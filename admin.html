@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Панель · Дилшоджон и Нодира</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Manrope:wght@400;500;600&display=swap">
+<style>
+/* Layout: "Maroqand" — the venue carries Samarkand's ancient name, so the invitation borrows its world:
+   ivory paper, lapis-blue tilework, gold leaf, an eight-point girih star, pointed peshtak arches.
+   A night-lapis band (date + countdown, with snow) breaks the long ivory scroll. Single deliberate light look. */
+:root{
+  --bg:#f6f0e4; --paper:#fffcf5; --ink:#1c2a44; --muted:#7a7c87; --line:#e5d9c3;
+  --rose:#d3a79c; --rose-soft:#f3e4dc; --rose-deep:#1f4e79; --sage:#93a688; --gold:#b8955a; --gold-hi:#ecd7a0;
+  --lapis:#1f4e79; --night:#13243d; --night-2:#1b3354; --turq:#3d8c96;
+  --ok:#4f8a6a; --no:#b25c62;
+  --f-display:'Cormorant Garamond','Cormorant',Georgia,'Times New Roman',serif;
+  --f-script:'Great Vibes','Cormorant Garamond',Georgia,serif;
+  --f-body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --foil:linear-gradient(100deg,#8f6e33 0%,#d9bd7c 22%,#b8955a 40%,#f2e2b0 58%,#a9853f 78%,#e1c88a 100%);
+  --tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23b8955a' stroke-width='.7' opacity='.55'%3E%3Cpath d='M14 14H34V34H14Z'/%3E%3Cpath d='M24 9.9 38.1 24 24 38.1 9.9 24Z'/%3E%3Cpath d='M0 0 14 14M48 0 34 14M0 48 14 34M48 48 34 34'/%3E%3Ccircle cx='24' cy='24' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  --star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23b8955a' d='M5.5 5.5h9v9h-9z'/%3E%3Cpath fill='%23b8955a' d='M10 3.6 16.4 10 10 16.4 3.6 10z'/%3E%3Ccircle cx='10' cy='10' r='1.8' fill='%23fffcf5'/%3E%3C/svg%3E");
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .34 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --arcade:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='18' viewBox='0 0 44 18'%3E%3Cpath fill='%2313243d' d='M0 18V11Q2 3 22 0Q42 3 44 11V18Z'/%3E%3C/svg%3E");
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 64px;background-image:var(--noise)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.08}
+.label{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.foil{background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 7s ease-in-out infinite}
+@keyframes foil{0%,100%{background-position:0 0}50%{background-position:100% 0}}
+
+/* demo bar */
+.demobar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:-16px;padding:10px 16px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--paper)}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:999px;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.demobar select{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:7px 10px;color:var(--ink);font:inherit;font-size:14px;max-width:100%}
+.demotag{font-size:12px;color:var(--muted)}
+
+/* ---------- envelope on a night-lapis ground ---------- */
+.intro{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:24px;
+  background:radial-gradient(120% 70% at 50% 35%,var(--night-2),var(--night) 70%);color:#f3ead7;transition:opacity 1s ease,visibility 1s}
+.intro::before{content:"";position:absolute;inset:0;background-image:var(--tile);background-size:64px;opacity:.18;pointer-events:none}
+.intro.gone{opacity:0;visibility:hidden}
+.intro .to{text-align:center;display:flex;flex-direction:column;gap:8px}
+.intro .to .label{color:var(--gold-hi);opacity:.8}
+.intro .to b{font-family:var(--f-display);font-weight:400;font-style:italic;font-size:clamp(28px,7.5vw,38px);line-height:1.15;text-wrap:balance;color:#fbf4e4}
+.env{position:relative;width:min(84vw,340px);aspect-ratio:3/2;perspective:1000px;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+.env-back{position:absolute;inset:0;background:#efe5d2;border-radius:6px;overflow:hidden}
+.env-back::after{content:"";position:absolute;inset:0;background:var(--lapis);background-image:var(--tile);background-size:36px;clip-path:polygon(0 0,100% 0,50% 58%)}
+.letter{position:absolute;left:6%;right:6%;top:6%;height:88%;background:var(--paper);background-image:var(--noise);border-radius:3px;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform 1.1s cubic-bezier(.2,.7,.2,1) .5s;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.letter::before{content:"";position:absolute;inset:7px;border:1px solid color-mix(in srgb,var(--gold) 55%,transparent)}
+.letter .label{color:var(--muted)}
+.letter span:last-child{font-family:var(--f-script);font-size:40px;line-height:1.1}
+.env-front{position:absolute;inset:0;z-index:2;background:linear-gradient(160deg,#f7efe0,#eadfc9);border-radius:6px;clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%)}
+.env-front::after{content:"";position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7}
+.flap{position:absolute;left:0;right:0;top:0;height:60%;z-index:3;background:linear-gradient(180deg,#f3ead8,#e4d6bc);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s ease,z-index 0s .45s}
+.wax{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);z-index:4;width:70px;height:70px;border-radius:50%;border:0;
+  background:radial-gradient(circle at 34% 28%,#3f74a6,var(--lapis) 55%,#0f2a47);box-shadow:0 6px 14px rgba(0,0,0,.4),inset 0 -3px 6px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,255,255,.18);
+  color:var(--gold-hi);font-family:var(--f-script);font-size:26px;transition:transform .45s ease,opacity .45s ease;animation:breathe 2.6s ease-in-out infinite}
+.wax::before{content:"";position:absolute;inset:5px;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold-hi) 55%,transparent)}
+@keyframes breathe{50%{box-shadow:0 6px 14px rgba(0,0,0,.4),0 0 0 10px rgba(236,215,160,.12),inset 0 -3px 6px rgba(0,0,0,.35)}}
+.env.open .wax{transform:translate(-50%,-50%) scale(.3);opacity:0;animation:none}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .letter{transform:translateY(-62%)}
+.intro .hint{font-size:13px;color:#d9cfbb;letter-spacing:.04em}
+.intro .hint::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold-hi);margin-right:8px;vertical-align:middle;animation:pulse 1.6s infinite}
+.intro .demotag{color:#9fa9bd}
+@keyframes pulse{50%{opacity:.25}}
+
+/* ---------- guest column ---------- */
+.guest{max-width:520px;margin:0 auto;display:flex;flex-direction:column;padding-bottom:40px}
+.chapter{padding-block:64px;display:flex;flex-direction:column;gap:20px;align-items:center;text-align:center;position:relative;scroll-margin-top:90px}
+.chapter h2{font-size:clamp(34px,9vw,46px);color:var(--ink)}
+.chapter p{margin:0;color:var(--muted);max-width:36ch}
+/* chapter kicker: gold rule · star · text · star · rule */
+.chapter>.label{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--gold);letter-spacing:.18em;max-width:100%}
+.chapter>.label::before,.chapter>.label::after{content:"";width:34px;height:12px;background:var(--star) center/12px no-repeat,linear-gradient(var(--gold),var(--gold)) center/100% 1px no-repeat;opacity:.9}
+.chapter+.chapter:not(.night):not(.after-night)::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:14px;background:var(--star) center/14px no-repeat,linear-gradient(90deg,transparent,var(--line) 30%,var(--line) 70%,transparent) center/100% 1px no-repeat}
+.rv{transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.2,.7,.2,1),filter 1.1s ease}
+.rv.pre{opacity:0;transform:translateY(26px);filter:blur(6px)}
+.rv.pre.in{opacity:1;transform:none;filter:none}
+
+/* drifting petals (ivory cover) and gold dust (envelope) */
+.petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.petals i,.petal-fly{width:10px;height:13px;border-radius:80% 0 80% 0;background:linear-gradient(135deg,#fbece6,var(--rose))}
+.petals i{position:absolute;top:-24px;opacity:.55;animation:fall linear infinite}
+.intro .petals i{width:5px;height:5px;border-radius:50%;background:radial-gradient(var(--gold-hi),transparent 70%);opacity:.9}
+@keyframes fall{0%{transform:translate3d(0,-20px,0) rotate(0)}50%{transform:translate3d(28px,48vh,0) rotate(160deg)}100%{transform:translate3d(-12px,104vh,0) rotate(320deg)}}
+.petal-fly{position:fixed;z-index:60;pointer-events:none}
+
+/* ---------- cover: a peshtak portal ---------- */
+.hero{padding-top:28px;gap:20px;position:relative;overflow:hidden;margin-inline:-16px;padding-inline:16px}
+.hero>:not(.petals){position:relative;z-index:1}
+.hero:not(.go)>:not(.petals){opacity:0}
+.hero.go>:not(.petals){animation:rise 1.3s cubic-bezier(.2,.7,.2,1) both}
+.hero.go>:nth-child(2){animation-delay:.15s}.hero.go>:nth-child(3){animation-delay:.55s}
+.hero.go>:nth-child(4){animation-delay:.8s}.hero.go>:nth-child(5){animation-delay:1.2s}
+@keyframes rise{from{opacity:0;transform:translateY(22px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.hero>.label{color:var(--gold)}
+.portal{width:min(80vw,310px);aspect-ratio:300/360;position:relative}
+.portal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.portal .frame{fill:none;stroke:var(--gold);stroke-width:1.1}
+.portal .frame.thin{stroke-width:.6;opacity:.7}
+.portal .draw{stroke-dasharray:1400;stroke-dashoffset:1400}
+.hero.go .portal .draw{animation:draw 3.2s ease .4s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.portal .twinkle{fill:var(--gold-hi);animation:twinkle 3s ease-in-out infinite}
+.portal .twinkle:nth-of-type(2n){animation-delay:1.1s}.portal .twinkle:nth-of-type(3n){animation-delay:2s}
+@keyframes twinkle{50%{opacity:.15}}
+.portal .mono{position:absolute;left:0;right:0;top:56%;transform:translateY(-50%);text-align:center;font-family:var(--f-script);font-size:clamp(64px,19vw,86px);line-height:1;padding:.1em 0}
+.portal .pdate{position:absolute;left:0;right:0;top:76%;text-align:center;font-size:11px;letter-spacing:.34em;color:#e9dfc8}
+.couple{font-family:var(--f-script);font-weight:400;font-size:clamp(58px,17vw,88px);line-height:1;color:var(--ink);padding-inline:.15em}
+.couple .and{display:block;font-family:var(--f-display);font-style:italic;font-size:.34em;color:var(--gold);margin-block:2px 4px}
+.date-line{display:flex;align-items:center;gap:14px;font-family:var(--f-display);font-size:21px;letter-spacing:.14em;text-transform:uppercase}
+.date-line i{width:44px;height:12px;background:var(--star) center/10px no-repeat,linear-gradient(var(--gold),var(--gold)) center/100% 1px no-repeat}
+.cue{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+.cue i{width:1px;height:36px;background:linear-gradient(var(--gold),transparent);transform-origin:top;animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0);opacity:1}55%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+/* ---------- letter: paper sheet with a tile border ---------- */
+.letterbox{background:var(--paper);background-image:var(--noise);border-radius:2px;padding:40px 28px 34px;max-width:440px;position:relative;box-shadow:0 1px 0 var(--line),0 18px 40px -18px rgba(60,45,20,.25)}
+.letterbox::before{content:"";position:absolute;inset:8px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);pointer-events:none}
+.letterbox::after{content:"";position:absolute;left:8px;right:8px;top:8px;height:18px;background-image:var(--tile);background-size:18px;opacity:.9;border-bottom:1px solid color-mix(in srgb,var(--gold) 50%,transparent)}
+.letterbox .dear{font-family:var(--f-display);font-style:italic;font-size:29px;line-height:1.2;color:var(--lapis);margin-top:6px}
+.letterbox p{color:var(--ink);margin:14px auto 0;font-size:16px;line-height:1.7}
+.letterbox .sig{font-family:var(--f-script);font-size:34px;margin-top:22px;color:var(--ink)}
+
+/* ---------- night band: date + countdown ---------- */
+.night{--ink:#f5ecd9;--muted:#a8b2c4;--line:rgba(236,215,160,.22);--rose-deep:var(--gold-hi);--paper:rgba(255,255,255,.04);
+  margin-inline:-16px;padding-inline:16px;background:var(--night);background-image:radial-gradient(90% 60% at 50% 0%,var(--night-2),transparent),linear-gradient(rgba(19,36,61,.8),rgba(19,36,61,.8)),var(--tile);background-size:auto,auto,72px;color:var(--ink);overflow:visible}
+.night.winter{background-blend-mode:normal}
+.night h2{color:var(--ink)}
+.night>.label{color:var(--gold-hi)}
+.night>.label::before,.night>.label::after{filter:brightness(1.4)}
+.winter{padding-top:72px}
+.winter::before{content:"";position:absolute;left:0;right:0;top:-17px;height:18px;background:var(--arcade) repeat-x;background-size:44px 18px;z-index:1}
+.after-night{padding-bottom:80px}
+.after-night::after{content:"";position:absolute;left:0;right:0;bottom:-17px;height:18px;background:var(--arcade) repeat-x;background-size:44px 18px;transform:scaleY(-1);z-index:1}
+.snow{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.night>:not(.snow){position:relative;z-index:1}
+.snow i{position:absolute;top:-10px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.8);opacity:.85;animation:fall linear infinite}
+
+.cal{width:min(100%,340px);padding:18px 16px 14px;border:1px solid var(--line);border-radius:160px 160px 16px 16px;padding-top:44px;background:rgba(255,255,255,.03)}
+.cal-head{display:flex;justify-content:center;gap:10px;align-items:baseline;margin-bottom:12px}
+.cal-head b{font-family:var(--f-display);font-weight:400;font-size:30px;font-style:italic}
+.cal-head .label{color:var(--gold-hi)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-variant-numeric:tabular-nums}
+.cal-grid span{aspect-ratio:1;display:grid;place-items:center;font-size:14px;position:relative;color:color-mix(in srgb,var(--ink) 80%,transparent)}
+.cal-grid .wd{font-size:10px;letter-spacing:.12em;color:var(--muted);aspect-ratio:auto;padding-bottom:6px;text-transform:uppercase}
+.cal-grid .day{font-family:var(--f-display);font-size:26px;font-weight:500;color:var(--night);z-index:0}
+.cal-grid .day::before{content:"";position:absolute;inset:2px;border-radius:50%;background:var(--foil);background-size:200% 100%;z-index:-1;box-shadow:0 0 18px rgba(236,215,160,.45)}
+.cal-grid .day svg{position:absolute;inset:-7px;width:calc(100% + 14px);height:calc(100% + 14px);overflow:visible}
+.cal-grid .day path{fill:none;stroke:var(--gold-hi);stroke-width:1.2;stroke-dasharray:160;stroke-dashoffset:160;transition:stroke-dashoffset 1.6s ease .3s}
+.cal.in .day path,.cal:not(.pre) .day path{stroke-dashoffset:0}
+
+.count{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.count b.tick{animation:tick .5s ease}
+@keyframes tick{from{transform:translateY(-7px);opacity:.25}to{transform:none;opacity:1}}
+.count div{min-width:74px;padding:20px 6px 12px;border:1px solid var(--line);border-radius:60px 60px 10px 10px;background:rgba(255,255,255,.04)}
+.count b{display:block;font-family:var(--f-display);font-size:42px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+.count small{font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+
+/* ---------- program: gold thread with girih diamonds ---------- */
+.program{list-style:none;margin:0;padding:0;width:min(100%,390px);position:relative;text-align:left}
+.program::before{content:"";position:absolute;left:94px;top:14px;bottom:14px;border-left:1px solid var(--gold);transform-origin:top;transition:transform 1.6s ease}
+.program.pre::before{transform:scaleY(0)}
+.program.pre.in::before{transform:scaleY(1)}
+.program li{display:grid;grid-template-columns:72px 44px 1fr;align-items:start;padding-block:14px}
+.program time{font-family:var(--f-display);font-size:26px;text-align:right;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--lapis)}
+.program .ico,.info .ico{width:30px;height:30px;transform:rotate(45deg);border:1px solid var(--gold);background:var(--paper);justify-self:center;position:relative;z-index:1;display:grid;place-items:center;margin-top:2px;box-shadow:0 0 0 4px var(--bg)}
+.program .ico svg,.info .ico svg{transform:rotate(-45deg);width:17px;height:17px;fill:none;stroke:var(--lapis);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.program b{font-family:var(--f-display);font-size:22px;font-weight:500;display:block;line-height:1.15}
+.program span{color:var(--muted);font-size:14px}
+
+/* ---------- place: Samarkand skyline in gold line ---------- */
+.place{background:var(--paper);background-image:var(--noise);border:1px solid var(--line);border-radius:200px 200px 16px 16px;padding:34px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(100%,390px);position:relative}
+.place::before{content:"";position:absolute;inset:7px;border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);border-radius:196px 196px 11px 11px;pointer-events:none}
+.place .skyline{width:min(100%,260px);height:auto;margin-bottom:4px}
+.skyline path,.skyline rect,.skyline line{fill:none;stroke:var(--gold);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.skyline .dome{fill:color-mix(in srgb,var(--turq) 18%,transparent)}
+.place h3{font-family:var(--f-display);font-size:32px;font-style:italic;color:var(--lapis)}
+.place p{font-size:15px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pillbtn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);text-decoration:none;font-size:14px;transition:border-color .2s,transform .2s}
+.pillbtn:hover{border-color:var(--gold);transform:translateY(-1px)}
+.pillbtn.solid{background:var(--lapis);color:#fbf4e4;border-color:var(--lapis)}
+
+/* ---------- dress code: swatches as arches ---------- */
+.swatches{display:flex;flex-wrap:wrap;gap:16px 12px;justify-content:center;list-style:none;margin:0;padding:0}
+.swatches li{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:var(--muted);width:58px;letter-spacing:.04em}
+.swatches i{width:46px;height:62px;border-radius:50% 50% 6px 6px / 42% 42% 6px 6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 0 0 4px var(--paper),0 0 0 5px var(--gold),0 10px 18px -8px rgba(40,30,10,.35)}
+
+/* ---------- useful info ---------- */
+.info{list-style:none;margin:0;padding:0;width:min(100%,430px);display:grid;gap:10px;text-align:left}
+.info li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.info b{display:block;font-family:var(--f-display);font-size:21px;font-weight:500;margin-bottom:2px;line-height:1.2}
+.info span{color:var(--muted);font-size:14px}
+.tbd{font-family:var(--f-body);font-style:normal;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8d6f3d;border:1px dashed var(--gold);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:3px;font-weight:500}
+
+/* ---------- rsvp ---------- */
+.rsvp{width:min(100%,400px);display:flex;flex-direction:column;gap:14px;align-items:stretch;background:var(--paper);border:1px solid var(--line);border-radius:200px 200px 20px 20px;padding:54px 18px 18px;position:relative}
+.rsvp::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:22px;height:22px;background:var(--star) center/contain no-repeat}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.stepper .ctrl{display:flex;align-items:center;gap:14px}
+.stepper button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--paper);font-size:20px;line-height:1}
+.stepper button:disabled{opacity:.35;cursor:default}
+.stepper output{font-family:var(--f-display);font-size:28px;min-width:2ch;text-align:center}
+.swipe{position:relative;height:64px;border-radius:999px;background:var(--bg);border:1px solid var(--gold);overflow:hidden;touch-action:none;user-select:none}
+.swipe .fill{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,color-mix(in srgb,var(--gold-hi) 40%,transparent),var(--gold-hi))}
+.swipe .hint{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--lapis);padding-left:58px;pointer-events:none}
+.swipe::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.8) 50%,transparent 65%);transform:translateX(-100%);animation:shine 3.2s ease-in-out 1s infinite}
+@keyframes shine{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+.knob{z-index:2;position:absolute;left:4px;top:4px;width:56px;height:56px;border-radius:50%;border:0;background:radial-gradient(circle at 34% 28%,#3f74a6,var(--lapis) 60%,#123555);color:var(--gold-hi);font-size:21px;display:grid;place-items:center;box-shadow:0 5px 14px rgba(19,36,61,.35)}
+.snap{transition:transform .3s ease,width .3s ease}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:4px 0;align-self:center;font-size:14px}
+
+/* ---------- seat: a place card ---------- */
+.seatcard{background:var(--paper);background-image:var(--noise);border-radius:4px;padding:34px 20px 26px;width:min(100%,400px);display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;box-shadow:0 22px 40px -20px rgba(40,30,10,.4)}
+.seatcard::before{content:"";position:absolute;inset:8px;border:1px solid var(--gold);pointer-events:none}
+.seatcard::after{content:"";position:absolute;left:8px;right:8px;top:8px;height:16px;background-image:var(--tile);background-size:16px;border-bottom:1px solid var(--gold)}
+.seatcard .label{color:var(--gold);margin-top:8px}
+.seatcard .num{font-family:var(--f-display);font-size:104px;line-height:1;background:var(--foil);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 7s ease-in-out infinite}
+.seatcard p{color:var(--muted);max-width:30ch}
+.hall{width:min(100%,460px);display:flex;flex-direction:column;gap:10px}
+.hall svg{width:100%;height:auto;display:block;background:var(--paper);border:1px solid var(--line);border-radius:16px}
+.sign{font-family:var(--f-display);font-style:italic;font-size:22px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:6px}
+.sign b{display:block;color:var(--ink);font-family:var(--f-script);font-weight:400;font-size:clamp(46px,13vw,60px);line-height:1.1;padding-inline:.15em}
+.sign::after{content:"";width:150px;height:16px;background:var(--star) center/16px no-repeat,linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent) center/100% 1px no-repeat;margin-top:8px}
+
+/* ---------- admin ---------- */
+.admin{max-width:1060px;margin:28px auto 0;display:flex;flex-direction:column;gap:22px}
+.admin-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:10px}
+.admin-head h1{font-size:44px;font-style:italic;color:var(--lapis)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-family:var(--f-display);font-size:42px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--lapis)}
+.stat small{font-size:13px;color:var(--muted)}
+.stat .bar{height:4px;border-radius:2px;background:var(--line);margin-top:10px;overflow:hidden}
+.stat .bar i{display:block;height:100%}
+.panes{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:16px;align-items:start}
+.pane{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pane h2{font-size:28px;font-style:italic;color:var(--lapis)}
+.pane-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pane svg{width:100%;height:auto;display:block;background:var(--bg);border-radius:12px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted)}
+.filters button[aria-pressed="true"]{border-color:var(--lapis);color:var(--lapis)}
+.glist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.glist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 2px;border-top:1px solid var(--line)}
+.glist .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.gname{min-width:0}.gname b{font-weight:500;display:block;overflow-wrap:anywhere}.gname small{color:var(--muted);font-size:12px}
+.pill{font-size:12px;padding:3px 9px;border-radius:999px;white-space:nowrap;border:1px solid}
+.pill.yes{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.pill.no{color:var(--no);border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+.pill.opened{color:#8d6f3d;border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
+.pill.none{color:var(--muted);border-color:var(--line)}
+.glist select{background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:5px 6px;font:inherit;font-size:13px}
+.iconbtn{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 9px;font-size:13px}
+.emptynote{color:var(--muted);font-size:14px;padding:12px 2px}
+.svgtable{cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--night);color:#f5ecd9;padding:10px 18px;border-radius:999px;font-size:14px;z-index:50;box-shadow:0 8px 24px rgba(19,36,61,.3);border:1px solid rgba(236,215,160,.3)}
+
+/* ---------- wishes ---------- */
+.wishform,.wishsent{width:min(100%,420px);background:var(--paper);background-image:var(--noise);border:1px solid var(--line);border-radius:4px;padding:20px;display:flex;flex-direction:column;gap:10px;text-align:left;box-shadow:0 18px 36px -22px rgba(40,30,10,.35)}
+.wishform textarea{width:100%;resize:vertical;min-height:130px;border:0;border-radius:0;background:repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);padding:4px 2px;font-family:var(--f-display);font-style:italic;font-size:21px;line-height:32px;color:var(--ink)}
+.wishform textarea:focus{outline:none;background-color:color-mix(in srgb,var(--gold-hi) 10%,transparent)}
+.wishform textarea::placeholder{color:var(--muted)}
+.wishfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.from{font-size:13px;color:var(--muted)}.from b{color:var(--ink);font-weight:500}
+.formerr{margin:0;color:var(--no);font-size:13px}
+.wishsent{text-align:center;align-items:center}
+.wishsent blockquote,.wishes blockquote{margin:0;font-family:var(--f-display);font-style:italic;font-size:21px;line-height:1.4;color:var(--ink)}
+.wishes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.wishes li{background:var(--bg);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0;overflow-wrap:anywhere}
+
+/* ---------- dock ---------- */
+.music{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;color:var(--lapis)}
+.music .note{font-size:21px;line-height:1}
+.music .eq{display:none;gap:3px;align-items:end;height:16px}
+.music .eq i{width:3px;background:var(--lapis);border-radius:2px;animation:eq 1s ease-in-out infinite}
+.music .eq i:nth-child(2){animation-delay:.25s}.music .eq i:nth-child(3){animation-delay:.5s}
+.music[aria-pressed="true"]{background:var(--gold-hi);border-color:var(--gold)}
+.music[aria-pressed="true"] .note{display:none}.music[aria-pressed="true"] .eq{display:flex}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 12px 32px rgba(19,36,61,.2);animation:dockin .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes dockin{from{opacity:0;transform:translate(-50%,16px)}}
+.dk{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center}
+.dk svg{width:20px;height:20px;fill:none;stroke:var(--lapis);stroke-width:1.6;stroke-linecap:round}
+.dk[aria-expanded="true"]{background:var(--gold-hi);border-color:var(--gold)}
+.dk-cta{height:44px;border:0;border-radius:999px;background:var(--lapis);color:#fbf4e4;padding:0 22px;font-family:var(--f-display);font-style:italic;font-size:20px;white-space:nowrap;max-width:230px;overflow:hidden;transition:max-width .4s ease,padding .4s ease,opacity .3s ease}
+.dk-cta.off{max-width:0;padding:0;opacity:0}
+.sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:31;width:min(calc(100vw - 32px),340px);background:var(--paper);background-image:var(--noise);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 18px 44px rgba(19,36,61,.25);display:flex;flex-direction:column;gap:6px}
+.sheet>.label{color:var(--gold)}
+.sheet ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.sheet button{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:12px;border:0;border-top:1px solid var(--line);background:none;padding:11px 2px;text-align:left;font-family:var(--f-display);font-size:22px;color:var(--ink)}
+.sheet li:first-child button{border-top:0}
+.sheet button span{font-family:var(--f-body);font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.progress{position:fixed;left:0;top:0;height:2px;width:100%;background:var(--foil);transform-origin:left;transform:scaleX(0);z-index:45;pointer-events:none}
+
+/* ---------- common-QR entry ---------- */
+.qrview{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:28px;padding-bottom:40px}
+.entry{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding-top:20px}
+.entry-mono{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 28%,#3f74a6,var(--lapis) 60%,#123555);color:var(--gold-hi);font-family:var(--f-script);font-size:36px;box-shadow:0 0 0 5px var(--paper),0 0 0 6px var(--gold)}
+.entry .label{color:var(--gold)}
+.entry-names{font-family:var(--f-script);font-size:clamp(44px,13vw,58px);font-weight:400;padding-inline:.15em}
+.codeform{width:min(100%,360px);background:var(--paper);border:1px solid var(--line);border-radius:180px 180px 20px 20px;padding:48px 18px 22px;display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.entry-title{font-family:var(--f-display);font-size:27px;line-height:1.15}
+.codeform p{margin:0;color:var(--muted);font-size:14px}
+.codein{font:inherit;font-family:var(--f-body);font-size:34px;font-weight:600;letter-spacing:.4em;text-align:center;text-transform:uppercase;padding:12px 0 12px .4em;border:1px solid var(--gold);border-radius:14px;background:var(--bg);color:var(--lapis);width:100%}
+.codeform .pillbtn{justify-content:center}
+.codein:focus{outline:2px solid var(--gold);outline-offset:2px}
+.entry-help{margin:0;font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}
+.entry-help .phone{margin:0}
+.cardmock{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;border-top:1px solid var(--line);padding-top:28px}
+.pcard{width:min(100%,280px);aspect-ratio:5/7;background:var(--paper);background-image:var(--noise);border-radius:4px;box-shadow:0 18px 40px -16px rgba(40,30,10,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;position:relative}
+.pcard::before{content:"";position:absolute;inset:8px;border:1px solid var(--gold);pointer-events:none}
+.pcard-mono{font-family:var(--f-script);font-size:38px;color:var(--lapis);line-height:1}
+.pcard-names{font-family:var(--f-script);font-size:30px}
+.pcard-date{font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.pcard-qr{margin-top:8px;padding:6px;background:#fffcf5;border:1px solid var(--line);min-width:110px;min-height:110px;display:grid;place-items:center;color:var(--muted)}
+.pcard-code{font-size:13px;color:var(--muted)}
+.pcard-code span{font-family:'Segoe Script','Bradley Hand','Comic Sans MS',cursive;font-size:22px;color:#2c3e75;letter-spacing:.12em;border-bottom:1px solid var(--line);padding:0 6px}
+.cardcode{font-family:var(--f-body);font-weight:600;letter-spacing:.14em;color:var(--lapis)}
+.codes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px}
+.codes li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px;min-width:0}
+.codes li span{overflow-wrap:anywhere}
+.headacts{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.gtype{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-size:12px;color:var(--ink);background:color-mix(in srgb,var(--c) 10%,var(--paper));border:1px solid color-mix(in srgb,var(--c) 40%,transparent);border-radius:999px;padding:1px 9px}
+.gtype::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.filters select{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 10px;font:inherit;font-size:13px;color:var(--ink)}
+.seg.mini button{padding:4px 10px;font-size:12px}
+.tablewrap{overflow-x:auto}
+.breakdown{border-collapse:collapse;width:100%;min-width:420px;font-size:14px;font-variant-numeric:tabular-nums}
+.breakdown th,.breakdown td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.breakdown thead th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.breakdown tbody th{text-align:left;font-weight:500}
+.breakdown tbody th i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+.breakdown small{color:var(--muted)}
+
+/* ---------- language switch ---------- */
+.langs{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--paper)}
+.langs button{border:0;background:none;border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted)}
+.langs button[aria-pressed="true"]{background:var(--lapis);color:#fbf4e4;font-weight:600}
+.langbar{display:flex;justify-content:center;padding-top:18px}
+#introLangs{position:absolute!important;top:calc(18px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:2}
+.intro .langs{background:rgba(255,255,255,.06);border-color:rgba(236,215,160,.3)}
+.intro .langs button{color:#c9cfdb}
+.intro .langs button[aria-pressed="true"]{background:var(--gold-hi);color:var(--night)}
+
+/* ---------- misc ---------- */
+.pillbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pillbtn.tg.on{background:var(--gold-hi);border-color:var(--gold);color:var(--night)}
+.remindpane .tgprev{background:#e6ebf1;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;max-width:420px}
+.tgmeta{font-size:12px;color:var(--muted)}
+.bubble{align-self:flex-start;background:#fff;border-radius:14px 14px 14px 4px;padding:10px 12px;font-size:14px;line-height:1.45;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.bell{font-size:12px}
+.phone{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:6px}
+.phone a{color:var(--lapis);font-weight:600;font-size:16px;text-decoration:none;font-variant-numeric:tabular-nums;user-select:all}
+.copybtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--lapis)}
+.qrwrap{position:fixed;inset:0;z-index:70;background:rgba(19,36,61,.45);display:grid;place-items:center;padding:16px}
+.qrcard{background:var(--paper);border-radius:20px;padding:22px;width:min(100%,340px);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 20px 50px rgba(19,36,61,.35)}
+.qrcard h3{font-size:28px;font-style:italic;color:var(--lapis)}
+.qrbox{padding:12px;background:#fffcf5;border:1px solid var(--line);border-radius:14px;min-height:246px;display:grid;place-items:center}
+.qrbox img,.qrbox canvas{display:block}
+.qrurl{margin:0;font-size:13px;color:var(--ink);overflow-wrap:anywhere}
+.intro>:not(.petals){position:relative;z-index:1}
+.after-night+.chapter::before{display:none}
+@media (max-width:820px){.panes{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.glist li{row-gap:6px}.glist li .pill{justify-self:end}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.portal .draw{stroke-dashoffset:0}.rv.pre{opacity:1;transform:none;filter:none}.petals,.snow{display:none}}
+/* ---- upgrade: cinematic open, full cover, parallax, big date, route, thank-you ---- */
+:root{--muted:#666a76}
+.intro.zoom .env{transform:scale(3.4) translateY(-6%);opacity:0;transition:transform 1.1s cubic-bezier(.7,0,.2,1),opacity .8s ease .25s}
+.intro.zoom .to,.intro.zoom .hint,.intro.zoom .demotag,.intro.zoom #introLangs{opacity:0;transition:opacity .35s ease}
+.hero{min-height:100svh;justify-content:center;padding-block:28px 40px}
+.hero .portal{translate:0 calc(var(--p,0)*90px);scale:calc(1 - var(--p,0)*.12)}
+.hero .couple{translate:0 calc(var(--p,0)*36px)}
+.chapter p{color:var(--muted);font-size:16px}
+.program::before{left:110px}
+.program li{grid-template-columns:80px 44px 1fr;column-gap:8px}
+.program time{white-space:nowrap}
+.program time{font-size:25px}
+.bigdate{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px 14px;width:min(100%,360px)}
+.bd-side{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-hi);padding-block:10px;border-block:1px solid var(--line)}
+.bd-num{font-family:var(--f-display);font-weight:500;font-size:clamp(120px,36vw,160px);line-height:.85;background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 7s ease-in-out infinite;padding:0 .04em}
+.bd-my{grid-column:1/-1;font-family:var(--f-display);font-style:italic;font-size:26px;color:var(--ink);margin-top:2px}
+.route-lbl{color:var(--gold);align-self:center}
+.hall svg .route{stroke-dasharray:1;stroke-dashoffset:1}
+.hall svg .route.go{transition:stroke-dashoffset 2.6s cubic-bezier(.4,0,.2,1);stroke-dashoffset:0}
+.hall svg .pulse{transform-box:fill-box;transform-origin:center;animation:pulsering 2s ease-out infinite}
+@keyframes pulsering{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.thanks{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;
+  background:radial-gradient(120% 70% at 50% 35%,var(--night-2),var(--night) 70%);color:#f5ecd9;opacity:0;transition:opacity .5s ease}
+.thanks::before{content:"";position:absolute;inset:0;background-image:var(--tile);background-size:64px;opacity:.15;pointer-events:none}
+.thanks.on{opacity:1}
+.thanks>:not(.petals){position:relative;z-index:1}
+.thanks .petals i{width:5px;height:5px;border-radius:50%;background:radial-gradient(var(--gold-hi),transparent 70%)}
+.th-seal{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 28%,#3f74a6,var(--lapis) 60%,#0f2a47);color:var(--gold-hi);font-family:var(--f-script);font-size:34px;box-shadow:0 0 0 6px rgba(236,215,160,.12),0 0 0 7px var(--gold);transform:scale(1.8);opacity:0;transition:transform .7s cubic-bezier(.2,1.4,.4,1) .15s,opacity .4s ease .15s}
+.thanks.on .th-seal{transform:none;opacity:1}
+.th-h{font-family:var(--f-script);font-weight:400;font-size:clamp(56px,16vw,76px);line-height:1.1;color:#fbf4e4;padding-inline:.15em}
+.th-p{margin:0;color:#c9cfdb;max-width:28ch}
+.th-card{background:var(--paper);background-image:var(--noise);color:var(--ink);padding:18px 34px 10px;border-radius:4px;position:relative;box-shadow:0 20px 40px rgba(0,0,0,.4);transform:rotateY(90deg);transition:transform .9s cubic-bezier(.2,.8,.2,1) .7s;display:flex;flex-direction:column;align-items:center}
+.th-card::before{content:"";position:absolute;inset:6px;border:1px solid var(--gold)}
+.thanks.on .th-card{transform:none}
+.th-card .label{color:var(--gold)}
+.th-card b{font-family:var(--f-display);font-weight:500;font-size:84px;line-height:1;background:var(--foil);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.th-btn{background:var(--gold-hi);border-color:var(--gold-hi);color:var(--night);font-weight:600;margin-top:6px}
+@media (prefers-reduced-motion:reduce){.hero .portal,.hero .couple{translate:none;scale:none}.hall svg .route{stroke-dashoffset:0}}
+/* ---- upgrade 2: addressed envelope, wedding-day mode, personal note, large text ---- */
+.stamp{position:absolute;right:5%;top:7%;z-index:5;width:15%;aspect-ratio:40/48;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));
+  -webkit-mask:radial-gradient(circle at 50% 50%,#000 60%,transparent 62%) 0 0/6px 6px repeat,linear-gradient(#000,#000) center/calc(100% - 5px) calc(100% - 5px) no-repeat;
+  mask:radial-gradient(circle at 50% 50%,#000 60%,transparent 62%) 0 0/6px 6px repeat,linear-gradient(#000,#000) center/calc(100% - 5px) calc(100% - 5px) no-repeat;transition:opacity .4s}
+.stamp svg{width:100%;height:100%;display:block}
+.pmark{position:absolute;right:13%;top:3%;z-index:6;width:22%;color:rgba(31,78,121,.55);transform:rotate(-14deg);transition:opacity .4s}
+.pmark svg{width:100%;display:block}
+.addr{position:absolute;left:9%;right:9%;bottom:9%;z-index:5;display:flex;flex-direction:column;align-items:flex-start;text-align:left;transition:opacity .4s}
+.addr span{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#9a8253}
+.addr b{font-family:var(--f-script);font-weight:400;font-size:clamp(22px,6.6vw,30px);line-height:1.15;color:var(--night);border-bottom:1px solid rgba(184,149,90,.6);padding-right:12px;max-width:58%}
+.env .wax{top:64%;left:82%;z-index:7;width:62px;height:62px;font-size:23px}
+.addr,.stamp,.pmark{pointer-events:none}
+.env.open .stamp,.env.open .pmark,.env.open .addr{opacity:0}
+.todaycard{margin:16px 0 0;padding:26px 18px 22px;border-radius:200px 200px 18px 18px;background:var(--night);background-image:radial-gradient(90% 60% at 50% 0%,var(--night-2),transparent),linear-gradient(rgba(19,36,61,.82),rgba(19,36,61,.82)),var(--tile);background-size:auto,auto,64px;color:#f5ecd9;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:44px}
+.todaycard .label{color:var(--gold-hi)}
+.todaycard h2{font-family:var(--f-script);font-size:clamp(40px,12vw,54px);color:#fbf4e4;padding-inline:.15em}
+.todaycard p{margin:0;color:#c9cfdb}
+.tnow{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.tnow div{border:1px solid rgba(236,215,160,.3);border-radius:12px;padding:10px;text-align:left}
+.tnow div:first-child{background:rgba(236,215,160,.12);border-color:var(--gold-hi)}
+.tnow span{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-hi)}
+.tnow b{font-family:var(--f-display);font-size:20px;font-weight:500;line-height:1.2}
+.todaycard .pillbtn{background:rgba(255,255,255,.06);color:#f5ecd9;border-color:rgba(236,215,160,.35)}
+.todaycard .pillbtn.solid{background:var(--gold-hi);color:var(--night);border-color:var(--gold-hi)}
+.program li.done{opacity:.45}
+.program li.now .ico{background:var(--lapis);border-color:var(--lapis)}
+.program li.now .ico svg{stroke:var(--gold-hi)}
+.program li.now b::after{content:"•";margin-left:6px;color:var(--no);animation:pulse 1.4s infinite}
+.daytoggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.pnote{margin-top:18px!important;padding:12px 14px;border-left:2px solid var(--gold);background:color-mix(in srgb,var(--gold-hi) 18%,transparent);font-family:var(--f-display);font-style:italic;font-size:19px!important;line-height:1.45;text-align:left;color:var(--lapis)!important}
+.notein{width:100%;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--ink)}
+.bigtoggle{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:10px 12px;margin-top:6px;font:inherit;font-size:15px;color:var(--ink)}
+.bigtoggle span{font-family:var(--f-display);font-size:22px;color:var(--lapis)}
+.bigtoggle[aria-pressed="true"]{background:var(--gold-hi);border-color:var(--gold)}
+html.big .chapter p,html.big .letterbox p,html.big .program span,html.big .info span,html.big .seatcard p,html.big .stepper span,html.big .wishfoot .from{font-size:19px!important;line-height:1.6}
+html.big .program b,html.big .info b{font-size:25px}
+html.big .label{font-size:13px}
+html.big .chapter h2{font-size:clamp(38px,10vw,50px)}
+/* ---- upgrade 3: cinematic scroll (Apple-style zoom-through, word reveals, scroll-lit letter, ticker, program thread) ---- */
+.heropin{position:relative;height:185svh;margin-inline:-16px;overflow-x:clip}
+.heropin .hero{contain:paint}
+html,body{overflow-x:clip}
+.heropin .hero{position:sticky;top:0;height:100svh;min-height:0;margin:0;padding-inline:16px;overflow:hidden;--z:calc(var(--p,0)*var(--p,0))}
+.hero.go>:not(.petals):not(.hero-veil){animation-fill-mode:backwards}
+.hero.go>.hero-veil{animation:none}
+.hero>.hero-veil{position:absolute;z-index:3}
+.hero .portal{translate:none;scale:calc(1 + var(--z)*3.5);transform-origin:50% 55%;z-index:2}
+.hero .portal .mono,.hero .portal .pdate{opacity:calc(1 - var(--p,0)*3.2)}
+.hero>.label,.hero .couple,.hero .date-line,.hero .cue{opacity:calc(1 - var(--p,0)*3.4);translate:0 calc(var(--p,0)*-60px)}
+.hero .couple{translate:0 calc(var(--p,0)*-60px)}
+.hero[style*="--p: 1"] .portal{visibility:hidden}
+.hero-veil{position:absolute;inset:0;background:var(--night);opacity:calc((var(--p,0) - .4)*2.2);pointer-events:none;z-index:3}
+.heropin+.winter{padding-top:84px}
+.heropin+.winter::before{display:none}
+.sw .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.sw .w>span{display:inline-block;transform:translateY(108%);transition:transform 1s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i)*70ms)}
+.sw.in .w>span{transform:none}
+.sw.rv.pre{opacity:1;filter:none;transform:none}
+.bd-num.sw .w>span{background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.lit .lw{color:color-mix(in srgb,var(--ink) 24%,transparent);transition:color .35s ease}
+.lit .lw.on{color:var(--ink)}
+.rv{transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.2,.7,.2,1),filter 1.1s ease,clip-path 1.25s cubic-bezier(.7,0,.2,1)}
+.letterbox.rv.pre,.place.rv.pre,.cal.rv.pre,.info.rv.pre,.swatches.rv.pre,.count.rv.pre,.program.rv.pre{opacity:1;filter:none;clip-path:inset(0 0 100% 0);transform:translateY(40px)}
+.letterbox.rv.pre.in,.place.rv.pre.in,.cal.rv.pre.in,.info.rv.pre.in,.swatches.rv.pre.in,.count.rv.pre.in,.program.rv.pre.in{clip-path:inset(0 0 0 0);transform:none}
+.ticker{margin-inline:-16px;overflow:hidden;padding-block:22px;border-block:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--paper)}
+.tk-row{white-space:nowrap;font-family:var(--f-display);font-style:italic;font-size:clamp(38px,11vw,56px);line-height:1;color:var(--lapis);will-change:transform}
+.tk-2{font-family:var(--f-body);font-style:normal;font-size:13px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+.program::after{content:"";position:absolute;left:110px;top:14px;width:2px;margin-left:-.5px;height:calc(100% - 28px);background:var(--lapis);transform-origin:top;transform:scaleY(var(--pf,0));z-index:0}
+.program li .ico{transition:background .4s,border-color .4s}
+.program li.pass .ico{background:var(--lapis);border-color:var(--lapis)}
+.program li.pass .ico svg{stroke:var(--gold-hi)}
+@media (prefers-reduced-motion:reduce){.heropin{height:auto}.heropin .hero{position:relative;height:auto;min-height:100svh}.hero .portal{scale:none}.hero-veil{display:none}.sw .w>span{transform:none}.ticker .tk-row{transform:none!important}}
+/* ---- upgrade 4 ---- */
+@property --ar{syntax:'<percentage>';inherits:false;initial-value:0%}
+/* 1) light on gold follows tilt */
+.tilt .foil,.tilt .bd-num .w>span,.tilt .seatcard .num,.tilt .th-card b,.tilt .count b{animation:none;background-size:260% 100%;background-position:calc(50% + var(--tx,0)*45%) 0}
+.portal svg{transform:none}
+.seatcard{transform:perspective(900px) rotateX(calc(var(--ty,0)*-5deg)) rotateY(calc(var(--tx,0)*7deg))}
+.seatcard::after{box-shadow:none}
+.seatcard .glare{content:"";position:absolute;inset:0;pointer-events:none;z-index:4;mix-blend-mode:soft-light;
+  background:linear-gradient(calc(110deg + var(--tx,0)*40deg),transparent 30%,rgba(255,255,255,.55) 48%,transparent 62%)}
+/* 2) constellation */
+.sky{position:relative;width:min(100%,320px);margin-top:6px;overflow:hidden;padding:10px 0}
+.sky svg{width:100%;display:block;overflow:visible}
+.sky .cl path{fill:none;stroke:var(--gold-hi);stroke-width:.7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--sp,0));opacity:.85;filter:drop-shadow(0 0 2px rgba(236,215,160,.8))}
+.sky .st circle{fill:#fffbe9;filter:drop-shadow(0 0 3px #fff);animation:twinkle 2.8s ease-in-out infinite;animation-delay:var(--d)}
+.shoot{position:absolute;top:8%;left:-10%;width:90px;height:1.5px;background:linear-gradient(90deg,transparent,#fff);border-radius:2px;transform:rotate(-18deg);opacity:0;animation:shoot 9s linear infinite 2s}
+.shoot.s2{top:40%;animation-delay:6.5s;animation-duration:11s}
+@keyframes shoot{0%{opacity:0;translate:0 0}2%{opacity:1}9%{opacity:0;translate:340px 110px}100%{opacity:0;translate:340px 110px}}
+/* 3) hall in perspective, flying to the table */
+.hall{perspective:1000px}
+.hall svg{transform-origin:50% 70%;transform:rotateX(52deg) scale(.95);transition:transform 2.6s cubic-bezier(.4,0,.2,1);box-shadow:0 30px 40px -20px rgba(19,36,61,.35)}
+.hall.fly svg{transform:rotateX(34deg) scale(1)}
+.hall.top svg{transform:none;transition-duration:1.2s}
+.hall svg g{filter:drop-shadow(0 2px 1.5px rgba(40,30,10,.25))}
+/* 4) ornaments draw themselves */
+.chapter>.label.rv::before,.chapter>.label.rv::after{transition:transform 1s cubic-bezier(.7,0,.2,1) .2s}
+.chapter>.label.rv.pre::before,.chapter>.label.rv.pre::after{transform:scaleX(0)}
+.chapter>.label.rv.pre.in::before,.chapter>.label.rv.pre.in::after{transform:none}
+.chapter>.label.rv::before{transform-origin:right}.chapter>.label.rv::after{transform-origin:left}
+.place .skyline path,.place .skyline rect{stroke-dasharray:420;stroke-dashoffset:0;transition:stroke-dashoffset 2.6s ease .3s}
+.place.rv.pre .skyline path,.place.rv.pre .skyline rect{stroke-dashoffset:420}
+.place.rv.pre.in .skyline path,.place.rv.pre.in .skyline rect{stroke-dashoffset:0}
+/* 5) chapters open through an arch */
+.archin{-webkit-mask:radial-gradient(75% var(--ar) at 50% 100%,#000 98%,transparent 100%) bottom/100% 100% no-repeat;mask:radial-gradient(75% var(--ar) at 50% 100%,#000 98%,transparent 100%) bottom/100% 100% no-repeat;--ar:0%}
+.archin.on{--ar:260%;transition:--ar 1.6s cubic-bezier(.6,0,.2,1)}
+/* 6) dust */
+.portal .dust{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;transition:opacity .9s ease}
+.portal .mono{transition:opacity .9s ease}
+.portal .mono.hidden-for-dust{opacity:0!important}
+/* 7) seals that get stamped */
+.seal-mini{position:absolute;right:-12px;top:-14px;z-index:6;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:var(--f-script);font-size:20px;color:var(--gold-hi);
+  background:radial-gradient(circle at 34% 28%,#a2394a,#7a1f2e 60%,#4f1220);box-shadow:0 4px 10px rgba(0,0,0,.35),inset 0 -3px 5px rgba(0,0,0,.35);opacity:0;transform:scale(2.4) rotate(-25deg)}
+.seal-mini::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1px dashed rgba(236,215,160,.55)}
+.seatcard.stamped .seal-mini{animation:stamp .7s cubic-bezier(.3,1.6,.5,1) forwards .2s}
+.seatcard.stamped{animation:thud .45s ease .55s}
+@keyframes stamp{to{opacity:1;transform:rotate(-12deg)}}
+@keyframes thud{40%{translate:0 3px}}
+.th-seal{transform:scale(2.6) rotate(-30deg)}
+.th-seal::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--gold-hi);opacity:0}
+.thanks.on .th-seal{transition:transform .65s cubic-bezier(.3,1.6,.5,1) .15s,opacity .3s ease .15s}
+.thanks.on .th-seal::after{animation:ink 1s ease-out .75s}
+@keyframes ink{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.8)}}
+.th-seal{position:relative}
+/* 8) evening palette */
+html.evening{--bg:#0f1c31;--paper:#152844;--ink:#f3ead7;--muted:#a9b3c6;--line:rgba(236,215,160,.18);--lapis:#e8cf92;--rose-deep:#e8cf92;color-scheme:dark}
+html.evening body{background-color:var(--bg)}
+html.evening .pillbtn.solid,html.evening .dk-cta,html.evening .langs button[aria-pressed="true"],html.evening .seg button[aria-pressed="true"]{color:#13243d}
+html.evening .seg button[aria-pressed="true"]{background:var(--gold-hi)}
+html.evening .letterbox,html.evening .seatcard,html.evening .wishform,html.evening .wishsent,html.evening .pcard{--paper:#fffcf5;--ink:#1c2a44;--muted:#666a76;--lapis:#1f4e79;--line:#e5d9c3;color:#1c2a44}
+html.evening .hero .portal svg rect[fill="#fffcf5"]{fill:#152844}
+html.evening .ticker{background:#13243d}
+html.evening .program .ico,html.evening .info .ico{box-shadow:0 0 0 4px var(--bg)}
+html.evening .dock{background:color-mix(in srgb,#152844 88%,transparent)}
+html.evening .hall svg{filter:brightness(.97)}
+html.evening .program li.pass .ico svg,html.evening .program li.now .ico svg{stroke:#13243d}
+@media (prefers-reduced-motion:reduce){.archin{-webkit-mask:none;mask:none}.hall svg{transform:none}.seal-mini{opacity:1;transform:rotate(-12deg)}.th-seal{transform:none}}
+/* ---- performance pass: cheaper effects, same look ---- */
+.foil,.bd-num.sw .w>span,.seatcard .num,.th-card b,.bd-num{animation:none!important}
+.rv.pre{filter:none}
+.rv{transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1),clip-path 1.2s cubic-bezier(.7,0,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.hero .portal{will-change:auto}
+.snow i{box-shadow:none}
+.hall svg g{filter:none}
+.hall svg{will-change:transform}
+.tk-row{will-change:transform}
+@media (pointer:coarse){
+  .dock,.demobar{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--paper)}
+  html.evening .dock{background:#152844}
+  .archin{-webkit-mask:none;mask:none}
+  .petals i{animation-duration:22s!important}
+  .portal svg{transition:none}
+}
+/* ---- upgrade 5 ---- */
+/* 1) the seal invites a tap */
+.wax{animation:none}
+.wax::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--gold-hi);animation:ring 1.8s ease-out infinite;pointer-events:none}
+.env:not(.open) .wax{animation:glow 1.8s ease-in-out infinite}
+@keyframes ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.9);opacity:0}}
+@keyframes glow{0%,100%{box-shadow:0 6px 14px rgba(0,0,0,.4),0 0 0 0 rgba(236,215,160,0),inset 0 -3px 6px rgba(0,0,0,.35)}50%{box-shadow:0 6px 14px rgba(0,0,0,.4),0 0 26px 8px rgba(236,215,160,.55),inset 0 -3px 6px rgba(0,0,0,.35)}}
+.intro .hint{font-size:15px;color:#f3ead7;font-weight:500}
+/* 4) cover = one screen: names inside the arch, readable */
+.heropin .hero{justify-content:center;gap:16px;padding-block:20px}
+.hero .portal{width:min(86vw,360px,calc((100svh - 150px)*.833))}
+.hero .portal .mono{top:34%;bottom:16%;transform:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;margin:0;padding:0 21%;
+  font-family:var(--f-display);font-style:italic;font-weight:500;font-size:clamp(26px,7.6vw,36px);line-height:1.08;color:#f6e6bd;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.hero .portal .mono span{display:block;white-space:nowrap}
+.hero .portal .mono .amp{font-size:.62em;color:var(--gold-hi);margin-block:2px}
+.hero .portal .pdate{top:auto;bottom:9%;font-size:12px;letter-spacing:.24em;color:#f1e3bd;text-transform:uppercase}
+html.evening .hero .portal .mono{color:#f6e6bd}
+/* 6) language chooser */
+.langpick{display:none;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.intro.choose .langpick{display:flex}
+.intro.choose .env,.intro.choose .to,.intro.choose .hint,.intro.choose .demotag,.intro.choose #introLangs{display:none}
+.lp-seal{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 28%,#3f74a6,var(--lapis) 60%,#0f2a47);color:var(--gold-hi);font-family:var(--f-script);font-size:30px;box-shadow:0 0 0 6px rgba(236,215,160,.12),0 0 0 7px var(--gold)}
+.lp-q{font-family:var(--f-display);font-size:28px;line-height:1.2;color:#fbf4e4}
+.lp-q span{display:block;font-family:var(--f-body);font-size:14px;color:#c9cfdb;margin-top:6px}
+.lp-btns{display:flex;flex-direction:column;gap:10px;width:min(78vw,280px)}
+.lp-btns button{height:54px;border-radius:999px;border:1px solid rgba(236,215,160,.45);background:rgba(255,255,255,.05);color:#f5ecd9;font-family:var(--f-display);font-size:22px}
+.lp-btns button.pre{border-color:var(--gold-hi)}
+.lp-btns button:active,.lp-btns button:hover{background:var(--gold-hi);color:var(--night)}
+/* 9) 3D map card */
+.map3d{display:block;position:relative;width:100%;max-width:330px;height:230px;margin:4px auto 6px;perspective:700px;text-decoration:none;color:inherit}
+.m-plane{position:absolute;left:4%;right:4%;top:14px;height:170px;border-radius:12px;overflow:hidden;transform-origin:50% 80%;transform:rotateX(38deg) rotateZ(-6deg) scale(1.02);box-shadow:0 22px 30px -16px rgba(19,36,61,.45);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+.m-plane svg{width:100%;height:100%;display:block}
+.place.rv.pre:not(.in) .m-plane{transform:rotateX(70deg) rotateZ(-20deg) scale(.8)}
+.m-route{stroke-dashoffset:200;animation:mroute 2.4s linear infinite}
+@keyframes mroute{to{stroke-dashoffset:0}}
+.m-pin{position:absolute;left:68%;top:6px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;animation:pindrop 1s cubic-bezier(.3,1.5,.5,1) both .6s}
+.m-pin span{background:var(--lapis);color:#fbf4e4;font-family:var(--f-display);font-style:italic;font-size:16px;padding:4px 12px;border-radius:999px;box-shadow:0 6px 14px rgba(19,36,61,.35)}
+.m-pin::after{content:"";width:2px;height:26px;background:var(--lapis)}
+.place.rv.pre:not(.in) .m-pin{animation:none;opacity:0}
+@keyframes pindrop{from{opacity:0;transform:translate(-50%,-40px)}to{opacity:1;transform:translate(-50%,0)}}
+.m-ripple{position:absolute;left:68%;top:64px;width:30px;height:12px;margin-left:-15px;border-radius:50%;border:2px solid var(--lapis);animation:mrip 2s ease-out infinite 1.5s;opacity:0}
+@keyframes mrip{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.m-cap{position:absolute;left:0;right:0;bottom:0;font-size:14px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){.m-plane{transform:none}.m-pin{animation:none}}
+/* ---- "Главное": quick-glance tiles after the date band ---- */
+.mainb-wrap{padding-top:96px}
+.mainb{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,420px);text-align:left}
+.mt{border-radius:20px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;gap:4px;min-width:0;position:relative;font:inherit;color:inherit;text-align:left;box-shadow:0 10px 24px -18px rgba(19,36,61,.35);transition:transform .15s}
+button.mt:active{transform:scale(.97)}
+.mt .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.mt b{font-family:var(--f-display);font-weight:500;font-size:44px;line-height:1;color:var(--lapis)}
+.mt small{font-size:13px;color:var(--muted);line-height:1.4}
+.mt-table{background:var(--lapis);border-color:var(--lapis)}
+.mt-table b{color:var(--gold-hi);font-size:56px}.mt-table .k{color:var(--gold-hi)}.mt-table small{color:#c9d5e6}
+.mt-ans{background:var(--gold-hi);border-color:var(--gold)}
+.mt-ans b{font-size:26px;color:var(--night);font-style:italic}.mt-ans .k{color:#7a5c26}.mt-ans small{color:#5d4a26}
+.mt-place{grid-column:1/-1}
+.mt-place b{font-size:28px;font-style:italic}
+.mt-place .btnrow{justify-content:flex-start;margin-top:8px}
+.mt-info{grid-column:1/-1;flex-direction:column;padding-right:44px}
+.mt-info i{position:absolute;right:16px;top:50%;translate:0 -50%;font-style:normal;font-size:22px;color:var(--gold)}
+html.evening .mt-ans b,html.evening .mt-ans .k,html.evening .mt-ans small{color:#13243d}
+html.evening .mt-table{background:#1f4e79}
+.loginview{min-height:100svh;display:grid;place-items:center}
+.loginbox{display:flex;flex-direction:column;align-items:center;gap:12px;width:min(100%,320px);text-align:center}
+.loginbox h1{font-family:var(--f-display);font-size:38px;font-style:italic;color:var(--lapis)}
+.addform{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;align-items:end}
+.addform label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.addform .wide{grid-column:span 2}
+.addform input,.addform select,.import textarea{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--ink);width:100%}
+.import{margin-top:8px}.import summary{cursor:pointer;color:var(--lapis);font-size:14px}
+.import textarea{margin:8px 0;font-family:ui-monospace,Menlo,monospace}
+.iconbtn{text-decoration:none;color:var(--ink);display:inline-flex;align-items:center}
+.iconbtn.del{color:var(--no)}
+@media (max-width:480px){.addform .wide{grid-column:auto}}
+</style>
+
+
+<div class="intro" id="intro" hidden role="dialog" aria-label="Конверт с приглашением">
+  <div class="petals" id="introPetals" aria-hidden="true"></div>
+  <div id="introLangs" class="intro-langs"></div>
+  <div class="langpick" id="langPick">
+    <div class="lp-seal">Д·Н</div>
+    <div class="lp-q">Выберите язык<br><span>Tilni tanlang · Тилни танланг</span></div>
+    <div class="lp-btns"><button data-pick="ru">Русский</button><button data-pick="uzl">O‘zbekcha</button><button data-pick="uzc">Ўзбекча</button></div>
+  </div>
+  <div class="to"><span class="label" id="introTo">Вам письмо</span></div>
+  <div class="env" id="env">
+    <div class="env-back"></div>
+    <div class="letter"><span class="label" id="introLetter">Приглашение</span><span>Д &amp; Н</span></div>
+    <div class="env-front"></div>
+    <div class="flap"></div>
+    <div class="stamp" aria-hidden="true"><svg viewBox="0 0 40 48"><rect x="1" y="1" width="38" height="46" fill="#1f4e79"/><rect x="4" y="4" width="32" height="40" fill="none" stroke="#ecd7a0" stroke-width=".6"/>
+      <g fill="none" stroke="#ecd7a0" stroke-width=".8" stroke-linecap="round"><path d="M9 34Q9 26 14 24Q19 26 19 34"/><path d="M21 34Q21 26 26 24Q31 26 31 34"/><path d="M14 24V21M26 24V21"/><path d="M7 34H33"/><path d="M17 34V29Q17 26 20 25Q23 26 23 34"/></g>
+      <text x="20" y="14" text-anchor="middle" fill="#ecd7a0" font-size="4.3" font-family="Manrope,sans-serif" letter-spacing=".3">UZBEKISTAN</text><text x="20" y="41" text-anchor="middle" fill="#ecd7a0" font-size="4.6" font-family="Manrope,sans-serif">2026</text></svg></div>
+    <div class="pmark" aria-hidden="true"><svg viewBox="0 0 70 70"><defs><path id="pmc" d="M35 35m-24 0a24 24 0 1 1 48 0a24 24 0 1 1 -48 0"/></defs>
+      <circle cx="35" cy="35" r="30" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="35" cy="35" r="19" fill="none" stroke="currentColor" stroke-width=".7"/>
+      <text font-size="6.4" letter-spacing="1.3" fill="currentColor" font-family="Manrope,sans-serif"><textPath href="#pmc">TOSHKENT · MAROQAND · TOSHKENT ·</textPath></text>
+      <text x="35" y="34" text-anchor="middle" font-size="7.5" fill="currentColor" font-family="Manrope,sans-serif" font-weight="600">26.11</text><text x="35" y="42" text-anchor="middle" font-size="6" fill="currentColor" font-family="Manrope,sans-serif">2026</text></svg></div>
+    <div class="addr"><span id="introFor">Кому</span><b id="introName"></b></div>
+    <button class="wax" id="wax" aria-label="Открыть конверт · Ochish">Д·Н</button>
+  </div>
+  <div class="hint" id="introTap">Нажмите на печать</div>
+  <div class="demotag" id="introMusic">Музыка включается кнопкой ♪ в нижней панели</div>
+</div>
+<div class="qrwrap" id="qrWrap" hidden>
+  <div class="qrcard" role="dialog" aria-modal="true" aria-labelledby="qrName">
+    <span class="label" id="qrLbl">QR-код</span>
+    <h3 id="qrName"></h3>
+    <div id="qrBox" class="qrbox"></div>
+    <p id="qrUrl" class="qrurl"></p>
+    <p class="demotag" id="qrNote"></p>
+    <button class="pillbtn solid" id="qrClose">Готово</button>
+  </div>
+</div>
+
+<main id="guestView" class="guest"></main>
+<main id="qrView" class="qrview" hidden></main>
+<main id="adminView" class="admin" hidden></main>
+<main id="login" class="loginview"></main>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="sheet" id="menuSheet" hidden><span class="label" id="menuLbl">Главы приглашения</span><ol id="menuList"></ol><button class="bigtoggle" id="bigBtn" aria-pressed="false"><span>Aa</span><b id="bigLbl">Крупный текст</b></button></div>
+<nav class="dock" id="dock" aria-label="Навигация по приглашению" hidden>
+  <button class="music" id="musicBtn" aria-pressed="false" aria-label="Включить музыку"><span class="note">♪</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+  <button class="dk-cta" id="ctaBtn">Ответить</button>
+  <button class="dk" id="menuBtn" aria-expanded="false" aria-controls="menuSheet" aria-label="Оглавление"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 12h14M5 16h9"/></svg></button>
+</nav>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const W = {
+  groom:'Дилшоджон', bride:'Нодира',
+  start:new Date('2026-11-26T18:00:00+05:00'), year:2026, month:10, day:26,
+  dateText:'26 · 11 · 2026', weekday:'четверг',
+  venue:'Ресторан «Maroqand»', hall:'Банкетный зал', addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа', mapq:'Maroqand restaurant, улица Хидоятова, 20А, Ташкент',
+  rsvpBy:'15 ноября',
+  // times and icons; titles live in TX (per language)
+  program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note'],['21:00','cake']],
+  phone:'+998 33 333 12 12',
+  palette:['#f3ece0','#ecd3cf','#c9dbe3','#b4c2a9','#2f4f78']
+};
+// Maroqand hall (from the couple's video + description): entrance at the bottom; stage on the left wall and the couple's
+// table at the flower wall opposite it; dance floor between them; guest tables on both sides of the dance floor;
+// 5 tables for elder men along the far wall (right part), separated by a curtain. 20 tables × 10 seats.
+const VW=600,H=460;
+const TABLES=(()=>{const a=[];
+  [547,481,415,349,283,217,151,85].forEach(x=>a.push([x,72]));   // far side of the dance floor
+  [481,415,349,283,217,151,85].forEach(x=>a.push([x,278]));      // entrance side of the dance floor
+  [250,322,394,466,538].forEach(x=>a.push([x,392,true]));          // elder men, behind the curtain by the entrance wall
+  return a.map(([x,y,men],i)=>({id:i+1,x,y,cap:10,men:!!men}))})();
+let G=[];
+
+// guest type: whose side, which circle, and for relatives which line — used for seating
+const SIDES=[['g','Дилшоджон'],['b','Нодира'],['both','Общие']];
+const GROUPS=[['rel','Родственники','#1f4e79'],['fp','Друзья родителей','#c2785f'],['fr','Друзья','#b8955a'],['col','Коллеги','#3d8c96'],['nb','Соседи','#7f9a6c'],['oth','Другое','#9a8fa3']];
+const LINES=[['','линия —'],['f','по отцу'],['m','по матери']];
+const grp=k=>GROUPS.find(x=>x[0]===k)||GROUPS[5];
+function typeLabel(g){return [SIDES.find(x=>x[0]===g.side)?.[1],grp(g.group)[1].toLowerCase(),g.group==='rel'&&g.line?LINES.find(x=>x[0]===g.line)[1]:''].filter(Boolean).join(' · ')}
+let current=null,mode='guest',filter='all',tableFilter=null,fSide='all',fGroup='all',hallMode='rsvp';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NS='http://www.w3.org/2000/svg';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const plural=(n,a,b,c)=>{n=Math.abs(n)%100;const m=n%10;if(n>10&&n<20)return c;if(m>1&&m<5)return b;if(m==1)return a;return c};
+const C={line:'#e5d9c3',paper:'#fffcf5',bg:'#f6f0e4',ink:'#1c2a44',muted:'#7a7c87',rose:'#b8955a',roseSoft:'#f3e9d6',roseDeep:'#1f4e79',gold:'#b8955a',sage:'#3d8c96'};
+function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2200)}
+
+/* ---------- hall ---------- */
+function el(tag,a,p){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e}
+function txt(p,x,y,s,a){const t=el('text',{x,y,'text-anchor':'middle',...a},p);t.textContent=s;return t}
+function tstats(t){let yes=0,pend=0;G.forEach(g=>{if(g.table!==t.id)return;if(g.status==='yes')yes+=g.coming;else if(g.status!=='no')pend+=g.seats});return{yes,pend}}
+function drawHall(svg,o){
+  svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${VW} ${H}`);
+  const serif={'font-style':'italic','font-family':'Cormorant Garamond, Georgia, serif'};
+  const sans={'font-family':'Manrope, sans-serif'};
+  const defs=el('defs',{},svg);
+  const pat=el('pattern',{id:'parq'+(o.mine??'a'),width:14,height:14,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
+  el('rect',{width:14,height:14,fill:'#f3ead7'},pat);el('path',{d:'M0 7H14M7 0V7M0 14V7',stroke:'#e2d3b3','stroke-width':1},pat);
+  const rg=el('radialGradient',{id:'cloth'},defs);el('stop',{offset:'0','stop-color':'#ffffff'},rg);el('stop',{offset:'1','stop-color':'#f1e8d6'},rg);
+  // room
+  el('rect',{x:8,y:8,width:VW-16,height:H-16,rx:14,fill:'#fffcf5',stroke:C.gold,'stroke-width':1.2},svg);
+  el('rect',{x:14,y:14,width:VW-28,height:H-28,rx:10,fill:'none',stroke:C.line},svg);
+  // stage with drapes
+  el('rect',{x:14,y:110,width:36,height:130,rx:4,fill:'#e9eff6',stroke:C.roseDeep,'stroke-width':1},svg);
+  for(let y=110;y<240;y+=13)el('path',{d:`M50 ${y}q6 6.5 0 13`,fill:'none',stroke:C.roseDeep,'stroke-width':.8,opacity:.6},svg);
+  txt(svg,0,0,'СЦЕНА',{transform:'translate(34 175) rotate(-90)',fill:C.roseDeep,'font-size':10,'letter-spacing':'3',...sans});
+  // dance floor
+  el('rect',{x:66,y:132,width:448,height:86,rx:12,fill:`url(#parq${o.mine??'a'})`,stroke:'#dccaa4'},svg);
+  txt(svg,290,181,'танцпол',{fill:'#9a8253','font-size':17,...serif});
+  // flower wall + couple's table
+  el('rect',{x:570,y:96,width:18,height:158,rx:6,fill:'#f6e7e2'},svg);
+  for(let i=0;i<14;i++)el('circle',{cx:575+(i%2)*8,cy:104+i*10.8,r:4.2,fill:['#e7b9b4','#fffaf2','#c9d7c0'][i%3],stroke:'#e0c9c2','stroke-width':.5},svg);
+  el('rect',{x:528,y:122,width:34,height:106,rx:15,fill:'url(#cloth)',stroke:C.gold,'stroke-width':1.3},svg);
+  txt(svg,0,0,'Дилшоджон & Нодира',{transform:'translate(549 175) rotate(90)',fill:C.roseDeep,'font-size':13,...serif});
+  // curtain + men's section
+  el('path',{d:`M190 ${H-8} V326 H${VW-8}`,fill:'none',stroke:C.gold,'stroke-width':1.6,'stroke-dasharray':'1 4','stroke-linecap':'round'},svg);
+  txt(svg,394,344,'за занавесом · столы старших мужчин',{fill:C.muted,'font-size':9,'letter-spacing':'.5',...sans});
+  // entrance
+  el('rect',{x:20,y:H-12,width:96,height:8,fill:'#fffcf5'},svg);
+  el('path',{d:`M24 ${H-8}H116`,stroke:C.gold,'stroke-width':3,'stroke-linecap':'round'},svg);
+  txt(svg,68,H-20,'вход',{fill:C.roseDeep,'font-size':15,...serif});
+  // tables with chairs
+  TABLES.forEach(t=>{
+    const g=el('g',{class:o.onPick?'svgtable':''},svg);const s=tstats(t);
+    const mine=o.mine===t.id,dim=o.mine!=null&&!mine,sel=o.selected===t.id;
+    const gs=o.byGroup?seatColors(t):null;
+    if(mine)el('circle',{cx:t.x,cy:t.y,r:34,fill:'none',stroke:C.gold,'stroke-width':1,class:'pulse'},g);
+    for(let i=0;i<t.cap;i++){const a=-Math.PI/2+i*2*Math.PI/t.cap,x=t.x+Math.cos(a)*25,y=t.y+Math.sin(a)*25;
+      let fill='#eee6d6',stroke='#d8cbb0';
+      if(o.mine!=null){if(mine){fill=i<o.mySeats?C.roseDeep:'#c9d7e6';stroke=fill}}
+      else if(gs){const c=gs[i];if(c){if(c.yes){fill=c.col;stroke=c.col}else{fill='#fffcf5';stroke=c.col}}}
+      else{if(i<s.yes){fill=C.roseDeep;stroke=C.roseDeep}else if(i<s.yes+s.pend){fill='#fffcf5';stroke=C.gold}}
+      el('rect',{x:x-3.4,y:y-2.8,width:6.8,height:5.6,rx:1.8,fill,stroke,'stroke-width':1,transform:`rotate(${a*180/Math.PI+90} ${x} ${y})`,opacity:dim?.45:1},g)}
+    el('circle',{cx:t.x,cy:t.y,r:18,fill:mine?'#f4ead2':'url(#cloth)',stroke:mine||sel?C.roseDeep:(t.men?C.sage:'#d8cbb0'),'stroke-width':mine||sel?2:1,opacity:dim?.55:1},g);
+    txt(g,t.x,o.mine==null?t.y+1:t.y+5,t.id,{fill:mine?C.roseDeep:C.ink,'font-size':mine?17:14,'font-weight':mine?600:400,'font-family':'Cormorant Garamond, Georgia, serif',opacity:dim?.6:1});
+    if(o.mine==null){const over=s.yes+s.pend>t.cap;txt(g,t.x,t.y+10,`${s.yes}/${t.cap}`,{fill:over?'#b25c62':C.muted,'font-size':7,...sans})}
+    if(o.onPick){g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label','Стол '+t.id+(t.men?', старшие мужчины':''));
+      g.addEventListener('click',()=>o.onPick(t.id));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();o.onPick(t.id)}})}
+  });
+  // route from the entrance to the guest's table
+  if(o.mine!=null){const t=TABLES.find(x=>x.id===o.mine);
+    const d=t.men?`M40 ${H-16} V${H-24} H${t.x} V${t.y+26}`:t.y<200?`M40 ${H-16} V244 H${Math.min(t.x,500)} V112 H${t.x} V${t.y+26}`:`M40 ${H-16} V244 H${t.x} V${t.y-26}`;
+    el('path',{d,fill:'none',stroke:C.gold,'stroke-width':1.4,'stroke-dasharray':'2 5','stroke-linecap':'round',opacity:.7},svg);
+    el('path',{d,fill:'none',stroke:C.roseDeep,'stroke-width':2.2,'stroke-linecap':'round','stroke-linejoin':'round',class:'route',pathLength:1},svg);
+    const w=el('circle',{r:6,fill:C.roseDeep,stroke:'#fffcf5','stroke-width':2,cx:40,cy:H-16,class:'walker'},svg);
+    el('animateMotion',{dur:'2.6s',fill:'freeze',begin:'indefinite',path:d,calcMode:'spline',keyTimes:'0;1',keySplines:'.4 0 .2 1'},w);
+    w.setAttribute('cx',0);w.setAttribute('cy',0);w.setAttribute('transform',`translate(40 ${H-16})`);
+  }
+}
+function walk(svg){const r=svg.querySelector('.route');if(r)r.classList.add('go');const m=svg.querySelector('animateMotion'),w=svg.querySelector('.walker');
+  if(w)w.removeAttribute('transform');if(m&&m.beginElement&&!reduce)try{m.beginElement()}catch(_){}else if(w){/* no SMIL: park at the table */}}
+function seatColors(t){const a=[];G.filter(g=>g.table===t.id&&g.status!=='no').sort((x,y)=>(y.status==='yes')-(x.status==='yes'))
+  .forEach(g=>{const n=g.status==='yes'?g.coming:g.seats;for(let k=0;k<n;k++)a.push({col:grp(g.group)[2],yes:g.status==='yes'})});return a}
+function animateVB(svg,to,ms=1200){const from=svg.getAttribute('viewBox').split(' ').map(Number);if(reduce){svg.setAttribute('viewBox',to.join(' '));return}
+  const t0=performance.now();const st=n=>{const p=Math.min(1,(n-t0)/ms),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+  svg.setAttribute('viewBox',from.map((f,i)=>f+(to[i]-f)*e).join(' '));if(p<1)requestAnimationFrame(st)};requestAnimationFrame(st)}
+function zoomTo(svg,id){const t=TABLES.find(t=>t.id===id);const w=300,h=230;animateVB(svg,[Math.max(0,Math.min(VW-w,t.x-w/2)),Math.max(0,Math.min(H-h,t.y-h/2)),w,h])}
+
+/* ---------- pieces ---------- */
+const SPRIG=`<svg class="sprig draw" viewBox="0 0 240 90" aria-hidden="true">
+<path d="M20 80 C70 60 120 58 220 30"/><path d="M60 66 C58 52 64 42 76 36"/><path d="M110 56 C112 42 120 34 132 30"/><path d="M160 46 C158 34 166 26 178 22"/>
+<path class="leaf" d="M76 36 C70 28 72 20 82 16 C86 24 84 32 76 36Z"/><path class="leaf" d="M132 30 C128 20 132 14 142 12 C144 20 140 28 132 30Z"/>
+<path class="leaf" d="M178 22 C176 14 182 8 190 8 C190 16 186 20 178 22Z"/><path class="leaf" d="M90 62 C98 70 108 70 114 64 C106 58 96 58 90 62Z"/>
+<path class="leaf" d="M140 52 C148 60 158 60 164 54 C156 48 146 48 140 52Z"/><circle cx="220" cy="30" r="4" fill="${C.rose}" stroke="none"/></svg>`;
+/* ---------- ornaments ---------- */
+const star8=(cx,cy,r)=>`M${cx-r*.7} ${cy-r*.7}h${1.4*r}v${1.4*r}h${-1.4*r}zM${cx} ${cy-r}L${cx+r} ${cy}L${cx} ${cy+r}L${cx-r} ${cy}z`;
+const ARCH='M62 344V178Q62 98 150 52Q238 98 238 178V344';
+const PORTAL=`<svg viewBox="0 0 300 360" aria-hidden="true">
+<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5a8c"/><stop offset=".55" stop-color="#1a3a60"/><stop offset="1" stop-color="#13243d"/></linearGradient>
+<pattern id="pt" width="30" height="30" patternUnits="userSpaceOnUse"><g fill="none" stroke="#ecd7a0" stroke-width=".5" opacity=".32"><path d="M9 9H21V21H9Z"/><path d="M15 6.5 23.5 15 15 23.5 6.5 15Z"/><path d="M0 0 9 9M30 0 21 9M0 30 9 21M30 30 21 21"/></g></pattern></defs>
+<rect x="6" y="6" width="288" height="348" fill="#fffcf5"/>
+<path d="${ARCH}Z" fill="url(#pg)"/><path d="${ARCH}Z" fill="url(#pt)"/>
+${[[110,120],[190,128],[150,92],[96,170],[205,165],[128,300],[176,292]].map(([x,y],i)=>`<circle class="twinkle" cx="${x}" cy="${y}" r="${i%3?1.2:1.7}"/>`).join('')}
+<rect class="frame draw" x="6" y="6" width="288" height="348"/>
+<rect class="frame thin draw" x="16" y="16" width="268" height="328"/>
+<path class="frame draw" d="${ARCH}"/>
+<path class="frame thin draw" d="M50 344V176Q50 88 150 38Q250 88 250 176V344"/>
+<g fill="#b8955a"><path d="${star8(34,44,10)}"/><path d="${star8(266,44,10)}"/><path d="${star8(150,24,5)}"/></g>
+<g fill="#fffcf5"><circle cx="34" cy="44" r="2.4"/><circle cx="266" cy="44" r="2.4"/></g>
+<path d="M16 344H284" stroke="#b8955a" stroke-width="1.1"/></svg>`;
+const SKYLINE=`<svg class="skyline" viewBox="0 0 260 120" aria-hidden="true">
+<path class="dome" d="M40 70Q40 38 62 28Q84 38 84 70Z"/><path class="dome" d="M176 70Q176 38 198 28Q220 38 220 70Z"/>
+<path d="M62 28V20M198 28V20M62 30Q53 48 51 70M62 30Q71 48 73 70M198 30Q189 48 187 70M198 30Q207 48 209 70"/>
+<rect x="40" y="70" width="44" height="42"/><rect x="176" y="70" width="44" height="42"/>
+<rect x="94" y="34" width="72" height="78"/><path d="M94 46H166"/><path d="M108 112V76Q108 56 130 46Q152 56 152 76V112"/>
+<path d="M116 112V78Q116 62 130 54Q144 62 144 78V112"/>
+<path d="M22 112 25 50H33L36 112M24 50H34L29 40Z M227 112 230 50H238L241 112M229 50H239L234 40Z"/>
+<path d="M8 112H252"/></svg>`;
+/* ---------- language: Russian, Uzbek Latin, Uzbek Cyrillic (generated from Latin) ---------- */
+const LANGS=[['ru','Рус'],['uzl','O‘zb'],['uzc','Ўзб']];
+let lang='ru';
+const L2C=[["O‘","Ў"],["o‘","ў"],["G‘","Ғ"],["g‘","ғ"],["’","ъ"],["SH","Ш"],["Sh","Ш"],["sh","ш"],["CH","Ч"],["Ch","Ч"],["ch","ч"],
+  ["Yo","Ё"],["yo","ё"],["Yu","Ю"],["yu","ю"],["Ya","Я"],["ya","я"],["Ye","Е"],["ye","е"]];
+const L1={a:'а',b:'б',d:'д',e:'е',f:'ф',g:'г',h:'ҳ',i:'и',j:'ж',k:'к',l:'л',m:'м',n:'н',o:'о',p:'п',q:'қ',r:'р',s:'с',t:'т',u:'у',v:'в',x:'х',y:'й',z:'з'};
+function lat2cyr(s){
+  s=s.split('QR').join('\u0001');
+  L2C.forEach(([a,b])=>{s=s.split(a).join(b)});
+  s=s.replace(/(^|[^A-Za-zА-яЁёЎўҒғҚқҲҳ])([Ee])/g,(m,p,e)=>p+(e==='E'?'Э':'э'));
+  return s.replace(/[A-Za-z]/g,c=>{const lo=c.toLowerCase(),r=L1[lo]||c;return c===lo?r:r.toUpperCase()}).split('\u0001').join('QR');
+}
+const C2L={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'j',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'x',ц:'ts',ч:'ch',ш:'sh',щ:'sh',ъ:'',ы:'i',ь:'',э:'e',ю:'yu',я:'ya',ў:'o‘',қ:'q',ғ:'g‘',ҳ:'h'};
+function cyr2lat(s){return s.replace(/[А-яЁёЎўҚқҒғҲҳ]/g,(ch,i)=>{const lo=ch.toLowerCase();let r=C2L[lo]??ch;
+  if(lo==='е'&&(i===0||/[\s\-«(]/.test(s[i-1])))r='ye';return ch!==lo&&r?r[0].toUpperCase()+r.slice(1):r})}
+function conv(v){return Array.isArray(v)?v.map(conv):typeof v==='string'?lat2cyr(v):v}
+// guest names are entered once in Cyrillic; Uzbek views swap the Russian "и" for "va"
+function nm(s){if(lang==='ru')return s;s=s.replace(/ и /g,' va ');return lang==='uzl'?cyr2lat(s).replace(/ va /g,' va '):s.replace(/ va /g,' ва ')}
+const TX={
+ru:{
+  invite:'Приглашение на свадьбу',scroll:'листайте',to:'Вам письмо',tap:'Нажмите на печать',letterTag:'Приглашение',musicHint:'Музыка включается кнопкой ♪ в нижней панели',
+  groom:'Дилшоджон',bride:'Нодира',and:'и',dateLine:'26 ноября 2026',
+  c1:'Письмо',
+  p1:'Есть дни, которые хочется разделить с самыми близкими людьми. 26 ноября начнётся наша семья, и мы будем счастливы, если в этот вечер вы будете рядом с нами.',
+  p2:'Ваши тёплые слова и добрые пожелания будут для нас самым дорогим подарком.',
+  c2:'Дата',dateH:'Четверг, 26 ноября',month:'Ноябрь',wd:['пн','вт','ср','чт','пт','сб','вс'],
+  c3:'До встречи',
+  c4:'Программа',progH:'Как пройдёт вечер',
+  prog:[['Сбор гостей','Встречаемся, обнимаемся и фотографируемся'],['Выход молодожёнов','Тот самый момент, ради которого мы собрались'],
+        ['Праздничный ужин','Угощения, тёплые слова и поздравления'],['Первый танец','Наш танец, а потом танцуем все вместе'],['Свадебный торт','Сладкий финал вечера']],
+  c5:'Место',hall:'Банкетный зал',venue:'Ресторан «Maroqand»',addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа',yandex:'Яндекс Карты',
+  c6:'Дресс-код',dressH:'Нежные оттенки',
+  dressP:'Если захотите поддержать настроение вечера, выберите что-то из этих пастельных оттенков. Главное, чтобы вам было удобно и радостно.',
+  sw:['молочный','пудровый','небесный','шалфей','лазурный'],
+  c7:'Полезно знать',infoH:'Чтобы всё прошло легко',tbd:'уточняется',
+  info:[['Когда приезжать','Вечер начинается в 18:00 и продлится примерно до 21:30. Приезжайте чуть заранее, чтобы спокойно найти зал и поздороваться со всеми.',0],
+        ['Как добраться','Ресторан «Maroqand», ул. Хидоятова, 20А. Кнопки маршрута есть в главе «Место».',0],
+        ['Парковка','У ресторана есть парковка.',0],
+        ['Дети','Будем рады видеть вас вместе с детьми.',0],
+        ['Вопросы','Если что-то непонятно, звоните или пишите Дилшоджону: §',0]],
+  c8:'Ваш ответ',rsvpH:'Вы будете с нами?',
+  rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Пожалуйста, дайте знать до 15 ноября, чтобы мы успели всё подготовить.`,
+  coming:'Придут',swipe:'с радостью приду',decline:'К сожалению, не смогу',
+  c8y:'Ваше место',yesH:'Мы вас ждём',yourTable:'Ваш стол',seats:n=>`${n} ${plural(n,'место','места','мест')}`,
+  wMen:'в мужской части зала, за занавесом у входа',wFar:'в ряду у дальней стены, вдоль танцпола',wNear:'в ряду вдоль танцпола, со стороны входа',
+  noTable:'Рассадка ещё готовится. Загляните сюда ближе к свадьбе.',allHall:'Показать весь зал',myTable:'Мой стол',addCal:'Добавить в календарь',change:'Изменить ответ',
+  remind:'Напомнить в Telegram за день',reminded:'Напомним 25 ноября в Telegram',remindToast:'Готово: напомним за день до свадьбы',
+  noLbl:'Ваш ответ',noH:'Жаль, что вас не будет',noP:'Спасибо, что ответили. Мы будем вспоминать вас в этот день.',canCome:'Я всё-таки смогу прийти',
+  c9:'Пожелания',wishH:'Пара тёплых слов',wishP:'Ваше пожелание увидим только мы с Нодирой.',wishLbl:'Ваше пожелание',
+  wishPh:'Напишите нам что-нибудь от души…',signLbl:'Подпись:',send:'Отправить',wishErr:'Напишите хотя бы пару слов.',wishGot:'Ваше пожелание у нас',more:'Написать ещё',wishToast:'Пожелание отправлено',
+  sign:'С любовью и в ожидании встречи',yesToast:'Спасибо! Ждём вас 26 ноября',
+  ctaAns:'Ответить',ctaSeat:'Мой стол',ctaWish:'Пожелание',menuLbl:'Главы приглашения',
+  menu:['Дата','Главное','Письмо','Программа','Место','Полезно знать','Ваш ответ','Пожелания'],
+  nums:['первая','вторая','четвёртая','пятая','шестая','седьмая','восьмая','девятая'],
+  calTitle:'Свадьба Дилшоджона и Нодиры',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'до 15 ноября',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
+  qrInvite:'Приглашение на свадьбу',qrTitle:'Введите код с открытки',qrSub:'Код из четырёх знаков написан на вашей открытке под QR-кодом.',qrBtn:'Открыть приглашение',qrErr:'Такого кода нет. Проверьте буквы и цифры на открытке.',qrHelp:'Не получается? Позвоните Дилшоджону:'
+},
+uz:{
+  invite:'Nikoh to‘yiga taklifnoma',scroll:'pastga suring',to:'Sizga maktub',tap:'Muhrni bosing',letterTag:'Taklifnoma',musicHint:'Musiqani pastki paneldagi ♪ tugmasi bilan yoqing',
+  groom:'Dilshodjon',bride:'Nodira',and:'va',dateLine:'26-noyabr 2026',
+  c1:'Maktub',
+  p1:'Shunday kunlar borki, ularni eng yaqin insonlar bilan baham ko‘rgingiz keladi. 26-noyabr kuni bizning oilamiz boshlanadi va shu oqshom siz yonimizda bo‘lsangiz, biz cheksiz baxtiyor bo‘lamiz.',
+  p2:'Sizning iliq so‘zlaringiz va ezgu tilaklaringiz biz uchun eng qimmatli sovg‘a bo‘ladi.',
+  c2:'Sana',dateH:'26-noyabr, payshanba',month:'Noyabr',wd:['du','se','ch','pa','ju','sh','ya'],
+  c3:'Diydorgacha',
+  c4:'Dastur',progH:'Oqshom qanday o‘tadi',
+  prog:[['Mehmonlar yig‘ilishi','Diydor ko‘rishamiz va suratga tushamiz'],['Kelin-kuyovning kirib kelishi','Hammamiz kutgan o‘sha lahza'],
+        ['Bayram dasturxoni','Taomlar, iliq so‘zlar va tabriklar'],['Birinchi raqs','Avval bizning raqsimiz, keyin hammamiz raqsga tushamiz'],['To‘y torti','Oqshomning shirin yakuni']],
+  c5:'Manzil',hall:'Banket zali',venue:'«Maroqand» restorani',addr:'Toshkent, Hidoyatov ko‘chasi, 20A · Chig‘atoy-Oqtepa mahallasi',yandex:'Yandex Xaritalar',
+  c6:'Kiyinish uslubi',dressH:'Nozik ranglar',
+  dressP:'Agar oqshom kayfiyatini qo‘llab-quvvatlamoqchi bo‘lsangiz, shu pastel ranglardan birini tanlang. Eng muhimi, o‘zingizga qulay va quvonchli bo‘lsin.',
+  sw:['sutrang','upa','osmoniy','shalfey','lojuvard'],
+  c7:'Bilish foydali',infoH:'Hammasi oson o‘tishi uchun',tbd:'aniqlanmoqda',
+  info:[['Qachon kelish kerak','Oqshom 18:00 da boshlanadi va taxminan 21:30 gacha davom etadi. Zalni bemalol topish va hammaga salom berish uchun biroz oldinroq keling.',0],
+        ['Qanday borish mumkin','«Maroqand» restorani, Hidoyatov ko‘chasi, 20A. Yo‘nalish tugmalari «Manzil» bobida.',0],
+        ['Avtoturargoh','Restoran yonida avtoturargoh bor.',0],
+        ['Bolalar','Sizni farzandlaringiz bilan ko‘rishdan xursand bo‘lamiz.',0],
+        ['Savollar','Biror narsa tushunarsiz bo‘lsa, Dilshodjonga qo‘ng‘iroq qiling yoki yozing: §',0]],
+  c8:'Javobingiz',rsvpH:'Biz bilan bo‘lasizmi?',
+  rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Hammasini tayyorlashga ulgurishimiz uchun, iltimos, 15-noyabrgacha javob bering.`,
+  coming:'Keladi',swipe:'albatta boraman',decline:'Afsuski, kela olmayman',
+  c8y:'Joyingiz',yesH:'Sizni kutamiz',yourTable:'Stolingiz',seats:n=>`${n} ta joy`,
+  wMen:'erkaklar qismida, kirish yonidagi parda ortida',wFar:'uzoq devor yonidagi qatorda, raqs maydoni bo‘ylab',wNear:'raqs maydoni bo‘ylab, kirish tomondagi qatorda',
+  noTable:'O‘tirish tartibi hali tayyorlanmoqda. To‘yga yaqinroq bu yerga qayting.',allHall:'Butun zalni ko‘rsatish',myTable:'Mening stolim',addCal:'Taqvimga qo‘shish',change:'Javobni o‘zgartirish',
+  remind:'Telegramda bir kun oldin eslatish',reminded:'25-noyabr kuni Telegramda eslatamiz',remindToast:'Tayyor: to‘ydan bir kun oldin eslatamiz',
+  noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
+  c9:'Tilaklar',wishH:'Bir-ikki iliq so‘z',wishP:'Tilagingizni faqat biz ikkimiz ko‘ramiz.',wishLbl:'Tilagingiz',
+  wishPh:'Bizga chin dildan bir nima yozing…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Hech bo‘lmasa bir-ikki so‘z yozing.',wishGot:'Tilagingiz bizda',more:'Yana yozish',wishToast:'Tilak yuborildi',
+  sign:'Muhabbat va diydor ilinjida',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
+  ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
+  menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Tilaklar'],
+  nums:['birinchi','ikkinchi','to‘rtinchi','beshinchi','oltinchi','yettinchi','sakkizinchi','to‘qqizinchi'],
+  calTitle:'Dilshodjon va Nodiraning to‘yi',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'15-noyabrgacha',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
+  qrInvite:'Nikoh to‘yiga taklifnoma',qrTitle:'Taklifnomadagi kodni kiriting',qrSub:'To‘rt belgili kod taklifnomangizda QR-kod ostida yozilgan.',qrBtn:'Taklifnomani ochish',qrErr:'Bunday kod yo‘q. Taklifnomadagi harf va raqamlarni tekshiring.',qrHelp:'Ochilmayaptimi? Dilshodjonga qo‘ng‘iroq qiling:'
+}};
+function tr(k,...a){const D=lang==='ru'?TX.ru:TX.uz;let v=D[k]??TX.ru[k];if(typeof v==='function')v=v(...a);return lang==='uzc'?conv(v):v}
+const UNITS={ru:{d:['день','дня','дней'],h:['час','часа','часов'],m:['минута','минуты','минут'],s:['секунда','секунды','секунд']},uz:{d:'kun',h:'soat',m:'daqiqa',s:'soniya'}};
+function unit(k,n){if(lang==='ru')return plural(n,...UNITS.ru[k]);return lang==='uzc'?lat2cyr(UNITS.uz[k]):UNITS.uz[k]}
+function langSwitch(id){return `<div class="langs" role="group" aria-label="Язык · Til">${LANGS.map(([k,l])=>`<button data-lang="${k}" aria-pressed="${lang===k}">${l}</button>`).join('')}</div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;lang=b.dataset.lang;
+  try{localStorage.setItem('dn-lang-'+current,lang)}catch(_){}
+  document.documentElement.lang=lang==='ru'?'ru':'uz';if(mode==='qr'){renderQr();return}const y=scrollY;renderGuest();introTexts();window.scrollTo(0,y)});
+
+function calendar(){
+  const first=new Date(W.year,W.month,1);const lead=(first.getDay()+6)%7;const days=new Date(W.year,W.month+1,0).getDate();
+  let h=tr('wd').map(d=>`<span class="wd">${d}</span>`).join('');
+  for(let i=0;i<lead;i++)h+='<span></span>';
+  for(let d=1;d<=days;d++)h+=d===W.day?`<span class="day">${d}<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 6 C48 4 56 18 54 32 C52 48 36 56 22 52 C8 48 4 32 8 20 C12 10 22 5 36 8"/></svg></span>`:`<span>${d}</span>`;
+  return `<div class="cal rv"><div class="cal-head"><b>${tr('month')}</b><span class="label">${W.year}</span></div><div class="cal-grid">${h}</div></div>`;
+}
+const ICONS={
+  glass:'<path d="M6 3h4l-.4 5.5a1.6 1.6 0 0 1-3.2 0z"/><path d="M8 10v8M6 18h4"/><path d="M14 3h4l-.4 5.5a1.6 1.6 0 0 1-3.2 0z"/><path d="M16 10v8M14 18h4"/>',
+  rings:'<circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/><path d="M8 6.5 9 4.5l1 2"/>',
+  plate:'<circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2.8"/><path d="M3.5 4v5M3.5 9v11M21 4c-1.5 0-2 2.5-2 6h2v10"/>',
+  note:'<path d="M9 18V5l10-2v13"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/>',
+  cake:'<path d="M4 21h16M5 21v-6h14v6M7 15v-3.5h10V15M12 11.5V8.5"/><path d="M12 6.8c.8-.6.8-1.5 0-2.6-.8 1.1-.8 2 0 2.6z"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  pin:'<path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/>',
+  car:'<path d="M5 16V12l2-4.5h10L19 12v4M4 16h16M7.5 19v-3M16.5 19v-3"/><circle cx="8" cy="13" r=".6"/><circle cx="16" cy="13" r=".6"/>',
+  child:'<circle cx="12" cy="6" r="2.5"/><path d="M8 11h8M12 9v6M12 15l-3 5M12 15l3 5"/>',
+  chat:'<path d="M5 6h14v9H10l-4 3v-3H5z"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>'
+};
+const INFO_ICONS=['clock','pin','car','child','chat'];
+const icon=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||''}</svg>`;
+function drift(host,n,kind){if(!host||reduce)return;host.innerHTML=Array.from({length:n},()=>{
+  const l=Math.random()*100,d=(kind==='snow'?10:14)+Math.random()*12,dl=-Math.random()*d,s=.5+Math.random()*.8;
+  return `<i style="left:${l}%;animation-duration:${d}s;animation-delay:${dl}s;scale:${s}"></i>`}).join('')}
+const petals=(h,n)=>drift(h,n,'petal');
+function burst(){if(reduce||!document.body.animate)return;const x=innerWidth/2,y=innerHeight*.55;
+  for(let i=0;i<26;i++){const p=document.createElement('i');p.className='petal-fly';p.style.left=x+'px';p.style.top=y+'px';document.body.appendChild(p);
+    const a=Math.random()*Math.PI*2,d=110+Math.random()*200,r=Math.random()*600;
+    p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},
+      {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d-90}px) rotate(${r/2}deg)`,opacity:.95,offset:.45},
+      {transform:`translate(${Math.cos(a)*d*1.25}px,${Math.sin(a)*d+220}px) rotate(${r}deg)`,opacity:0}],
+      {duration:2300+Math.random()*900,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>p.remove()}}
+function where(t){return tr(t.men?'wMen':t.y<130?'wFar':'wNear')}
+let opened=false;
+let demoDay=false;
+const nowT=()=>demoDay?new Date('2026-11-26T19:10:00+05:00'):new Date();
+const isDay=()=>{const d=nowT();const t=new Date(d.getTime()+5*36e5).toISOString().slice(0,10);return t==='2026-11-26'};
+function progState(i){const n=nowT();const at=k=>new Date(`2026-11-26T${W.program[k][0]}:00+05:00`);
+  if(!isDay())return '';const st=at(i),nx=i+1<W.program.length?at(i+1):new Date(st.getTime()+90*6e4);return n>=nx?'done':n>=st?'now':''}
+function todayBlock(g,t){if(!isDay())return '';const n=nowT();const cur=W.program.findIndex((p,i)=>progState(i)==='now');
+  const q=encodeURIComponent(W.mapq);const nx=cur+1<W.program.length?cur+1:-1;
+  return `<section class="todaycard"><span class="label">26 · 11 · 2026</span><h2>${tr('today')}</h2>
+    <p>${n>=W.start?tr('started'):tr('todaySub')}</p>
+    ${cur>=0?`<div class="tnow"><div><span>${tr('nowLbl')}</span><b>${tr('prog')[cur][0]}</b></div>${nx>=0?`<div><span>${tr('nextLbl')} · ${W.program[nx][0]}</span><b>${tr('prog')[nx][0]}</b></div>`:''}</div>`:''}
+    <div class="btnrow">${g.status==='yes'&&t?`<button class="pillbtn solid" data-go="answer">${tr('ourTable')} · ${t.id}</button>`:''}
+      <a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}">${tr('route2')}</a></div></section>`}
+const cd=()=>{const ms=Math.max(0,W.start-nowT());return{d:Math.floor(ms/864e5),h:Math.floor(ms/36e5)%24,m:Math.floor(ms/6e4)%60,s:Math.floor(ms/1e3)%60}};
+function gcal(){const f=d=>d.toISOString().replace(/[-:]|\.\d{3}/g,'');const e=new Date(W.start.getTime()+3.5*36e5);
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(tr('calTitle'))+`&dates=${f(W.start)}/${f(e)}&location=`+encodeURIComponent(`${W.venue}, ${W.mapq}`)}
+
+/* ---------- guest ---------- */
+function rsvpBlock(g,t){
+  if(g.status==='yes') return `
+    <section class="chapter" id="seat"><span class="label">${tr('c8y')}</span>
+      <h2>${tr('yesH')}</h2>
+      ${t?`<div class="seatcard"><i class="seal-mini" aria-hidden="true">Д·Н</i><span class="label">${tr('yourTable')}</span><div class="num">${t.id}</div><p>${tr('seats',g.coming)}, ${where(t)}</p></div>
+      <div class="hall"><span class="label route-lbl">${tr('routeLbl')}</span><svg id="guestHall" role="img" aria-label="${tr('yourTable')} ${t.id}"></svg>
+        <div class="btnrow"><button class="pillbtn" id="zoomBtn" data-z="out">${tr('allHall')}</button></div></div>`
+      :`<div class="seatcard"><span class="label">${tr('yourTable')}</span><div class="num">…</div><p>${tr('noTable')}</p></div>`}
+      <div class="btnrow"><a class="pillbtn solid" href="${gcal()}" target="_blank" rel="noopener">${tr('addCal')}</a>
+        <button class="pillbtn tg${g.remind?' on':''}" id="remindBtn" aria-pressed="${!!g.remind}">${icon('bell')}${g.remind?tr('reminded'):tr('remind')}</button></div>
+      <button class="linkbtn" id="change">${tr('change')}</button>
+    </section>`;
+  if(g.status==='no') return `<section class="chapter" id="seat"><span class="label">${tr('noLbl')}</span><h2>${tr('noH')}</h2>
+      <p>${tr('noP')}</p><button class="linkbtn" id="change">${tr('canCome')}</button></section>`;
+  return `<section class="chapter" id="rsvp"><span class="label">${tr('c8')}</span><h2>${tr('rsvpH')}</h2>
+    <p>${tr('rsvpP',g.seats)}</p>
+    <div class="rsvp">
+      <div class="stepper"><span>${tr('coming')}</span><div class="ctrl"><button id="minus" aria-label="−">−</button><output id="cnt">${g.seats}</output><button id="plus" aria-label="+">+</button></div></div>
+      <div class="swipe" id="swipe"><div class="fill" id="fill"></div><div class="hint">${tr('swipe')}</div><button class="knob" id="knob" aria-label="${tr('swipe')}">♡</button></div>
+      <button class="linkbtn" id="decline">${tr('decline')}</button>
+    </div></section>`;
+}
+const words=t=>t.split(' ').map(w=>`<span class="lw">${w}</span>`).join(' ');
+function renderGuest(scrollId){
+  const g=G.find(x=>x.id===current);const t=TABLES.find(x=>x.id===g.table);const c=cd();
+  const q=encodeURIComponent(W.mapq);const greet=lang==='ru'?g.greet:(lang==='uzc'?'Қадрли':'Qadrli');
+  $('#guestView').innerHTML=`
+    <div class="langbar">${langSwitch()}</div>
+    ${todayBlock(g,t)}
+    <div class="heropin" id="heroPin"><section class="chapter hero${opened?' go':''}">
+      <span class="label">${tr('invite')}</span>
+      <div class="portal">${PORTAL}<h1 class="mono"><span>${tr('groom')}</span><span class="amp">${tr('and')}</span><span>${tr('bride')}</span></h1><div class="pdate">${tr('dateLine')}</div></div>
+      <div class="cue" aria-hidden="true">${tr('scroll')}<i></i></div>
+      <div class="petals" id="heroPetals" aria-hidden="true"></div>
+      <div class="hero-veil" aria-hidden="true"></div>
+    </section></div>
+    <section class="chapter winter night" id="ch-date"><div class="snow" id="snow" aria-hidden="true"></div><span class="label rv">${tr('c2')}</span>
+      <div class="bigdate rv"><span class="bd-side">${tr('wdName')}</span><b class="bd-num">26</b><span class="bd-side">18:00</span><span class="bd-my">${tr('monthYear')}</span></div>${calendar()}</section>
+    <section class="chapter night after-night"><span class="label rv">${tr('c3')}</span>
+      <div class="count rv">${['d','h','m','s'].map(k=>`<div><b id="cd-${k}">${c[k]}</b><small id="cl-${k}">${unit(k,c[k])}</small></div>`).join('')}</div>
+    </section>
+    <section class="chapter mainb-wrap" id="ch-main"><span class="label rv">${tr('mainLbl')}</span>
+      <div class="mainb rv">
+        <button class="mt mt-time" data-go="ch-program"><span class="k">${tr('startLbl')}</span><b>18:00</b><small>${tr('untilLbl')}</small></button>
+        ${g.status==='yes'&&t?`<button class="mt mt-table" data-go="answer"><span class="k">${tr('yourTable')}</span><b>${t.id}</b><small>${where(t)}</small></button>`
+          :g.status==='no'?`<button class="mt mt-time" data-go="wish"><span class="k">${tr('noLbl')}</span><b style="font-size:26px">${tr('wishH')}</b></button>`
+          :`<button class="mt mt-ans" data-go="answer"><span class="k">${tr('noLbl')}</span><b>${tr('ctaAns')}</b><small>${tr('answerBy')}</small></button>`}
+        <div class="mt mt-place"><span class="k">${tr('c5')}</span><b>${tr('venue')}</b><small>${tr('addr')}</small>
+          <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${encodeURIComponent(W.mapq)}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(W.mapq)}">Google Maps</a></div></div>
+        <button class="mt mt-info" data-go="ch-info"><span class="k">${tr('c7')}</span><small>${tr('infoTile')}</small><i aria-hidden="true">→</i></button>
+      </div>
+    </section>
+    <section class="chapter" id="ch-letter"><span class="label rv">${tr('c1')}</span>
+      <div class="letterbox rv"><div class="dear">${esc(greet)} ${esc(nm(g.name))},</div>
+        <p class="lit">${words(tr('p1'))}</p><p class="lit">${words(tr('p2'))}</p>${g.note?`<p class="pnote">${esc(g.note)}</p>`:''}
+        <div class="sig">${tr('groom')} ${tr('and')} ${tr('bride')}</div></div>
+    </section>
+    <div class="ticker" aria-hidden="true"><div class="tk-row">${(tr('groom')+' & '+tr('bride')+' ✦ ').repeat(6)}</div><div class="tk-row tk-2">${('26 · 11 · 2026 ✦ Maroqand ✦ ').repeat(8)}</div></div>
+    <section class="chapter archin" id="ch-program"><span class="label rv">${tr('c4')}</span><h2 class="rv">${tr('progH')}</h2>
+      <ol class="program rv">${W.program.map((p,i)=>`<li class="${progState(i)}"><time>${p[0]}</time><span class="ico">${icon(p[1])}</span><div><b>${tr('prog')[i][0]}</b><span>${tr('prog')[i][1]}</span></div></li>`).join('')}</ol>
+    </section>
+    <section class="chapter archin" id="ch-place"><span class="label rv">${tr('c5')}</span>
+      <div class="place rv">${SKYLINE}<span class="label">${tr('hall')}</span><h3>${tr('venue')}</h3><a class="map3d" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}" aria-label="${tr('yandex')}">
+        <div class="m-plane"><svg viewBox="0 0 300 200" aria-hidden="true">
+          <rect width="300" height="200" fill="#efe6d3"/>
+          <g fill="#e4d8bf">${[[10,10,70,50],[90,10,90,50],[190,10,100,50],[10,72,50,56],[70,72,110,56],[190,72,46,56],[246,72,44,56],[10,140,90,50],[110,140,70,50],[190,140,100,50]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4"/>`).join('')}</g>
+          <path d="M0 66H300M0 134H300M84 0V200M184 0V200" stroke="#fffaf0" stroke-width="10"/>
+          <path d="M0 66H300M0 134H300M84 0V200M184 0V200" stroke="#d9c79f" stroke-width="1" stroke-dasharray="4 6"/>
+          <path d="M240 200C236 160 228 120 214 100" stroke="#9fc1d6" stroke-width="7" fill="none" opacity=".7"/>
+          <rect x="196" y="76" width="36" height="48" rx="5" fill="#1f4e79"/><path d="M205 124V104Q205 94 214 90Q223 94 223 104V124" fill="none" stroke="#ecd7a0" stroke-width="1.4"/>
+          <path class="m-route" d="M20 200V134H184V100H196" fill="none" stroke="#b8955a" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 7"/>
+        </svg></div>
+        <div class="m-pin"><span>Maroqand</span></div><i class="m-ripple"></i>
+        <div class="m-cap">${tr('addr')}</div></a>
+        <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">Google Maps</a></div></div>
+    </section>
+    <section class="chapter archin" id="ch-info"><span class="label rv">${tr('c7')}</span><h2 class="rv">${tr('infoH')}</h2>
+      <ul class="info rv">${tr('info').map(([q,a,tbd],i)=>`<li><span class="ico">${icon(INFO_ICONS[i])}</span><div><b>${q}${tbd?` <em class="tbd">${tr('tbd')}</em>`:''}</b><span>${a.replace('§',`<span class="phone"><a href="tel:${W.phone.replace(/ /g,'')}">${W.phone}</a><button class="copybtn" data-copyphone>${tr('copy')}</button></span>`)}</span></div></li>`).join('')}</ul>
+    </section>
+    ${rsvpBlock(g,t)}
+    ${wishBlock(g)}
+    <section class="chapter"><p class="sign">${tr('sign')}<b>${tr('groom')} ${tr('and')} ${tr('bride')}</b></p></section>`;
+  const lite=matchMedia('(pointer:coarse)').matches;petals($('#heroPetals'),lite?5:9);drift($('#snow'),lite?12:22,'snow');
+  wireGuest(g,t);
+  updCta(g,t);buildMenu();
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.2});
+  document.querySelectorAll('#guestView .chapter:not(.hero) h2, #guestView .bd-num').forEach(h=>{h.classList.remove('rv');h.classList.add('sw','rv');
+    h.innerHTML=h.textContent.trim().split(/\s+/).map((w,i)=>`<span class="w"><span style="--i:${i}">${w}</span></span>`).join(' ')});
+  if(!reduce)document.querySelectorAll('#guestView .rv').forEach(n=>{if(n.getBoundingClientRect().top>innerHeight){n.classList.add('pre');io.observe(n)}});
+  if(g.status==='yes'&&t){const svg=$('#guestHall');drawHall(svg,{mine:t.id,mySeats:g.coming});
+    const zio=new IntersectionObserver(es=>{if(es[0].isIntersecting){zio.disconnect();walk(svg);svg.parentNode.classList.add('fly');setTimeout(()=>{svg.parentNode.classList.add('top');zoomTo(svg,t.id)},reduce?0:3000)}},{threshold:.45});zio.observe(svg)}
+  document.querySelectorAll('#guestView .rv:not(.pre)').forEach(n=>n.classList.add('in'));
+  FX.cache();onScroll();
+  if(scrollId){const n=$('#'+scrollId);n&&n.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+}
+/* ---------- wishes (private: only the couple sees them) ---------- */
+let WISHES=[];
+const fmtAt=d=>d.toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+function wishBlock(g){
+  const mine=WISHES.filter(w=>w.gid===g.id);
+  const sent=mine.length&&!g.writing;
+  return `<section class="chapter archin" id="wish"><span class="label rv">${tr('c9')}</span><h2 class="rv">${tr('wishH')}</h2>
+    <p class="rv">${tr('wishP')}</p>
+    ${sent?`<div class="wishsent rv"><span class="label">${tr('wishGot')}</span><blockquote>${esc(mine[mine.length-1].text)}</blockquote><span class="from">${esc(nm(g.name))}</span>
+      <button class="linkbtn" id="wishMore">${tr('more')}</button></div>`
+    :`<form class="wishform rv" id="wishForm">
+      <label for="wishText" class="label">${tr('wishLbl')}</label>
+      <textarea id="wishText" maxlength="500" rows="4" placeholder="${tr('wishPh')}"></textarea>
+      <div class="wishfoot"><span class="from">${tr('signLbl')} <b>${esc(nm(g.name))}</b></span><button class="pillbtn solid" type="submit">${tr('send')}</button></div>
+      <p class="formerr" id="wishErr" hidden>${tr('wishErr')}</p>
+    </form>`}
+  </section>`;
+}
+function wireWish(g){
+  const f=$('#wishForm');
+  if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=$('#wishText').value.trim();
+    if(v.length<2){$('#wishErr').hidden=false;return}
+    WISHES.push({gid:g.id,text:v,at:new Date()});g.writing=false;toast(tr('wishToast'));renderGuest('wish')});
+  const m=$('#wishMore');if(m)m.onclick=()=>{g.writing=true;renderGuest('wish')};
+}
+/* ---------- music: gentle music box, guest switches it on ---------- */
+const Music={ac:null,master:null,on:false,timer:null,VOL:.16};
+function mtof(m){return 440*Math.pow(2,(m-69)/12)}
+function mbTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.createOscillator(),gn=a.createGain();
+  o.type='sine';o2.type='sine';o.frequency.value=f;o2.frequency.value=f*2.01;
+  const g2=a.createGain();g2.gain.value=.18;o2.connect(g2).connect(gn);o.connect(gn);gn.connect(Music.bus);
+  gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+.012);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)}
+function phrase(t0){
+  const beat=.62;
+  const bars=[[48,[64,67,72],[76,74,72]],[45,[64,69,72],[72,71,69]],[41,[65,69,72],[69,72,77]],[43,[62,67,71],[74,72,71]],
+              [48,[64,67,72],[72,76,79]],[45,[64,69,72],[77,76,72]],[50,[65,69,74],[74,77,76]],[43,[62,67,71],[74,71,67]]];
+  bars.forEach((b,i)=>{const t=t0+i*3*beat;
+    mbTone(mtof(b[0]),t,2.2,.5);
+    b[1].forEach((n,j)=>mbTone(mtof(n),t+beat*(1+j*.66),1.2,.18));
+    b[2].forEach((n,j)=>mbTone(mtof(n),t+j*beat,j===0?1.8:1.3,.42));
+  });
+  return bars.length*3*beat;
+}
+function loop(){if(!Music.on)return;const len=phrase(Music.ac.currentTime+.08);Music.timer=setTimeout(loop,len*1000-120)}
+function toggleMusic(force){
+  const want=force===undefined?!Music.on:force;const b=$('#musicBtn');
+  if(want){
+    try{
+      if(!Music.ac){const A=window.AudioContext||window.webkitAudioContext;Music.ac=new A();
+        Music.master=Music.ac.createGain();Music.master.connect(Music.ac.destination);
+        Music.bus=Music.ac.createGain();const d=Music.ac.createDelay(),fb=Music.ac.createGain();d.delayTime.value=.31;fb.gain.value=.28;
+        Music.bus.connect(Music.master);Music.bus.connect(d);d.connect(fb).connect(d);d.connect(Music.master)}
+      Music.ac.resume();Music.master.gain.cancelScheduledValues(Music.ac.currentTime);
+      Music.master.gain.setValueAtTime(0,Music.ac.currentTime);Music.master.gain.linearRampToValueAtTime(Music.VOL,Music.ac.currentTime+1.2);
+      Music.on=true;loop();
+    }catch(e){toast('Музыка недоступна в этом браузере');return}
+  }else if(Music.ac){Music.on=false;clearTimeout(Music.timer);const t=Music.ac.currentTime;Music.master.gain.cancelScheduledValues(t);Music.master.gain.setValueAtTime(Music.master.gain.value,t);Music.master.gain.linearRampToValueAtTime(0,t+.6)}
+  Music.on=want&&!!Music.ac;try{localStorage.setItem('dn-music',Music.on?'1':'')}catch(_){}b.setAttribute('aria-pressed',Music.on);b.setAttribute('aria-label',Music.on?'Выключить музыку':'Включить музыку');
+}
+
+function wireGuest(g,t){
+  wireWish(g);
+  const ch=$('#change');if(ch)ch.onclick=()=>{g.status='opened';g.coming=0;renderGuest('rsvp')};
+  const zb=$('#zoomBtn');if(zb)zb.onclick=()=>{const svg=$('#guestHall');if(zb.dataset.z==='out'){animateVB(svg,[0,0,VW,H],900);zb.dataset.z='in';zb.textContent=tr('myTable')}else{zoomTo(svg,t.id);zb.dataset.z='out';zb.textContent=tr('allHall')}};
+  // demo: in the live site this opens the wedding bot in Telegram, the guest taps Start, and the bot can message them the day before
+  const rb=$('#remindBtn');if(rb)rb.onclick=()=>{g.remind=!g.remind;if(g.remind)toast(tr('remindToast'));rb.classList.toggle('on',g.remind);rb.setAttribute('aria-pressed',g.remind);rb.innerHTML=icon('bell')+(g.remind?tr('reminded'):tr('remind'))};
+  const dec=$('#decline');if(dec)dec.onclick=()=>{g.status='no';g.coming=0;renderGuest('seat')};
+  if(!$('#swipe'))return;
+  let n=g.seats;const cnt=$('#cnt'),mi=$('#minus'),pl=$('#plus');
+  const upd=()=>{cnt.textContent=n;mi.disabled=n<=1;pl.disabled=n>=g.seats};upd();
+  mi.onclick=()=>{n=Math.max(1,n-1);upd()};pl.onclick=()=>{n=Math.min(g.seats,n+1);upd()};
+  const sw=$('#swipe'),kn=$('#knob'),fill=$('#fill');let sx=null,dx=0;const max=()=>sw.clientWidth-62;
+  const set=v=>{kn.style.transform=`translateX(${v}px)`;fill.style.width=(v+58)+'px'};
+  const yes=()=>{g.status='yes';g.coming=n;try{navigator.vibrate&&navigator.vibrate(30)}catch(_){}renderGuest();thanks(g,TABLES.find(x=>x.id===g.table))};
+  kn.addEventListener('pointerdown',e=>{sx=e.clientX;kn.setPointerCapture(e.pointerId);kn.classList.remove('snap');fill.classList.remove('snap')});
+  kn.addEventListener('pointermove',e=>{if(sx==null)return;dx=Math.max(0,Math.min(max(),e.clientX-sx));set(dx)});
+  const end=()=>{if(sx==null)return;sx=null;if(dx>=max()*.85){set(max());setTimeout(yes,200)}else{kn.classList.add('snap');fill.classList.add('snap');dx=0;set(0);fill.style.width='0'}};
+  kn.addEventListener('pointerup',end);kn.addEventListener('pointercancel',end);
+  kn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '||e.key==='ArrowRight'){e.preventDefault();set(max());setTimeout(yes,200)}});
+}
+setInterval(()=>{if(mode!=='guest'||!$('#cd-d'))return;const c=cd();
+  for(const k of ['d','h','m','s']){const b=$('#cd-'+k);if(b.textContent!==String(c[k])){b.textContent=c[k];b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');$('#cl-'+k).textContent=unit(k,c[k])}}},1000);
+
+
+/* ---------- 1) gold that catches the light: phone tilt, finger or mouse ---------- */
+const Tilt={x:0,y:0,tx:0,ty:0,src:null,
+  set(x,y,src){if(this.src==='gyro'&&src!=='gyro')return;this.src=src;this.tx=Math.max(-1,Math.min(1,x));this.ty=Math.max(-1,Math.min(1,y));document.documentElement.classList.add('tilt');if(!this.raf)this.loop()},
+  loop(){this.raf=requestAnimationFrame(()=>{this.raf=0;this.x+=(this.tx-this.x)*.12;this.y+=(this.ty-this.y)*.12;
+    const tx=this.x.toFixed(3),ty=this.y.toFixed(3);document.querySelectorAll('.seatcard,.foil,.bd-num,.count,.th-card').forEach(n=>{n.style.setProperty('--tx',tx);n.style.setProperty('--ty',ty)});
+    if(Math.abs(this.tx-this.x)+Math.abs(this.ty-this.y)>.002)this.loop()})}};
+addEventListener('deviceorientation',e=>{if(e.gamma==null)return;Tilt.set(e.gamma/30,(e.beta-45)/30,'gyro')});
+addEventListener('pointermove',e=>{if(reduce||e.pointerType==='touch')return;Tilt.set(e.clientX/innerWidth*2-1,e.clientY/innerHeight*2-1,'pointer')},{passive:true});
+addEventListener('touchmove',e=>{if(reduce||Tilt.src==='gyro')return;const t=e.touches[0];Tilt.set(t.clientX/innerWidth*2-1,t.clientY/innerHeight*2-1,'touch')},{passive:true});
+function askMotion(){try{if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(_){}}
+
+/* ---------- 6) monogram assembled from gold dust ---------- */
+function dust(){const portal=document.querySelector('.hero .portal'),mono=portal&&portal.querySelector('.mono');if(!mono||reduce)return;
+  const cv=document.createElement('canvas');cv.className='dust';portal.appendChild(cv);const R=portal.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=R.width*dpr;cv.height=R.height*dpr;const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  const off=document.createElement('canvas'),W2=Math.round(R.width),H2=Math.round(R.height);off.width=W2;off.height=H2;const o=off.getContext('2d');
+  const fs=parseFloat(getComputedStyle(mono).fontSize);o.font=`${fs}px ${getComputedStyle(mono).fontFamily}`;o.textAlign='center';o.textBaseline='middle';o.fillStyle='#000';
+  const pr=portal.getBoundingClientRect();[...mono.children].forEach(sp=>{const cs=getComputedStyle(sp),r=sp.getBoundingClientRect();o.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;o.fillText(sp.textContent,W2/2,r.top-pr.top+r.height/2)});const data=o.getImageData(0,0,W2,H2).data;const pts=[];
+  for(let y=0;y<H2;y+=3)for(let x=0;x<W2;x+=3)if(data[(y*W2+x)*4+3]>128)pts.push([x,y]);
+  const N=Math.min(matchMedia('(pointer:coarse)').matches?650:950,pts.length);const P=[];for(let i=0;i<N;i++){const t=pts[Math.floor(i*pts.length/N)];
+    P.push({x:Math.random()*W2,y:H2*(.2+Math.random()*.8),tx:t[0],ty:t[1],d:Math.random()*.5,s:.6+Math.random()*1.2})}
+  mono.classList.add('hidden-for-dust');const t0=performance.now(),D=1900;
+  (function f(now){const k=Math.min(1,(now-t0)/D);ctx.clearRect(0,0,W2,H2);
+    for(const p of P){const e=Math.min(1,Math.max(0,(k-p.d*.5)/(1-p.d*.5)));const q=1-Math.pow(1-e,3);
+      const x=p.x+(p.tx-p.x)*q,y=p.y+(p.ty-p.y)*q;ctx.fillStyle=`rgba(${236-q*40},${215-q*40},${160-q*50},${.35+q*.65})`;ctx.fillRect(x,y,p.s,p.s)}
+    if(k<1)requestAnimationFrame(f);else{mono.classList.remove('hidden-for-dust');cv.style.opacity=0;setTimeout(()=>cv.remove(),900)}})(t0)}
+
+/* ---------- 9) gentle sounds (only for guests who switched music on) ---------- */
+function remembersMusic(){try{return !!localStorage.getItem('dn-music')}catch(_){return false}}
+function sfx(kind){try{if(!Music.ac){const A=window.AudioContext||window.webkitAudioContext;Music.ac=new A();Music.master=Music.ac.createGain();Music.master.connect(Music.ac.destination);Music.master.gain.value=0;
+    Music.bus=Music.ac.createGain();const d=Music.ac.createDelay(),fb=Music.ac.createGain();d.delayTime.value=.31;fb.gain.value=.28;Music.bus.connect(Music.master);Music.bus.connect(d);d.connect(fb).connect(d);d.connect(Music.master)}
+  const a=Music.ac;a.resume();const out=a.createGain();out.connect(a.destination);const t=a.currentTime;
+  if(kind==='rustle'){const len=.45,b=a.createBuffer(1,a.sampleRate*len,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=(Math.random()*2-1)*Math.pow(1-i/c.length,2);
+    const n=a.createBufferSource();n.buffer=b;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=2600;f.Q.value=.7;n.connect(f).connect(out);out.gain.value=.05;n.start(t)}
+  else{[1318.5,1975.5,2637].forEach((fr,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=fr;o.connect(g).connect(out);
+    g.gain.setValueAtTime(0,t+i*.07);g.gain.linearRampToValueAtTime(.05/(i+1),t+i*.07+.01);g.gain.exponentialRampToValueAtTime(.0001,t+i*.07+1.6);o.start(t+i*.07);o.stop(t+i*.07+1.7)})}}catch(_){}}
+
+/* ---------- 8) evening mode: after sunset in Tashkent, or by the demo switch ---------- */
+function eveningAuto(){const h=(new Date().getUTCHours()+5)%24;return h>=18||h<6}
+function setEvening(on){document.documentElement.classList.toggle('evening',on)}
+
+/* ---------- thank-you moment after "I'm coming" ---------- */
+function thanks(g,t){const o=document.createElement('div');o.className='thanks';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+  o.innerHTML=`<div class="petals" aria-hidden="true"></div><div class="th-seal">Д·Н</div><h2 class="th-h">${tr('thx')}</h2><p class="th-p">${tr('thxSub')}</p>
+    ${t?`<div class="th-card"><span class="label">${tr('yourTable')}</span><b>${t.id}</b></div>`:''}
+    <button class="pillbtn th-btn">${t?tr('seeTable'):'OK'}</button>`;
+  document.body.appendChild(o);drift(o.querySelector('.petals'),14,'petal');burst();
+  requestAnimationFrame(()=>o.classList.add('on'));if(Music.on)setTimeout(()=>sfx('chime'),350);
+  const close=()=>{o.classList.remove('on');setTimeout(()=>o.remove(),500);const n=$('#seat');n&&n.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})};
+  o.querySelector('.th-btn').onclick=close;o.querySelector('.th-btn').focus()}
+
+/* ---------- dock, contents, progress ---------- */
+let ctaTarget='rsvp';
+function updCta(g,t){const b=$('#ctaBtn');
+  if(g.status==='yes'){ctaTarget='seat';b.textContent=t?`${tr('ctaSeat')} · ${t.id}`:tr('ctaSeat')}
+  else if(g.status==='no'){ctaTarget='wish';b.textContent=tr('ctaWish')}
+  else{ctaTarget='rsvp';b.textContent=tr('ctaAns')}
+  onScroll()}
+const CH_IDS=['ch-date','ch-main','ch-letter','ch-program','ch-place','ch-info','answer','wish'];
+function buildMenu(){$('#menuLbl').textContent=tr('menuLbl');$('#bigLbl').textContent=tr('big');
+  $('#menuList').innerHTML=CH_IDS.map((id,i)=>`<li><button data-go="${id}">${tr('menu')[i]}<span>${String(i+1).padStart(2,'0')}</span></button></li>`).join('')}
+function goTo(id){const n=id==='answer'?($('#rsvp')||$('#seat')):$('#'+id);n&&n.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+function menu(open){$('#menuSheet').hidden=!open;$('#menuBtn').setAttribute('aria-expanded',open)}
+$('#menuBtn').onclick=e=>{e.stopPropagation();menu($('#menuSheet').hidden)};
+$('#menuList').onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;menu(false);goTo(b.dataset.go)};
+document.addEventListener('click',e=>{if(!$('#menuSheet').hidden&&!e.target.closest('#menuSheet,#menuBtn'))menu(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu(false);closeQr()}});
+$('#ctaBtn').onclick=()=>goTo(ctaTarget);
+function setBig(on){document.documentElement.classList.toggle('big',on);$('#bigBtn').setAttribute('aria-pressed',on);try{localStorage.setItem('dn-big',on?'1':'')}catch(_){}}
+try{if(localStorage.getItem('dn-big'))setBig(true)}catch(_){}
+$('#bigBtn').onclick=()=>setBig(!document.documentElement.classList.contains('big'));
+document.addEventListener('click',e=>{const b=e.target.closest('.todaycard [data-go], .mainb [data-go]');if(b)goTo(b.dataset.go)});
+setEvening(eveningAuto());
+
+document.addEventListener('click',e=>{if(!e.target.closest('[data-copyphone]'))return;
+  const sel=()=>{const a=e.target.closest('.phone').querySelector('a');const r=document.createRange();r.selectNodeContents(a);const s=getSelection();s.removeAllRanges();s.addRange(r)};
+  try{navigator.clipboard.writeText(W.phone).then(()=>toast(tr('copied')),sel)}catch(_){sel()}});
+/* scroll-linked effects: hero zoom, letter highlight, ticker, program thread */
+const FX={els:{},cache(){const q=s=>document.querySelector(s);this.els={pin:q('#heroPin'),hero:q('.hero'),lit:[...document.querySelectorAll('#guestView .lw')],letter:q('#ch-letter .letterbox'),
+  pre:[...document.querySelectorAll('#guestView .rv.pre:not(.in)')],arch:[...document.querySelectorAll('#guestView .archin:not(.on)')],sky:q('#guestView .sky'),stamp:[...document.querySelectorAll('#guestView .seatcard:not(.stamped)')],tk:[...document.querySelectorAll('.tk-row')],tkBox:q('.ticker'),prog:q('#guestView .program'),pli:[...document.querySelectorAll('#guestView .program li')]}},
+  run(){const e=this.els,H=innerHeight,cl=v=>Math.min(1,Math.max(0,v));if(mode!=='guest')return;
+    // --- read phase (no writes) ---
+    const top=n=>n.getBoundingClientRect().top;
+    const arch=e.arch&&e.arch.length?e.arch.map(top):null, stamp=e.stamp&&e.stamp.length?e.stamp.map(top):null, pre=e.pre&&e.pre.length?e.pre.map(top):null;
+    const pin=e.pin?e.pin.getBoundingClientRect():null, let_=e.letter?e.letter.getBoundingClientRect():null, tk=e.tkBox?e.tkBox.getBoundingClientRect():null;
+    const pr=e.prog?e.prog.getBoundingClientRect():null, pli=e.prog?e.pli.map(top):null;
+    // --- write phase ---
+    if(arch)e.arch=e.arch.filter((n,i)=>arch[i]<H*.92?(n.classList.add('on'),false):true);
+    if(stamp)e.stamp=e.stamp.filter((n,i)=>stamp[i]<H*.75?(n.classList.add('stamped'),false):true);
+    if(pre)e.pre=e.pre.filter((n,i)=>n.classList.contains('in')?false:pre[i]<H*.9?(n.classList.add('in'),false):true);
+    if(pin&&e.hero){const p=cl(-pin.top/(pin.height-H));if(p!==e._p){e._p=p;e.hero.style.setProperty('--p',p.toFixed(4))}}
+    if(let_&&e.lit.length){const k=reduce?1:cl((H*.82-let_.top)/(let_.height*.85));const n=Math.round(k*e.lit.length);
+      if(n!==e._n){e._n=n;e.lit.forEach((w,i)=>{const on=i<n;if(w._on!==on){w._on=on;w.classList.toggle('on',on)}})}}
+    if(tk&&tk.bottom>0&&tk.top<H){const x=(tk.top-H)*.45;e.tk[0]&&(e.tk[0].style.transform=`translate3d(${x-200}px,0,0)`);e.tk[1]&&(e.tk[1].style.transform=`translate3d(${-x-600}px,0,0)`)}
+    if(pr){e.prog.style.setProperty('--pf',cl((H*.62-pr.top)/pr.height).toFixed(3));e.pli.forEach((li,i)=>{const on=pli[i]<H*.62;if(li._on!==on){li._on=on;li.classList.toggle('pass',on)}})}}};
+let fxTick=false;
+function onScroll(){if(!fxTick){fxTick=true;requestAnimationFrame(()=>{fxTick=false;frame()})}}
+function frame(){
+  const tgt=$('#'+ctaTarget),tr_=tgt?tgt.getBoundingClientRect():null,max=document.documentElement.scrollHeight-innerHeight;FX.run();
+  $('#progress').style.transform=`scaleX(${mode==='guest'&&max>0?Math.min(1,scrollY/max):0})`;
+  const show=mode==='guest'&&opened&&scrollY>320;const d=$('#dock');
+  if(d.hidden===show)d.hidden=!show;
+  if(!show)menu(false);
+  if(tr_)$('#ctaBtn').classList.toggle('off',tr_.top<innerHeight*.85&&tr_.bottom>innerHeight*.15)
+}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);
+
+/* ---------- envelope ---------- */
+function introTexts(){const g=G.find(x=>x.id===current);
+  $('#introTo').textContent=tr('to');$('#introFor').textContent=tr('forWhom');$('#introName').textContent=nm(g.name);$('#introTap').textContent=tr('tap');
+  $('#introLetter').textContent=tr('letterTag');$('#introMusic').textContent=tr('musicHint');$('#introLangs').innerHTML=langSwitch()}
+function pickLang(g){let l=g.lang||'ru';try{l=localStorage.getItem('dn-lang-'+g.id)||l}catch(_){}lang=l;document.documentElement.lang=lang==='ru'?'ru':'uz'}
+function showIntro(){const g=G.find(x=>x.id===current);introTexts();opened=false;
+  const h=document.querySelector('.hero');h&&h.classList.remove('go');
+  const it=$('#intro');it.hidden=false;it.classList.remove('gone','zoom');$('#env').classList.remove('open');
+  let saved=null;try{saved=localStorage.getItem('dn-lang-'+current)}catch(_){}it.classList.toggle('choose',!saved);
+  document.querySelectorAll('[data-pick]').forEach(b=>b.classList.toggle('pre',b.dataset.pick===(g.lang||'ru')));}
+document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{lang=b.dataset.pick;try{localStorage.setItem('dn-lang-'+current,lang)}catch(_){}
+  document.documentElement.lang=lang==='ru'?'ru':'uz';renderGuest();introTexts();$('#intro').classList.remove('choose')});
+$('#wax').onclick=()=>{askMotion();const g=G.find(x=>x.id===current);if(g.status==='none')g.status='opened';
+  $('#env').classList.add('open');opened=true;
+  setTimeout(()=>$('#intro').classList.add('zoom'),reduce?0:1450);
+  setTimeout(()=>{const h=document.querySelector('.hero');h&&h.classList.add('go');dust()},reduce?0:2000);
+  if(remembersMusic()){sfx('rustle');setTimeout(()=>toggleMusic(true),900)}
+  setTimeout(()=>{$('#intro').classList.add('gone');window.scrollTo(0,0)},reduce?0:2050);
+  setTimeout(()=>{$('#intro').hidden=true},reduce?0:3000)};
+/* ---------- admin ---------- */
+const ST={yes:'Придёт',no:'Не придёт',opened:'Открыл, молчит',none:'Не открывал'};
+function renderAdmin(){
+  const invited=G.reduce((a,g)=>a+g.seats,0);
+  const yes=G.filter(g=>g.status==='yes').reduce((a,g)=>a+g.coming,0);
+  const no=G.filter(g=>g.status==='no').reduce((a,g)=>a+g.seats,0);
+  const wait=G.filter(g=>g.status==='none'||g.status==='opened').reduce((a,g)=>a+g.seats,0);
+  const unseated=G.filter(g=>!g.table&&g.status!=='no').length;const pct=v=>Math.round(v/invited*100);
+  let list=G.filter(g=>filter==='all'||(filter==='wait'?(g.status==='none'||g.status==='opened'):g.status===filter));
+  if(tableFilter!=null)list=list.filter(g=>g.table===tableFilter);
+  if(fSide!=='all')list=list.filter(g=>g.side===fSide);
+  if(fGroup!=='all')list=list.filter(g=>g.group===fGroup);
+  const opts=g=>`<option value="">без стола</option>`+TABLES.map(t=>`<option value="${t.id}" ${g.table===t.id?'selected':''}>Стол ${t.id}</option>`).join('');
+  $('#adminView').innerHTML=`
+    <div class="admin-head"><div><div class="label">Свадьба ${W.groom} и ${W.bride} · 26 ноября 2026</div><h1>Наша панель</h1></div><div class="headacts"><span class="demotag">${G.length} приглашений · ${invited} мест</span><button class="pillbtn solid" id="commonQr">Общий QR для открыток</button><button class="pillbtn" id="reload">Обновить</button><button class="pillbtn" id="botSetup">Подключить бота</button><button class="pillbtn" id="logout">Выйти</button></div></div>
+    <section class="pane addpane"><div class="pane-head"><h2>Добавить гостя</h2><span class="demotag">код подставлен из вашего листа кодов — первый свободный</span></div>
+      <form id="addForm" class="addform">
+        <label>Код<input id="aCode" maxlength="6" value="${nextCode()}" autocomplete="off"></label>
+        <label class="wide">Имя, как на приглашении<input id="aName" placeholder="Алишер ака и Нигора опа" autocomplete="off"></label>
+        <label>Обращение<select id="aGreet">${['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'].map(x=>`<option>${x}</option>`).join('')}</select></label>
+        <label>Мест<input id="aSeats" type="number" min="1" max="20" value="2"></label>
+        <label>Сторона<select id="aSide">${SIDES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
+        <label>Группа<select id="aGrp">${GROUPS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
+        <label>Язык<select id="aLang">${LANGS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
+        <button class="pillbtn solid" type="submit">Добавить</button>
+      </form>
+      <details class="import"><summary>Загрузить сразу много гостей списком</summary>
+        <p class="demotag">Каждая строка: <b>КОД ; Имя ; мест</b>. Например: <code>DA32; Алишер ака и Нигора опа; 2</code></p>
+        <textarea id="impText" rows="5" placeholder="DA32; Алишер ака и Нигора опа; 2&#10;4WHZ; Семья Каримовых; 4"></textarea>
+        <button class="pillbtn solid" id="impBtn">Загрузить</button></details>
+    </section>
+    <section class="stats" aria-label="Сводка">
+      <div class="stat"><b>${yes}</b><small>придут</small><div class="bar"><i style="width:${pct(yes)}%;background:var(--ok)"></i></div></div>
+      <div class="stat"><b>${wait}</b><small>ждём ответа</small><div class="bar"><i style="width:${pct(wait)}%;background:var(--gold)"></i></div></div>
+      <div class="stat"><b>${no}</b><small>не смогут</small><div class="bar"><i style="width:${pct(no)}%;background:var(--no)"></i></div></div>
+      <div class="stat"><b>${unseated}</b><small>${plural(unseated,'приглашение','приглашения','приглашений')} без стола</small><div class="bar"><i style="width:${unseated?100:0}%;background:var(--muted)"></i></div></div>
+    </section>
+    <div class="panes">
+      <section class="pane"><div class="pane-head"><h2>Зал</h2><div class="seg mini" role="group" aria-label="Раскраска зала"><button data-hm="rsvp" aria-pressed="${hallMode==='rsvp'}">По ответам</button><button data-hm="group" aria-pressed="${hallMode==='group'}">По группам</button></div>${tableFilter!=null?'<button class="pillbtn" id="clearT">Все столы</button>':''}</div>
+        <div class="legend">${hallMode==='group'
+          ?GROUPS.map(([k,l,c])=>`<span><i style="background:${c}"></i>${l}</span>`).join('')+'<span><i style="border:1.5px solid var(--muted)"></i>контур — ещё не ответили</span>'
+          :'<span><i style="background:var(--rose)"></i>подтвердили</span><span><i style="border:1.5px solid var(--gold)"></i>ждём ответа</span><span><i style="background:var(--line)"></i>свободно</span><span><i style="border:1.5px solid var(--sage)"></i>столы 16–20 · старшие мужчины</span>'}</div>
+        <svg id="adminHall" role="img" aria-label="Заполнение столов"></svg>
+        <p class="demotag" style="margin:0">Нажмите на стол, чтобы увидеть, кто за ним сидит.</p></section>
+      <section class="pane"><div class="pane-head"><h2>${tableFilter!=null?'Стол '+tableFilter:'Гости'}</h2></div>
+        <div class="filters" role="group" aria-label="Фильтр">${[['all','Все'],['yes','Придут'],['wait','Ждём'],['no','Не придут']].map(([k,l])=>`<button data-f="${k}" aria-pressed="${filter===k}">${l}</button>`).join('')}</div>
+        <div class="filters" role="group" aria-label="Сторона и группа">${[['all','Все стороны'],...SIDES].map(([k,l])=>`<button data-side="${k}" aria-pressed="${fSide===k}">${l}</button>`).join('')}
+          <select id="fGroup" aria-label="Группа гостей"><option value="all">Все группы</option>${GROUPS.map(([k,l])=>`<option value="${k}" ${fGroup===k?'selected':''}>${l}</option>`).join('')}</select></div>
+        <ul class="glist">${list.length?list.map(g=>`<li><div class="gname"><b>${esc(g.name)}${g.remind?' <span class="bell" title="Ждёт напоминание в Telegram">🔔</span>':''}</b><small>${g.status==='yes'?`${g.coming} из ${g.seats}`:`${g.seats} ${plural(g.seats,'место','места','мест')}`} · код открытки <b class="cardcode">${g.card}</b></small><span class="gtype" style="--c:${grp(g.group)[2]}">${typeLabel(g)}</span></div>
+          <span class="pill ${g.status}">${ST[g.status]}</span>
+          <div class="acts"><select data-g="${g.id}" aria-label="Стол для ${esc(g.name)}">${opts(g)}</select>
+            <select data-l="${g.id}" aria-label="Язык приглашения для ${esc(g.name)}">${LANGS.map(([k,l])=>`<option value="${k}" ${g.lang===k?'selected':''}>${l}</option>`).join('')}</select>
+            <select data-side-of="${g.id}" aria-label="Чья сторона">${SIDES.map(([k,l])=>`<option value="${k}" ${g.side===k?'selected':''}>${l}</option>`).join('')}</select>
+            <select data-group-of="${g.id}" aria-label="Группа">${GROUPS.map(([k,l])=>`<option value="${k}" ${g.group===k?'selected':''}>${l}</option>`).join('')}</select>
+            ${g.group==='rel'?`<select data-line-of="${g.id}" aria-label="Линия родства">${LINES.map(([k,l])=>`<option value="${k}" ${g.line===k?'selected':''}>${l}</option>`).join('')}</select>`:''}
+            <button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
+            ${g.noteOpen?`<textarea class="notein" data-note-in="${g.id}" rows="2" placeholder="Пара тёплых слов лично этому гостю. Появятся в его письме.">${esc(g.note||'')}</textarea>`:''}</div></li>`).join(''):'<li class="emptynote">Здесь пока никого.</li>'}</ul></section>
+    </div>
+    <section class="pane"><div class="pane-head"><h2>Кто приглашён</h2><span class="demotag">мест по группам · в скобках подтвердили</span></div>
+      <div class="tablewrap"><table class="breakdown"><thead><tr><th></th>${SIDES.map(([k,l])=>`<th>${l}</th>`).join('')}<th>Всего</th></tr></thead><tbody>
+      ${GROUPS.map(([gk,gl,gc])=>{const cell=f=>{const a=G.filter(x=>x.group===gk&&f(x));const inv=a.reduce((m,x)=>m+x.seats,0),ok=a.filter(x=>x.status==='yes').reduce((m,x)=>m+x.coming,0);return inv?`${inv} <small>(${ok})</small>`:'<small>—</small>'};
+        return `<tr><th><i style="background:${gc}"></i>${gl}</th>${SIDES.map(([sk])=>`<td>${cell(x=>x.side===sk)}</td>`).join('')}<td><b>${cell(()=>true)}</b></td></tr>`}).join('')}
+      </tbody></table></div>
+    </section>
+    <section class="pane remindpane"><div class="pane-head"><h2>Напоминание в Telegram</h2><span class="demotag">${G.filter(g=>g.remind&&g.status==='yes').length} ${plural(G.filter(g=>g.remind&&g.status==='yes').length,'гость ждёт','гостя ждут','гостей ждут')}</span></div>
+      <div class="tgprev"><div class="tgmeta">25 ноября, 12:00 · отправится автоматически тем, кто ответил «Приду» и нажал «Напомнить»</div>
+        <div class="bubble">Завтра наша свадьба! 💍<br>Ждём вас 26 ноября в 18:00, ресторан «Maroqand», ул. Хидоятова, 20А.<br>Ваш стол № 5.<br><br>Дилшоджон и Нодира</div></div>
+      <p class="demotag" style="margin:0">Номер стола подставляется для каждого гостя свой. Гостям, выбравшим узбекский, придёт текст на узбекском.</p>
+    </section>
+    <section class="pane"><div class="pane-head"><h2>Коды для открыток</h2><button class="pillbtn" id="copyCodes">Скопировать списком</button></div>
+      <p class="demotag" style="margin:0">Все открытки печатаются одинаковыми, с общим QR. Под QR от руки или наклейкой пишется код гостя.</p>
+      <ol class="codes">${G.map(g=>`<li><span>${esc(g.name)}</span><b class="cardcode">${g.card}</b></li>`).join('')}</ol>
+    </section>
+    <section class="pane"><div class="pane-head"><h2>Пожелания</h2><span class="demotag">видите только вы · ${WISHES.length}</span></div>
+      ${WISHES.length?`<ul class="wishes">${WISHES.slice().reverse().map(w=>{const g=G.find(x=>x.id===w.gid);return `<li><blockquote>${esc(w.text)}</blockquote><span class="from"><b>${esc(g?g.name:'Гость')}</b> · ${fmtAt(w.at)}</span></li>`}).join('')}</ul>`
+      :'<p class="emptynote">Пока пожеланий нет. Они появятся здесь, как только гости начнут писать.</p>'}
+    </section>`;
+  drawHall($('#adminHall'),{selected:tableFilter,byGroup:hallMode==='group',onPick:id=>{tableFilter=tableFilter===id?null:id;renderAdmin()}});
+  const ct=$('#clearT');if(ct)ct.onclick=()=>{tableFilter=null;renderAdmin()};
+  document.querySelectorAll('[data-hm]').forEach(b=>b.onclick=()=>{hallMode=b.dataset.hm;renderAdmin()});
+  document.querySelectorAll('[data-note]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.note);g.noteOpen=!g.noteOpen;renderAdmin();const t=document.querySelector(`[data-note-in="${g.id}"]`);t&&t.focus()});
+  document.querySelectorAll('[data-note-in]').forEach(t=>t.oninput=()=>{const g=G.find(x=>x.id==t.dataset.noteIn);g.note=t.value.trim();clearTimeout(t._d);t._d=setTimeout(()=>save(g,{note:g.note||null},'Личные слова сохранены'),700)});
+  document.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{fSide=b.dataset.side;renderAdmin()});
+  $('#fGroup').onchange=e=>{fGroup=e.target.value;renderAdmin()};
+  const setT=(attr,key,fix)=>document.querySelectorAll(`[${attr}]`).forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.getAttribute(attr));g[key]=s.value;if(fix)fix(g);renderAdmin();save(g,{side:g.side,grp:g.group,line:g.line},`${g.name}: ${typeLabel(g)}`)});
+  setT('data-side-of','side');setT('data-group-of','group',g=>{if(g.group!=='rel')g.line=''});setT('data-line-of','line');
+  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderAdmin()});
+  document.querySelectorAll('select[data-g]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.g);g.table=s.value?+s.value:null;renderAdmin();save(g,{table_no:g.table},s.value?`${g.name} → стол ${s.value}`:'Стол снят')});
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.copy);const url=link(g);
+    try{navigator.clipboard.writeText(url).then(()=>toast('Ссылка скопирована'),()=>toast(url))}catch(e){toast(url)}});
+  document.querySelectorAll('select[data-l]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.l);g.lang=s.value;save(g,{lang:g.lang},`${g.name}: приглашение откроется на «${LANGS.find(l=>l[0]===s.value)[1]}»`)});
+  $('#reload').onclick=()=>load();$('#logout').onclick=()=>{try{sessionStorage.removeItem('dn-admin')}catch(_){}KEY='';showLogin()};
+  $('#botSetup').onclick=async()=>{const r=await adm('setup');if(r)toast(r.hook&&r.hook.ok?'Бот подключён, проверьте Telegram':'Не получилось: проверьте токен бота в Vercel')};
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.del);if(!g.delAsk){g.delAsk=true;renderAdmin();setTimeout(()=>{g.delAsk=false},4000);return}
+    if(await adm('delete',{id:g.id})){G=G.filter(x=>x!==g);renderAdmin();toast('Гость удалён')}});
+  $('#addForm').onsubmit=async e=>{e.preventDefault();const f={code:normCode($('#aCode').value),name:$('#aName').value.trim(),greet:$('#aGreet').value,seats:$('#aSeats').value,side:$('#aSide').value,grp:$('#aGrp').value,lang:$('#aLang').value};
+    if(f.code.length<4||!f.name){toast('Нужны код (4 знака) и имя');return}
+    const r=await adm('save',{fields:f});if(r&&r.guest){G.push(fromRow(r.guest));renderAdmin();toast('Добавлен: '+f.name)}};
+  $('#impBtn').onclick=async()=>{const rows=$('#impText').value.split('\n').map(l=>l.split(/[;\t]/).map(x=>x.trim())).filter(p=>p[0]&&p[1]).map(p=>({code:normCode(p[0]),name:p[1],seats:p[2]||1}));
+    if(!rows.length){toast('Нет строк для загрузки');return}const r=await adm('import',{rows});if(r){toast('Загружено: '+r.imported);load()}};
+  $('#commonQr').onclick=()=>openQr('Общий QR',location.origin,'Один код на все открытки. Гость сканирует его и вводит свой код из 4 знаков.');
+  $('#copyCodes').onclick=()=>{const t=G.map(g=>`${g.name} — ${g.card}`).join('\n');try{navigator.clipboard.writeText(t).then(()=>toast('Список кодов скопирован'),()=>toast('Не удалось скопировать'))}catch(e){toast('Не удалось скопировать')}};
+}
+function openQr(title,url,note){$('#qrName').textContent=title;$('#qrUrl').textContent=url;$('#qrNote').textContent=note;
+  const box=$('#qrBox');box.innerHTML='';
+  if(window.QRCode){new QRCode(box,{text:url,width:220,height:220,colorDark:'#3a2a31',colorLight:'#fffcfa',correctLevel:QRCode.CorrectLevel.M})}
+  else box.textContent='QR-код не загрузился. Проверьте интернет и попробуйте ещё раз.';
+  $('#qrWrap').hidden=false;$('#qrClose').focus()}
+function closeQr(){$('#qrWrap').hidden=true}
+$('#qrClose').onclick=closeQr;$('#qrWrap').onclick=e=>{if(e.target.id==='qrWrap')closeQr()};
+
+/* ---------- common QR: one QR on every printed card + a 4-symbol code written under it ---------- */
+const LOOK={'А':'A','В':'B','Е':'E','К':'K','М':'M','Н':'H','Р':'P','С':'C','Т':'T','Х':'X','У':'Y','О':'0','З':'3'};
+const normCode=v=>v.toUpperCase().replace(/[АВЕКМНРСТХУОЗ]/g,c=>LOOK[c]).replace(/[^A-Z0-9]/g,'').slice(0,4);
+function renderQr(){
+  const sample=G.find(g=>g.id===current)||G[0];
+  $('#qrView').innerHTML=`
+    <div class="langbar">${langSwitch()}</div>
+    <section class="entry">
+      <div class="entry-mono">Д&amp;Н</div>
+      <span class="label">${tr('qrInvite')}</span>
+      <h1 class="entry-names">${tr('groom')} ${tr('and')} ${tr('bride')}</h1>
+      <form class="codeform" id="codeForm" novalidate>
+        <label for="codeIn" class="entry-title">${tr('qrTitle')}</label>
+        <p>${tr('qrSub')}</p>
+        <input id="codeIn" class="codein" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="6" placeholder="K7F2" aria-describedby="codeErr">
+        <p class="formerr" id="codeErr" hidden>${tr('qrErr')}</p>
+        <button class="pillbtn solid" type="submit">${tr('qrBtn')}</button>
+      </form>
+      <p class="entry-help">${tr('qrHelp')} <span class="phone"><a href="tel:${W.phone.replace(/ /g,'')}">${W.phone}</a></span></p>
+    </section>
+    <section class="cardmock" aria-label="Как выглядит открытка">
+      <span class="label">Так выглядит печатная открытка</span>
+      <div class="pcard"><div class="pcard-mono">Д&amp;Н</div><div class="pcard-names">Дилшоджон и Нодира</div><div class="pcard-date">26 · 11 · 2026 · 18:00</div>
+        <div class="pcard-qr" id="pcardQr"></div><div class="pcard-code">код: <span>${sample.card}</span></div></div>
+      <p class="demotag">Для проверки: код «${esc(sample.name)}» — <b class="cardcode">${sample.card}</b>. Можно вводить и русскими буквами.</p>
+    </section>`;
+  const box=$('#pcardQr');if(window.QRCode)new QRCode(box,{text:'https://dn-wedding.uz',width:96,height:96,colorDark:'#3a2a31',colorLight:'#fffcfa',correctLevel:QRCode.CorrectLevel.M});else box.textContent='QR';
+  const inp=$('#codeIn');inp.addEventListener('input',()=>{const v=normCode(inp.value);if(inp.value!==v)inp.value=v;$('#codeErr').hidden=true});
+  $('#codeForm').addEventListener('submit',e=>{e.preventDefault();const v=normCode(inp.value);const g=G.find(x=>x.card===v);
+    if(!g){$('#codeErr').hidden=false;inp.focus();return}
+    current=g.id;$('#guestPick').value=g.id;pickLang(g);setMode('guest');showIntro()});
+}
+
+/* ---------- live data for the couple ---------- */
+const PRINTED=["DA32", "4WHZ", "4R4V", "Y2GB", "HS7M", "HYC5", "77B6", "SPKN", "P437", "LVBP", "5XXK", "9R72", "G7W5", "WSJ8", "S6ZH", "S9C7", "3XSZ", "CSVE", "WESF", "T6EU", "8TB8", "XAMW", "FKWP", "KBS6", "JV6U", "9V6M", "5MJB", "KU52", "TL8Z", "7S6Z", "35DB", "TLMR", "VMPJ", "8NYG", "FSKV", "ZS72", "ZMB9", "N6F7", "KH2A", "U2H5", "V8KG", "Y4EX", "N533", "M7LB", "AXR8", "9LNP", "CBLT", "K34R", "ZDSU", "MECL", "W83X", "V5VL", "K7YW", "NZFL", "V8L2", "RYM3", "TX6L", "VXBW", "TLBR", "ZVZ9", "22K5", "CZJ7", "3KS4", "YB7L", "84V9", "7A5N", "2AAN", "428W", "NR9Y", "EYRP", "52T7", "CC9A", "A23G", "EK9Y", "L8L5", "NZN4", "K5BR", "4ZZU", "PD4Y", "DC5M", "9MPD", "LAX2", "6N8K", "UPB6", "2X77", "RS2C", "EKTJ", "56EM", "6PH4", "NN7G", "LHJJ", "DWZU", "YHUD", "L2NA", "5UUX", "SS9R", "Z5PJ", "7GTG", "Z5CU", "VYJT", "AXTT", "DDSB", "5AG3", "MPXJ", "CAHL", "9696", "PMU9", "KMFB", "8RSZ", "JW58", "8BCB", "CN4R", "35UW", "LKDM", "VCZE", "8CJF", "TX2H", "CZ2Y", "JS6N", "3S6S", "DFW5", "XL5T", "RG9S", "S3U6", "WMAR", "8F5T", "9YBK", "26JV", "AE45", "XEUF", "H9MW", "W6TK", "R6EK", "KADH", "VBP9", "2WTR", "6DYX", "WC7L", "54YF", "CBZ8", "Z293", "DUJF", "VWLX", "MU4T", "HJF6", "LW9E", "R6UT", "KZVB", "RAGX", "JHY6", "XDGN", "N7F9", "M4DM", "BF5Z", "RGUB", "AFPW", "YUKZ", "TDMW", "P2YZ", "H5GC", "HAT7", "YPCN", "BL6T", "LVJV", "SP9C", "GDCX", "NEX5", "93D2", "BYME", "M48L", "W33R", "PZJW", "7T7F", "WVNU", "EHHC", "JLWA", "A37P", "UDZB", "C5EM", "3UKL", "GANW", "5J9B", "CEP8", "6MXN", "R6FT", "5GB8", "8CJP", "W93B", "CVJ8", "BME8", "RRDB", "3F6Z", "UYWV", "6LDH", "EHWY", "GCKM", "B9U9", "HKD8", "C93G", "EMKB", "TWMH", "6PDD", "9BD9", "AVAD", "ZR2A", "T3XH", "7EWL", "L6DB", "UTLW", "D6CW", "5E4G", "Z2TZ", "77B4", "89TA", "YK7C", "CV3V", "XB73", "6W98", "R7GL", "JMFV", "VHA9", "EWXP", "N3DH", "W54Y", "H9UP", "5YXC", "Z3FE", "KRLL", "B588", "YX3D", "AKFJ", "27TW", "VR7X", "TZ53", "DDCF", "VYU5", "F8CZ", "55UU", "3EPE", "3VEW", "XT82", "5YFH", "H6KH", "LGNX", "228Z", "6UJL", "VB5U", "33WA", "TZE8", "RM9T"];
+let KEY='';try{KEY=sessionStorage.getItem('dn-admin')||''}catch(_){}
+let BOTNAME='';
+function fromRow(r){return{id:r.id,name:r.name,greet:r.greet,seats:r.seats,table:r.table_no,status:r.status,coming:r.coming,lang:r.lang,side:r.side,group:r.grp,line:r.line,note:r.note,remind:!!r.tg_chat_id,card:r.code,code:r.code}}
+const link=g=>`${location.origin}/?c=${g.card}`;
+const shareTg=g=>`https://t.me/share/url?url=${encodeURIComponent(link(g))}&text=${encodeURIComponent(`${g.greet} ${g.name}! Приглашаем вас на нашу свадьбу 💍 Ваше личное приглашение:`)}`;
+function nextCode(){const used=new Set(G.map(g=>g.card));return PRINTED.find(c=>!used.has(c))||''}
+async function adm(action,extra){try{const r=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':KEY},body:JSON.stringify({action,...extra})});
+  const j=await r.json().catch(()=>({}));if(r.status===401){showLogin('Неверный пароль');return null}
+  if(!r.ok){toast(j.error==='duplicate_code'?'Такой код уже есть у другого гостя':'Ошибка сервера, попробуйте ещё раз');return null}return j}catch(e){toast('Нет связи с сервером');return null}}
+async function save(g,fields,msg){const r=await adm('save',{id:g.id,fields});if(r&&msg)toast(msg)}
+async function load(){const j=await adm('list');if(!j)return;BOTNAME=j.bot||'';G=j.guests.map(fromRow);
+  WISHES=j.wishes.map(w=>({gid:w.guest_id,text:w.text,at:new Date(w.created_at)}));$('#login').hidden=true;$('#adminView').hidden=false;mode='admin';renderAdmin()}
+function showLogin(err){$('#adminView').hidden=true;const l=$('#login');l.hidden=false;
+  l.innerHTML=`<form class="loginbox" id="loginForm"><div class="entry-mono">Д·Н</div><h1>Наша панель</h1><p class="demotag">Только для Дилшоджона и Нодиры</p>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Пароль" class="codein" style="letter-spacing:.1em;font-size:20px">
+    ${err?`<p class="formerr">${err}</p>`:''}<button class="pillbtn solid" type="submit">Войти</button></form>`;
+  $('#loginForm').onsubmit=e=>{e.preventDefault();KEY=$('#pw').value;try{sessionStorage.setItem('dn-admin',KEY)}catch(_){}load()};$('#pw').focus()}
+$('#guestView').hidden=true;$('#qrView').hidden=true;
+KEY?load():showLogin();
+
+</script>
+
+</body>
+</html>
