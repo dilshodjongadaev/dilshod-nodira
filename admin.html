@@ -916,7 +916,7 @@ uz:{
   dressP:'Agar oqshom kayfiyatini qo‘llab-quvvatlamoqchi bo‘lsangiz, shu pastel ranglardan birini tanlang. Eng muhimi, o‘zingizga qulay va quvonchli bo‘lsin.',
   sw:['sutrang','upa','osmoniy','shalfey','lojuvard'],
   c7:'Bilish foydali',infoH:'Hammasi oson o‘tishi uchun',tbd:'aniqlanmoqda',
-  info:[['Qachon kelish kerak','Oqshom 18:00 da boshlanadi va taxminan 21:30 gacha davom etadi. Zalni bemalol topish va hammaga salom berish uchun biroz oldinroq keling.',0],
+  info:[['Qachon kelish kerak','Oqshom 18:00 da boshlanadi va taxminan 21:30 gacha davom etadi. Biroz ertaroq kelsangiz, zalni bemalol topib, hamma bilan ko‘rishib olishga ulgurasiz.',0],
         ['Qanday borish mumkin','«Maroqand» restorani, Hidoyatov ko‘chasi, 20A. Yo‘nalish tugmalari «Manzil» bobida.',0],
         ['Avtoturargoh','Restoran yonida avtoturargoh bor.',0],
         ['Bolalar','Sizni farzandlaringiz bilan ko‘rishdan xursand bo‘lamiz.',0],
@@ -929,8 +929,8 @@ uz:{
   noTable:'O‘tirish tartibi hali tayyorlanmoqda. To‘yga yaqinroq bu yerga qayting.',allHall:'Butun zalni ko‘rsatish',myTable:'Mening stolim',addCal:'Taqvimga qo‘shish',change:'Javobni o‘zgartirish',
   remind:'Telegramda bir kun oldin eslatish',reminded:'25-noyabr kuni Telegramda eslatamiz',remindToast:'Tayyor: to‘ydan bir kun oldin eslatamiz',
   noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
-  c9:'Tilaklar',wishH:'Bir-ikki iliq so‘z',wishP:'Tilagingizni faqat biz ikkimiz ko‘ramiz.',wishLbl:'Tilagingiz',
-  wishPh:'Bizga chin dildan bir nima yozing…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Hech bo‘lmasa bir-ikki so‘z yozing.',wishGot:'Tilagingiz bizda',more:'Yana yozish',wishToast:'Tilak yuborildi',
+  c9:'Tilaklar',wishH:'Ko‘ngil so‘zlari',wishP:'Aytmoqchi bo‘lgan gapingiz bo‘lsa, shu yerda qoldirishingiz mumkin. Uni faqat biz ikkimiz o‘qiymiz.',wishLbl:'Maktubingiz',
+  wishPh:'Shu yerga yozishingiz mumkin…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Maktub hali bo‘sh.',wishGot:'Maktubingiz bizga yetib keldi',more:'Yana yozish',wishToast:'Yuborildi, rahmat!',
   sign:'Muhabbat va diydor ilinjida',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
   ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
   menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Tilaklar'],
@@ -1336,9 +1336,9 @@ function renderAdmin(){
         <button class="pillbtn solid" id="impBtn">Загрузить</button></details>
     </section>
     <section class="stats" aria-label="Сводка">
-      <div class="stat"><b>${yes}</b><small>придут</small><div class="bar"><i style="width:${pct(yes)}%;background:var(--ok)"></i></div></div>
-      <div class="stat"><b>${wait}</b><small>ждём ответа</small><div class="bar"><i style="width:${pct(wait)}%;background:var(--gold)"></i></div></div>
-      <div class="stat"><b>${no}</b><small>не смогут</small><div class="bar"><i style="width:${pct(no)}%;background:var(--no)"></i></div></div>
+      <div class="stat"><b>${yes}</b><small>${plural(yes,'гость придёт','гостя придут','гостей придут')}</small><div class="bar"><i style="width:${pct(yes)}%;background:var(--ok)"></i></div></div>
+      <div class="stat"><b>${wait}</b><small>${plural(wait,'место ждёт','места ждут','мест ждут')} ответа</small><div class="bar"><i style="width:${pct(wait)}%;background:var(--gold)"></i></div></div>
+      <div class="stat"><b>${no}</b><small>${plural(no,'гость не сможет','гостя не смогут','гостей не смогут')}</small><div class="bar"><i style="width:${pct(no)}%;background:var(--no)"></i></div></div>
       <div class="stat"><b>${unseated}</b><small>${plural(unseated,'приглашение','приглашения','приглашений')} без стола</small><div class="bar"><i style="width:${unseated?100:0}%;background:var(--muted)"></i></div></div>
     </section>
     <div class="panes">
