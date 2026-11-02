@@ -917,7 +917,7 @@ uz:{
   noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
   c9:'Tilaklar',wishH:'Ko‘ngil so‘zlari',wishP:'Aytmoqchi bo‘lgan gapingiz bo‘lsa, shu yerda qoldirishingiz mumkin. Uni faqat biz ikkimiz o‘qiymiz.',wishLbl:'Maktubingiz',
   wishPh:'Shu yerga yozishingiz mumkin…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Maktub hali bo‘sh.',wishGot:'Maktubingiz bizga yetib keldi',more:'Yana yozish',wishToast:'Yuborildi, rahmat!',
-  sign:'Muhabbat va diydor ilinjida',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
+  sign:'Hurmat va muhabbat bilan',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
   ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
   menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Tilaklar'],
   nums:['birinchi','ikkinchi','to‘rtinchi','beshinchi','oltinchi','yettinchi','sakkizinchi','to‘qqizinchi'],
@@ -1065,7 +1065,7 @@ function renderGuest(scrollId){
     </section>
     ${rsvpBlock(g,t)}
     ${wishBlock(g)}
-    <section class="chapter"><p class="sign">${tr('sign')}<b>${tr('groom')} ${tr('and')} ${tr('bride')}</b></p></section>`;
+    <section class="chapter"><p class="sign">${tr('sign')}<b>${tr('groom')}<br>${tr('and')} ${tr('bride')}</b></p></section>`;
   const lite=matchMedia('(pointer:coarse)').matches;petals($('#heroPetals'),lite?5:9);drift($('#snow'),lite?12:22,'snow');
   wireGuest(g,t);
   updCta(g,t);buildMenu();
