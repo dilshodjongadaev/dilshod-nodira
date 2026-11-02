@@ -602,6 +602,12 @@ html.evening .hero .portal .mono{color:#f6e6bd}
 .lp-btns button{height:54px;border-radius:999px;border:1px solid rgba(236,215,160,.45);background:rgba(255,255,255,.05);color:#f5ecd9;font-family:var(--f-display);font-size:22px}
 .lp-btns button.pre{border-color:var(--gold-hi)}
 .lp-btns button:active,.lp-btns button:hover{background:var(--gold-hi);color:var(--night)}
+.realmap{display:block;position:relative;width:100%;max-width:420px;height:260px;margin:10px auto 8px;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(184,149,90,.55);box-shadow:0 0 0 5px rgba(236,215,160,.12),0 22px 34px -18px rgba(19,36,61,.55);background:#efe6d3}
+.realmap iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
+.rm-hint{position:absolute;right:10px;bottom:10px;background:var(--lapis);color:#fbf4e4;font-size:12px;padding:5px 10px;border-radius:999px;box-shadow:0 6px 14px rgba(19,36,61,.35)}
+.place .m-cap{position:static;text-align:center;margin:0 auto 4px;max-width:420px}
+.tk-h{width:.62em;height:.62em;fill:currentColor;vertical-align:.02em;margin-inline:.05em}
 /* 9) 3D map card */
 .map3d{display:block;position:relative;width:100%;max-width:330px;height:230px;margin:4px auto 6px;perspective:700px;text-decoration:none;color:inherit}
 .m-plane{position:absolute;left:4%;right:4%;top:14px;height:170px;border-radius:12px;overflow:hidden;transform-origin:50% 80%;transform:rotateX(38deg) rotateZ(-6deg) scale(1.02);box-shadow:0 22px 30px -16px rgba(19,36,61,.45);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
@@ -695,7 +701,7 @@ const W = {
   groom:'Дилшоджон', bride:'Нодира',
   start:new Date('2026-11-26T18:00:00+05:00'), year:2026, month:10, day:26,
   dateText:'26 · 11 · 2026', weekday:'четверг',
-  venue:'Ресторан «Maroqand»', hall:'Банкетный зал', addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа', mapq:'Maroqand restaurant, улица Хидоятова, 20А, Ташкент',
+  venue:'Свадебный ресторан «Maroqand»', hall:'Место торжества', addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа', mapq:'Maroqand, ул. Хидоятова, 20А, Чигатай-Актепа',
   rsvpBy:'15 ноября',
   // times and icons; titles live in TX (per language)
   program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note'],['21:00','cake']],
@@ -858,14 +864,14 @@ ru:{
   c3:'До встречи',
   c4:'Программа',progH:'Как пройдёт вечер',
   prog:[['Сбор гостей','Встречаемся, обнимаемся и фотографируемся'],['Выход молодожёнов','Тот самый момент, ради которого мы собрались'],
-        ['Праздничный ужин','Угощения, тёплые слова и поздравления'],['Первый танец','Наш танец, а потом танцуем все вместе'],['Свадебный торт','Сладкий финал вечера']],
-  c5:'Место',hall:'Банкетный зал',venue:'Ресторан «Maroqand»',addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа',yandex:'Яндекс Карты',
+        ['Праздничный ужин','Угощения, тёплые слова и поздравления'],['Первый танец молодожёнов',''],['Свадебный торт','Сладкий финал вечера']],
+  c5:'Место',hall:'Место торжества',venue:'Свадебный ресторан «Maroqand»',addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа',yandex:'Яндекс Карты',
   c6:'Дресс-код',dressH:'Нежные оттенки',
   dressP:'Если захотите поддержать настроение вечера, выберите что-то из этих пастельных оттенков. Главное, чтобы вам было удобно и радостно.',
   sw:['молочный','пудровый','небесный','шалфей','лазурный'],
   c7:'Полезно знать',infoH:'Чтобы всё прошло легко',tbd:'уточняется',
   info:[['Когда приезжать','Вечер начинается в 18:00 и продлится примерно до 21:30. Приезжайте чуть заранее, чтобы спокойно найти зал и поздороваться со всеми.',0],
-        ['Как добраться','Ресторан «Maroqand», ул. Хидоятова, 20А. Кнопки маршрута есть в главе «Место».',0],
+        ['Как добраться','Свадебный ресторан «Maroqand», ул. Хидоятова, 20А — у Большой кольцевой дороги, рядом с «Korzinka». Вход через белую арку. Кнопки маршрута — в главе «Место».',0],
         ['Парковка','У ресторана есть парковка.',0],
         ['Дети','Будем рады видеть вас вместе с детьми.',0],
         ['Вопросы','Если что-то непонятно, звоните или пишите Дилшоджону: §',0]],
@@ -877,11 +883,11 @@ ru:{
   noTable:'Рассадка ещё готовится. Загляните сюда ближе к свадьбе.',allHall:'Показать весь зал',myTable:'Мой стол',addCal:'Добавить в календарь',change:'Изменить ответ',
   remind:'Напомнить в Telegram за день',reminded:'Напомним 25 ноября в Telegram',remindToast:'Готово: напомним за день до свадьбы',
   noLbl:'Ваш ответ',noH:'Жаль, что вас не будет',noP:'Спасибо, что ответили. Мы будем вспоминать вас в этот день.',canCome:'Я всё-таки смогу прийти',
-  c9:'Пожелания',wishH:'Пара тёплых слов',wishP:'Ваше пожелание увидим только мы с Нодирой.',wishLbl:'Ваше пожелание',
-  wishPh:'Напишите нам что-нибудь от души…',signLbl:'Подпись:',send:'Отправить',wishErr:'Напишите хотя бы пару слов.',wishGot:'Ваше пожелание у нас',more:'Написать ещё',wishToast:'Пожелание отправлено',
+  c9:'Пара слов',wishH:'Если захочется написать',wishP:'Если захотите что-то сказать, оставьте это здесь. Прочитаем только мы вдвоём.',wishLbl:'Ваши слова',
+  wishPh:'Можно написать здесь…',signLbl:'Подпись:',send:'Отправить',wishErr:'Пока ничего не написано.',wishGot:'Ваши слова дошли до нас',more:'Написать ещё',wishToast:'Отправлено, спасибо!',
   sign:'С любовью и в ожидании встречи',yesToast:'Спасибо! Ждём вас 26 ноября',
   ctaAns:'Ответить',ctaSeat:'Мой стол',ctaWish:'Пожелание',menuLbl:'Главы приглашения',
-  menu:['Дата','Главное','Письмо','Программа','Место','Полезно знать','Ваш ответ','Пожелания'],
+  menu:['Дата','Главное','Письмо','Программа','Место','Полезно знать','Ваш ответ','Пара слов'],
   nums:['первая','вторая','четвёртая','пятая','шестая','седьмая','восьмая','девятая'],
   calTitle:'Свадьба Дилшоджона и Нодиры',tooMany:'Слишком много попыток. Подождите 10 минут и попробуйте снова.',netErr:'Нет связи. Проверьте интернет и попробуйте ещё раз.',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'до 15 ноября',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
   qrInvite:'Приглашение на свадьбу',qrTitle:'Введите код с открытки',qrSub:'Код из четырёх знаков написан на вашей открытке под QR-кодом.',qrBtn:'Открыть приглашение',qrErr:'Такого кода нет. Проверьте буквы и цифры на открытке.',qrHelp:'Не получается? Позвоните Дилшоджону:'
@@ -896,14 +902,14 @@ uz:{
   c3:'Diydorgacha',
   c4:'Dastur',progH:'Oqshom qanday o‘tadi',
   prog:[['Mehmonlar yig‘ilishi','Diydor ko‘rishamiz va suratga tushamiz'],['Kelin-kuyovning kirib kelishi','Hammamiz kutgan o‘sha lahza'],
-        ['Bayram dasturxoni','Taomlar, iliq so‘zlar va tabriklar'],['Birinchi raqs','Avval bizning raqsimiz, keyin hammamiz raqsga tushamiz'],['To‘y torti','Oqshomning shirin yakuni']],
-  c5:'Manzil',hall:'Banket zali',venue:'«Maroqand» restorani',addr:'Toshkent, Hidoyatov ko‘chasi, 20A · Chig‘atoy-Oqtepa mahallasi',yandex:'Yandex Xaritalar',
+        ['Bayram dasturxoni','Taomlar, iliq so‘zlar va tabriklar'],['Kelin-kuyovning ilk raqsi',''],['To‘y torti','Oqshomning shirin yakuni']],
+  c5:'Manzil',hall:'Bazm joyi',venue:'«Maroqand» to‘yxonasi',addr:'Toshkent, Hidoyatov ko‘chasi, 20A · Chig‘atoy-Oqtepa mahallasi',yandex:'Yandex Xaritalar',
   c6:'Kiyinish uslubi',dressH:'Nozik ranglar',
   dressP:'Agar oqshom kayfiyatini qo‘llab-quvvatlamoqchi bo‘lsangiz, shu pastel ranglardan birini tanlang. Eng muhimi, o‘zingizga qulay va quvonchli bo‘lsin.',
   sw:['sutrang','upa','osmoniy','shalfey','lojuvard'],
   c7:'Bilish foydali',infoH:'Hammasi oson o‘tishi uchun',tbd:'aniqlanmoqda',
   info:[['Qachon kelish kerak','Oqshom 18:00 da boshlanadi va taxminan 21:30 gacha davom etadi. Biroz ertaroq kelsangiz, zalni bemalol topib, hamma bilan ko‘rishib olishga ulgurasiz.',0],
-        ['Qanday borish mumkin','«Maroqand» restorani, Hidoyatov ko‘chasi, 20A. Yo‘nalish tugmalari «Manzil» bobida.',0],
+        ['Qanday borish mumkin','«Maroqand» to‘yxonasi, Hidoyatov ko‘chasi, 20A — Katta halqa yo‘li bo‘yida, «Korzinka» yonida. Kirish oq ravoq orqali. Yo‘nalish tugmalari «Manzil» bobida.',0],
         ['Avtoturargoh','Restoran yonida avtoturargoh bor.',0],
         ['Bolalar','Sizni farzandlaringiz bilan ko‘rishdan xursand bo‘lamiz.',0],
         ['Savollar','Biror narsa tushunarsiz bo‘lsa, Dilshodjonga qo‘ng‘iroq qiling yoki yozing: §',0]],
@@ -915,11 +921,11 @@ uz:{
   noTable:'O‘tirish tartibi hali tayyorlanmoqda. To‘yga yaqinroq bu yerga qayting.',allHall:'Butun zalni ko‘rsatish',myTable:'Mening stolim',addCal:'Taqvimga qo‘shish',change:'Javobni o‘zgartirish',
   remind:'Telegramda bir kun oldin eslatish',reminded:'25-noyabr kuni Telegramda eslatamiz',remindToast:'Tayyor: to‘ydan bir kun oldin eslatamiz',
   noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
-  c9:'Tilaklar',wishH:'Ko‘ngil so‘zlari',wishP:'Aytmoqchi bo‘lgan gapingiz bo‘lsa, shu yerda qoldirishingiz mumkin. Uni faqat biz ikkimiz o‘qiymiz.',wishLbl:'Maktubingiz',
-  wishPh:'Shu yerga yozishingiz mumkin…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Maktub hali bo‘sh.',wishGot:'Maktubingiz bizga yetib keldi',more:'Yana yozish',wishToast:'Yuborildi, rahmat!',
+  c9:'Ko‘ngil so‘zi',wishH:'Ko‘ngil so‘zlari',wishP:'Aytmoqchi bo‘lgan gapingiz bo‘lsa, shu yerda qoldirishingiz mumkin. Uni faqat biz ikkimiz o‘qiymiz.',wishLbl:'So‘zlaringiz',
+  wishPh:'Shu yerga yozishingiz mumkin…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Hali hech narsa yozilmadi.',wishGot:'So‘zlaringiz bizga yetib keldi',more:'Yana yozish',wishToast:'Yuborildi, rahmat!',
   sign:'Hurmat va muhabbat bilan',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
   ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
-  menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Tilaklar'],
+  menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Ko‘ngil so‘zi'],
   nums:['birinchi','ikkinchi','to‘rtinchi','beshinchi','oltinchi','yettinchi','sakkizinchi','to‘qqizinchi'],
   calTitle:'Dilshodjon va Nodiraning to‘yi',tooMany:'Juda ko‘p urinish. 10 daqiqa kutib, qayta urinib ko‘ring.',netErr:'Aloqa yo‘q. Internetni tekshirib, qayta urinib ko‘ring.',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'15-noyabrgacha',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
   qrInvite:'Nikoh to‘yiga taklifnoma',qrTitle:'Taklifnomadagi kodni kiriting',qrSub:'To‘rt belgili kod taklifnomangizda QR-kod ostida yozilgan.',qrBtn:'Taklifnomani ochish',qrErr:'Bunday kod yo‘q. Taklifnomadagi harf va raqamlarni tekshiring.',qrHelp:'Ochilmayaptimi? Dilshodjonga qo‘ng‘iroq qiling:'
@@ -978,7 +984,7 @@ function todayBlock(g,t){if(!isDay())return '';const n=nowT();const cur=W.progra
     <p>${n>=W.start?tr('started'):tr('todaySub')}</p>
     ${cur>=0?`<div class="tnow"><div><span>${tr('nowLbl')}</span><b>${tr('prog')[cur][0]}</b></div>${nx>=0?`<div><span>${tr('nextLbl')} · ${W.program[nx][0]}</span><b>${tr('prog')[nx][0]}</b></div>`:''}</div>`:''}
     <div class="btnrow">${g.status==='yes'&&t?`<button class="pillbtn solid" data-go="answer">${tr('ourTable')} · ${t.id}</button>`:''}
-      <a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}">${tr('route2')}</a></div></section>`}
+      <a class="pillbtn" target="_blank" rel="noopener" href="${YA}">${tr('route2')}</a></div></section>`}
 const cd=()=>{const ms=Math.max(0,W.start-nowT());return{d:Math.floor(ms/864e5),h:Math.floor(ms/36e5)%24,m:Math.floor(ms/6e4)%60,s:Math.floor(ms/1e3)%60}};
 function gcal(){const f=d=>d.toISOString().replace(/[-:]|\.\d{3}/g,'');const e=new Date(W.start.getTime()+3.5*36e5);
   return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(tr('calTitle'))+`&dates=${f(W.start)}/${f(e)}&location=`+encodeURIComponent(`${W.venue}, ${W.mapq}`)}
@@ -1032,7 +1038,7 @@ function renderGuest(scrollId){
           :g.status==='no'?`<button class="mt mt-time" data-go="wish"><span class="k">${tr('noLbl')}</span><b style="font-size:26px">${tr('wishH')}</b></button>`
           :`<button class="mt mt-ans" data-go="answer"><span class="k">${tr('noLbl')}</span><b>${tr('ctaAns')}</b><small>${tr('answerBy')}</small></button>`}
         <div class="mt mt-place"><span class="k">${tr('c5')}</span><b>${tr('venue')}</b><small>${tr('addr')}</small>
-          <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${encodeURIComponent(W.mapq)}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(W.mapq)}">Google Maps</a></div></div>
+          <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="${YA}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="${GM}">Google Maps</a></div></div>
         <button class="mt mt-info" data-go="ch-info"><span class="k">${tr('c7')}</span><small>${tr('infoTile')}</small><i aria-hidden="true">→</i></button>
       </div>
     </section>
@@ -1041,24 +1047,14 @@ function renderGuest(scrollId){
         <p class="lit">${words(tr('p1'))}</p><p class="lit">${words(tr('p2'))}</p>${g.note?`<p class="pnote">${esc(g.note)}</p>`:''}
         <div class="sig">${tr('groom')} ${tr('and')} ${tr('bride')}</div></div>
     </section>
-    <div class="ticker" aria-hidden="true"><div class="tk-row">${(tr('groom')+' & '+tr('bride')+' ✦ ').repeat(6)}</div><div class="tk-row tk-2">${('26 · 11 · 2026 ✦ Maroqand ✦ ').repeat(8)}</div></div>
+    <div class="ticker" aria-hidden="true"><div class="tk-row">${(tr('groom')+' <svg class="tk-h" viewBox="0 0 24 24"><path d="M12 21C9 18.8 2 14 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6 22 14 15 18.8 12 21z"/></svg> '+tr('bride')+' ✦ ').repeat(6)}</div><div class="tk-row tk-2">${('26 · 11 · 2026 ✦ Maroqand ✦ ').repeat(8)}</div></div>
     <section class="chapter archin" id="ch-program"><span class="label rv">${tr('c4')}</span><h2 class="rv">${tr('progH')}</h2>
       <ol class="program rv">${W.program.map((p,i)=>`<li class="${progState(i)}"><time>${p[0]}</time><span class="ico">${icon(p[1])}</span><div><b>${tr('prog')[i][0]}</b><span>${tr('prog')[i][1]}</span></div></li>`).join('')}</ol>
     </section>
     <section class="chapter archin" id="ch-place"><span class="label rv">${tr('c5')}</span>
-      <div class="place rv">${SKYLINE}<span class="label">${tr('hall')}</span><h3>${tr('venue')}</h3><a class="map3d" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}" aria-label="${tr('yandex')}">
-        <div class="m-plane"><svg viewBox="0 0 300 200" aria-hidden="true">
-          <rect width="300" height="200" fill="#efe6d3"/>
-          <g fill="#e4d8bf">${[[10,10,70,50],[90,10,90,50],[190,10,100,50],[10,72,50,56],[70,72,110,56],[190,72,46,56],[246,72,44,56],[10,140,90,50],[110,140,70,50],[190,140,100,50]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4"/>`).join('')}</g>
-          <path d="M0 66H300M0 134H300M84 0V200M184 0V200" stroke="#fffaf0" stroke-width="10"/>
-          <path d="M0 66H300M0 134H300M84 0V200M184 0V200" stroke="#d9c79f" stroke-width="1" stroke-dasharray="4 6"/>
-          <path d="M240 200C236 160 228 120 214 100" stroke="#9fc1d6" stroke-width="7" fill="none" opacity=".7"/>
-          <rect x="196" y="76" width="36" height="48" rx="5" fill="#1f4e79"/><path d="M205 124V104Q205 94 214 90Q223 94 223 104V124" fill="none" stroke="#ecd7a0" stroke-width="1.4"/>
-          <path class="m-route" d="M20 200V134H184V100H196" fill="none" stroke="#b8955a" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 7"/>
-        </svg></div>
-        <div class="m-pin"><span>Maroqand</span></div><i class="m-ripple"></i>
-        <div class="m-cap">${tr('addr')}</div></a>
-        <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="https://yandex.uz/maps/?text=${q}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">Google Maps</a></div></div>
+      <div class="place rv">${SKYLINE}<span class="label">${tr('hall')}</span><h3>${tr('venue')}</h3><a class="realmap" target="_blank" rel="noopener" href="${YA}" aria-label="${tr('yandex')}"><iframe src="https://yandex.uz/map-widget/v1/?ll=${encodeURIComponent(LL)}&z=16&pt=${encodeURIComponent(LL)},pm2blm&lang=${lang==='ru'?'ru_RU':'uz_UZ'}" loading="lazy" tabindex="-1" title="${tr('venue')}"></iframe><span class="rm-hint">${tr('yandex')} ↗</span></a>
+        <div class="m-cap">${tr('addr')}</div>
+        <div class="btnrow"><a class="pillbtn" target="_blank" rel="noopener" href="${YA}">${tr('yandex')}</a><a class="pillbtn" target="_blank" rel="noopener" href="${GM}">Google Maps</a></div></div>
     </section>
     <section class="chapter archin" id="ch-info"><span class="label rv">${tr('c7')}</span><h2 class="rv">${tr('infoH')}</h2>
       <ul class="info rv">${tr('info').map(([q,a,tbd],i)=>`<li><span class="ico">${icon(INFO_ICONS[i])}</span><div><b>${q}${tbd?` <em class="tbd">${tr('tbd')}</em>`:''}</b><span>${a.replace('§',`<span class="phone"><a href="tel:${W.phone.replace(/ /g,'')}">${W.phone}</a><button class="copybtn" data-copyphone>${tr('copy')}</button></span>`)}</span></div></li>`).join('')}</ul>
@@ -1326,6 +1322,7 @@ function renderQr(){
 }
 
 /* ---------- live data ---------- */
+const LL='69.177706,41.363879',YA='https://yandex.uz/maps/org/maroqand/91381430596/',GM='https://www.google.com/maps/search/?api=1&query=41.363879,69.177706';
 let CODE=null,BOT='';
 async function api(path,body){try{const r=await fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({c:CODE,...body})});
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j}catch(e){toast(tr('netErr'));return null}}
