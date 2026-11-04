@@ -31,7 +31,7 @@ async function notify(text) {
 }
 const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 const normCode = v => String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-const pub = g => ({ name: g.name, greet: g.greet, seats: g.seats, table: g.table_no, status: g.status,
+const pub = g => ({ name: g.name, name_uz: g.name_uz || '', kind: g.kind || 'one', greet: g.greet, seats: g.seats, table: g.table_no, status: g.status,
   coming: g.coming, lang: g.lang, note: g.note, remind: !!g.tg_chat_id });
 function body(req) {
   if (req.body && typeof req.body === 'object') return req.body;

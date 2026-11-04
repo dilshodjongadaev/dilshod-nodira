@@ -637,6 +637,25 @@ button.mt:active{transform:scale(.97)}
 .mt-info i{position:absolute;right:16px;top:50%;translate:0 -50%;font-style:normal;font-size:22px;color:var(--gold)}
 html.evening .mt-ans b,html.evening .mt-ans .k,html.evening .mt-ans small{color:#13243d}
 html.evening .mt-table{background:#1f4e79}
+.gtype.shared{--c:#7f9a6c;margin-left:4px}
+.ans{list-style:none;margin:6px 0 0;padding:0;font-size:13px;color:var(--muted)}.ans li::before{content:"· "}
+.editform{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;width:100%;margin-top:8px;padding:12px;border:1px dashed var(--line);border-radius:12px}
+.editform label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}.editform .wide{grid-column:1/-1}
+.editform input,.editform select,.lgrid textarea{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--ink);width:100%}
+.editform .btnrow{grid-column:1/-1}
+.letterpane summary{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;cursor:pointer;list-style:none}.letterpane summary::-webkit-details-marker{display:none}
+.letterpane summary h2::after{content:" ▾";font-size:.6em;color:var(--gold)}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:10px 0}
+.lgrid>div{display:flex;flex-direction:column;gap:8px}.lgrid label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.lgrid textarea{line-height:1.5;resize:vertical}
+.planpane .plan{display:grid;gap:8px}
+.pl{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;font-size:14px}
+.pl.sub{padding-left:14px;font-size:13px;color:var(--muted)}
+.pl b{font-variant-numeric:tabular-nums}.pl b.full{color:var(--ok)}.pl b.over{color:var(--no)}
+.pl .bar{grid-column:1/-1;height:4px;border-radius:4px;background:var(--line);overflow:hidden}.pl .bar i{display:block;height:100%;background:var(--gold)}
+.xlimport{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}.xlbtn{cursor:pointer}
+.xlprev{flex-basis:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5}
+.xlprev ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}.xlprev .btnrow{margin-top:10px}
 .loginview{min-height:100svh;display:grid;place-items:center}
 .loginbox{display:flex;flex-direction:column;align-items:center;gap:12px;width:min(100%,320px);text-align:center}
 .loginbox h1{font-family:var(--f-display);font-size:38px;font-style:italic;color:var(--lapis)}
@@ -712,7 +731,7 @@ const W = {
   venue:'Ресторан «Maroqand»', hall:'Банкетный зал', addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа', mapq:'Maroqand restaurant, улица Хидоятова, 20А, Ташкент',
   rsvpBy:'15 ноября',
   // times and icons; titles live in TX (per language)
-  program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note'],['21:00','cake']],
+  program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note']],
   phone:'+998 33 333 12 12',
   palette:['#f3ece0','#ecd3cf','#c9dbe3','#b4c2a9','#2f4f78']
 };
@@ -731,6 +750,7 @@ let G=[];
 const SIDES=[['g','Дилшоджон'],['b','Нодира'],['both','Общие']];
 const GROUPS=[['rel','Родственники','#1f4e79'],['fp','Друзья родителей','#c2785f'],['fr','Друзья','#b8955a'],['col','Коллеги','#3d8c96'],['nb','Соседи','#7f9a6c'],['oth','Другое','#9a8fa3']];
 const LINES=[['','линия —'],['f','по отцу'],['m','по матери']];
+const PARTS=[['w','Женская часть'],['m','Мужская часть']];let fPart='all';
 const grp=k=>GROUPS.find(x=>x[0]===k)||GROUPS[5];
 function typeLabel(g){return [SIDES.find(x=>x[0]===g.side)?.[1],grp(g.group)[1].toLowerCase(),g.group==='rel'&&g.line?LINES.find(x=>x[0]===g.line)[1]:''].filter(Boolean).join(' · ')}
 let current=null,mode='guest',filter='all',tableFilter=null,fSide='all',fGroup='all',hallMode='rsvp';
@@ -884,7 +904,7 @@ ru:{
         ['Дети','Будем рады видеть вас вместе с детьми.',0],
         ['Вопросы','Если что-то непонятно, звоните или пишите Дилшоджону: §',0]],
   c8:'Ваш ответ',rsvpH:'Вы будете с нами?',
-  rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Пожалуйста, дайте знать до 15 ноября, чтобы мы успели всё подготовить.`,
+  rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Дайте, пожалуйста, знать, сможете ли вы прийти.`,
   coming:'Придут',swipe:'с радостью приду',decline:'К сожалению, не смогу',
   c8y:'Ваше место',yesH:'Мы вас ждём',yourTable:'Ваш стол',seats:n=>`${n} ${plural(n,'место','места','мест')}`,
   wMen:'в мужской части зала, за занавесом у входа',wFar:'в ряду у дальней стены, вдоль танцпола',wNear:'в ряду вдоль танцпола, со стороны входа',
@@ -897,7 +917,7 @@ ru:{
   ctaAns:'Ответить',ctaSeat:'Мой стол',ctaWish:'Пожелание',menuLbl:'Главы приглашения',
   menu:['Дата','Главное','Письмо','Программа','Место','Полезно знать','Ваш ответ','Пожелания'],
   nums:['первая','вторая','четвёртая','пятая','шестая','седьмая','восьмая','девятая'],
-  calTitle:'Свадьба Дилшоджона и Нодиры',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'до 15 ноября',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
+  calTitle:'Свадьба Дилшоджона и Нодиры',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'это займёт пару секунд',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
   qrInvite:'Приглашение на свадьбу',qrTitle:'Введите код с открытки',qrSub:'Код из четырёх знаков написан на вашей открытке под QR-кодом.',qrBtn:'Открыть приглашение',qrErr:'Такого кода нет. Проверьте буквы и цифры на открытке.',qrHelp:'Не получается? Позвоните Дилшоджону:'
 },
 uz:{
@@ -922,7 +942,7 @@ uz:{
         ['Bolalar','Sizni farzandlaringiz bilan ko‘rishdan xursand bo‘lamiz.',0],
         ['Savollar','Biror narsa tushunarsiz bo‘lsa, Dilshodjonga qo‘ng‘iroq qiling yoki yozing: §',0]],
   c8:'Javobingiz',rsvpH:'Biz bilan bo‘lasizmi?',
-  rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Hammasini tayyorlashga ulgurishimiz uchun, iltimos, 15-noyabrgacha javob bering.`,
+  rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Kela olasizmi — iltimos, bizga bildiring.`,
   coming:'Keladi',swipe:'albatta boraman',decline:'Afsuski, kela olmayman',
   c8y:'Joyingiz',yesH:'Sizni kutamiz',yourTable:'Stolingiz',seats:n=>`${n} ta joy`,
   wMen:'erkaklar qismida, kirish yonidagi parda ortida',wFar:'uzoq devor yonidagi qatorda, raqs maydoni bo‘ylab',wNear:'raqs maydoni bo‘ylab, kirish tomondagi qatorda',
@@ -931,11 +951,11 @@ uz:{
   noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
   c9:'Tilaklar',wishH:'Ko‘ngil so‘zlari',wishP:'Aytmoqchi bo‘lgan gapingiz bo‘lsa, shu yerda qoldirishingiz mumkin. Uni faqat biz ikkimiz o‘qiymiz.',wishLbl:'Maktubingiz',
   wishPh:'Shu yerga yozishingiz mumkin…',signLbl:'Imzo:',send:'Yuborish',wishErr:'Maktub hali bo‘sh.',wishGot:'Maktubingiz bizga yetib keldi',more:'Yana yozish',wishToast:'Yuborildi, rahmat!',
-  sign:'Muhabbat va diydor ilinjida',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
+  sign:'Hurmat va muhabbat bilan',yesToast:'Rahmat! 26-noyabrda sizni kutamiz',
   ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
   menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Tilaklar'],
   nums:['birinchi','ikkinchi','to‘rtinchi','beshinchi','oltinchi','yettinchi','sakkizinchi','to‘qqizinchi'],
-  calTitle:'Dilshodjon va Nodiraning to‘yi',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'15-noyabrgacha',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
+  calTitle:'Dilshodjon va Nodiraning to‘yi',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'bir necha soniya vaqt oladi',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
   qrInvite:'Nikoh to‘yiga taklifnoma',qrTitle:'Taklifnomadagi kodni kiriting',qrSub:'To‘rt belgili kod taklifnomangizda QR-kod ostida yozilgan.',qrBtn:'Taklifnomani ochish',qrErr:'Bunday kod yo‘q. Taklifnomadagi harf va raqamlarni tekshiring.',qrHelp:'Ochilmayaptimi? Dilshodjonga qo‘ng‘iroq qiling:'
 }};
 function tr(k,...a){const D=lang==='ru'?TX.ru:TX.uz;let v=D[k]??TX.ru[k];if(typeof v==='function')v=v(...a);return lang==='uzc'?conv(v):v}
@@ -1079,7 +1099,7 @@ function renderGuest(scrollId){
     </section>
     ${rsvpBlock(g,t)}
     ${wishBlock(g)}
-    <section class="chapter"><p class="sign">${tr('sign')}<b>${tr('groom')} ${tr('and')} ${tr('bride')}</b></p></section>`;
+    <section class="chapter"><p class="sign">${tr('sign')}<b>${tr('groom')}<br>${tr('and')} ${tr('bride')}</b></p></section>`;
   const lite=matchMedia('(pointer:coarse)').matches;petals($('#heroPetals'),lite?5:9);drift($('#snow'),lite?12:22,'snow');
   wireGuest(g,t);
   updCta(g,t);buildMenu();
@@ -1127,13 +1147,17 @@ function mbTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.create
   gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+.012);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)}
 function phrase(t0){
-  const beat=.62;
-  const bars=[[48,[64,67,72],[76,74,72]],[45,[64,69,72],[72,71,69]],[41,[65,69,72],[69,72,77]],[43,[62,67,71],[74,72,71]],
-              [48,[64,67,72],[72,76,79]],[45,[64,69,72],[77,76,72]],[50,[65,69,74],[74,77,76]],[43,[62,67,71],[74,71,67]]];
-  bars.forEach((b,i)=>{const t=t0+i*3*beat;
-    mbTone(mtof(b[0]),t,2.2,.5);
-    b[1].forEach((n,j)=>mbTone(mtof(n),t+beat*(1+j*.66),1.2,.18));
-    b[2].forEach((n,j)=>mbTone(mtof(n),t+j*beat,j===0?1.8:1.3,.42));
+  // original gentle waltz in 3/4: low note on "one", soft chord on "two-three", music-box melody on top
+  const beat=.42;
+  const CH={C:[48,[64,67,72]],Am:[45,[64,69,72]],Dm:[50,[65,69,74]],G:[43,[62,67,71]],F:[41,[65,69,72]],Em:[40,[64,67,71]],G7:[43,[65,71,74]]};
+  const bars=[['C',[[76,2],[79,1]]],['Am',[[81,2],[79,1]]],['Dm',[[77,1],[76,1],[74,1]]],['G',[[74,2],[71,1]]],
+              ['C',[[72,2],[76,1]]],['F',[[77,2],[81,1]]],['G',[[79,1],[77,1],[74,1]]],['C',[[72,3]]],
+              ['Am',[[76,2],[72,1]]],['Em',[[71,2],[76,1]]],['F',[[77,2],[81,1]]],['C',[[79,2],[76,1]]],
+              ['Dm',[[77,1],[81,1],[84,1]]],['G',[[83,2],[79,1]]],['G7',[[77,1],[74,1],[71,1]]],['C',[[72,3]]]];
+  bars.forEach(([c,mel],i)=>{const t=t0+i*3*beat;const [bass,ch]=CH[c];
+    mbTone(mtof(bass),t,1.4,.42);
+    [1,2].forEach(k=>ch.forEach(n=>mbTone(mtof(n),t+k*beat,.5,.11)));
+    let at=0;mel.forEach(([n,d])=>{mbTone(mtof(n),t+at*beat,Math.max(.7,d*beat*1.6),.4);at+=d});
   });
   return bars.length*3*beat;
 }
@@ -1316,31 +1340,47 @@ function renderAdmin(){
   if(tableFilter!=null)list=list.filter(g=>g.table===tableFilter);
   if(fSide!=='all')list=list.filter(g=>g.side===fSide);
   if(fGroup!=='all')list=list.filter(g=>g.group===fGroup);
+  if(fPart!=='all')list=list.filter(g=>g.part===fPart);
+  const ps=(p,f=()=>true)=>G.filter(g=>g.part===p&&f(g)).reduce((a,g)=>a+g.seats,0);
   const opts=g=>`<option value="">без стола</option>`+TABLES.map(t=>`<option value="${t.id}" ${g.table===t.id?'selected':''}>Стол ${t.id}</option>`).join('');
   $('#adminView').innerHTML=`
     <div class="admin-head"><div><div class="label">Свадьба ${W.groom} и ${W.bride} · 26 ноября 2026</div><h1>Наша панель</h1></div><div class="headacts"><span class="demotag">${G.length} приглашений · ${invited} мест</span><button class="pillbtn solid" id="commonQr">Общий QR для открыток</button><button class="pillbtn" id="reload">Обновить</button><button class="pillbtn" id="botSetup">Подключить бота</button><button class="pillbtn" id="logout">Выйти</button></div></div>
     <section class="pane addpane"><div class="pane-head"><h2>Добавить гостя</h2><span class="demotag">код подставлен из вашего листа кодов — первый свободный</span></div>
       <form id="addForm" class="addform">
+        <label>Тип<select id="aKind"><option value="one">Личное</option><option value="group">Общее (друзья, однокурсники…)</option></select></label>
+        <label id="aPreW" hidden>Для кого<select id="aPre">${GPRE.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
         <label>Код<input id="aCode" maxlength="6" value="${nextCode()}" autocomplete="off"></label>
-        <label class="wide">Имя, как на приглашении<input id="aName" placeholder="Алишер ака и Нигора опа" autocomplete="off"></label>
-        <label>Обращение<select id="aGreet">${['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'].map(x=>`<option>${x}</option>`).join('')}</select></label>
+        <label class="wide"><span id="aNameL">Имя, как на приглашении</span><input id="aName" placeholder="Алишер ака и Нигора опа" autocomplete="off"></label>
+        <label class="wide"><span id="aNameUzL">Имя по-узбекски, латиницей (необязательно)</span><input id="aNameUz" placeholder="пусто — переведётся само" autocomplete="off"></label>
+        <label id="aGreetW">Обращение<select id="aGreet">${['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'].map(x=>`<option>${x}</option>`).join('')}</select></label>
         <label>Мест<input id="aSeats" type="number" min="1" max="20" value="2"></label>
+        <label>Часть зала<select id="aPart">${PARTS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
         <label>Сторона<select id="aSide">${SIDES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
         <label>Группа<select id="aGrp">${GROUPS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
         <label>Язык<select id="aLang">${LANGS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
         <button class="pillbtn solid" type="submit">Добавить</button>
       </form>
-      <details class="import"><summary>Загрузить сразу много гостей списком</summary>
+      <div class="xlimport"><label class="pillbtn solid xlbtn">Загрузить из Excel<input type="file" id="xlFile" accept=".xlsx,.xls" hidden></label>
+        <span class="demotag">файл «Гости-Дилшоджон-Нодира.xlsx» · строки без имени пропускаются · ответы гостей не стираются</span>
+        <div id="xlPrev" class="xlprev" hidden></div></div>
+      <details class="import"><summary>Или вставить списком текстом</summary>
         <p class="demotag">Каждая строка: <b>КОД ; Имя ; мест</b>. Например: <code>DA32; Алишер ака и Нигора опа; 2</code></p>
         <textarea id="impText" rows="5" placeholder="DA32; Алишер ака и Нигора опа; 2&#10;4WHZ; Семья Каримовых; 4"></textarea>
         <button class="pillbtn solid" id="impBtn">Загрузить</button></details>
     </section>
+    <section class="pane letterpane"><details ${LETTER?'':''}><summary><h2>Текст письма</h2><span class="demotag">${LETTER?'ваш текст':'стандартный текст'} · одинаковый для всех гостей</span></summary>
+      <p class="demotag">Над текстом каждый гость видит своё обращение («Уважаемые Алишер ака и Нигора опа,»), под ним — ваши личные слова, если вы их добавили. Узбекская кириллица делается из латиницы сама.</p>
+      <div class="lgrid">${[['ru','По-русски'],['uz','O‘zbekcha (lotin)']].map(([l,t])=>`<div><b>${t}</b>${['p1','p2'].map((k,i)=>`<label>Абзац ${i+1}<textarea data-lt="${l}.${k}" rows="${i?3:5}">${esc((LETTER&&LETTER[l]&&LETTER[l][k])||TX[l][k])}</textarea></label>`).join('')}</div>`).join('')}</div>
+      <div class="btnrow"><button class="pillbtn solid" id="ltSave">Сохранить текст</button>${LETTER?'<button class="pillbtn" id="ltReset">Вернуть стандартный</button>':''}</div></details></section>
     <section class="stats" aria-label="Сводка">
       <div class="stat"><b>${yes}</b><small>${plural(yes,'гость придёт','гостя придут','гостей придут')}</small><div class="bar"><i style="width:${pct(yes)}%;background:var(--ok)"></i></div></div>
       <div class="stat"><b>${wait}</b><small>${plural(wait,'место ждёт','места ждут','мест ждут')} ответа</small><div class="bar"><i style="width:${pct(wait)}%;background:var(--gold)"></i></div></div>
       <div class="stat"><b>${no}</b><small>${plural(no,'гость не сможет','гостя не смогут','гостей не смогут')}</small><div class="bar"><i style="width:${pct(no)}%;background:var(--no)"></i></div></div>
       <div class="stat"><b>${unseated}</b><small>${plural(unseated,'приглашение','приглашения','приглашений')} без стола</small><div class="bar"><i style="width:${unseated?100:0}%;background:var(--muted)"></i></div></div>
     </section>
+    <section class="pane planpane"><div class="pane-head"><h2>План мест</h2><span class="demotag">вписано / план</span></div><div class="plan">
+      ${[['Женская часть · столы 1–15',ps('w'),150],['Мужская часть · столы 16–20',ps('m'),50],['— сторона невесты',ps('m',g=>g.side==='b'),10],['— друзья жениха',ps('m',g=>g.side==='g'&&g.group==='fr'),20],['— родственники жениха',ps('m',g=>g.side==='g'&&g.group==='rel'),20]].map(([l,v,p])=>`<div class="pl${l[0]==='—'?' sub':''}"><span>${l}</span><b class="${v>p?'over':v===p?'full':''}">${v} / ${p}</b><div class="bar"><i style="width:${Math.min(100,Math.round(v/p*100))}%"></i></div></div>`).join('')}
+    </div></section>
     <div class="panes">
       <section class="pane"><div class="pane-head"><h2>Зал</h2><div class="seg mini" role="group" aria-label="Раскраска зала"><button data-hm="rsvp" aria-pressed="${hallMode==='rsvp'}">По ответам</button><button data-hm="group" aria-pressed="${hallMode==='group'}">По группам</button></div>${tableFilter!=null?'<button class="pillbtn" id="clearT">Все столы</button>':''}</div>
         <div class="legend">${hallMode==='group'
@@ -1351,15 +1391,23 @@ function renderAdmin(){
       <section class="pane"><div class="pane-head"><h2>${tableFilter!=null?'Стол '+tableFilter:'Гости'}</h2></div>
         <div class="filters" role="group" aria-label="Фильтр">${[['all','Все'],['yes','Придут'],['wait','Ждём'],['no','Не придут']].map(([k,l])=>`<button data-f="${k}" aria-pressed="${filter===k}">${l}</button>`).join('')}</div>
         <div class="filters" role="group" aria-label="Сторона и группа">${[['all','Все стороны'],...SIDES].map(([k,l])=>`<button data-side="${k}" aria-pressed="${fSide===k}">${l}</button>`).join('')}
-          <select id="fGroup" aria-label="Группа гостей"><option value="all">Все группы</option>${GROUPS.map(([k,l])=>`<option value="${k}" ${fGroup===k?'selected':''}>${l}</option>`).join('')}</select></div>
-        <ul class="glist">${list.length?list.map(g=>`<li><div class="gname"><b>${esc(g.name)}${g.remind?' <span class="bell" title="Ждёт напоминание в Telegram">🔔</span>':''}</b><small>${g.status==='yes'?`${g.coming} из ${g.seats}`:`${g.seats} ${plural(g.seats,'место','места','мест')}`} · код открытки <b class="cardcode">${g.card}</b></small><span class="gtype" style="--c:${grp(g.group)[2]}">${typeLabel(g)}</span></div>
+          ${[['all','Весь зал'],...PARTS].map(([k,l])=>`<button data-part="${k}" aria-pressed="${fPart===k}">${l}</button>`).join('')}<select id="fGroup" aria-label="Группа гостей"><option value="all">Все группы</option>${GROUPS.map(([k,l])=>`<option value="${k}" ${fGroup===k?'selected':''}>${l}</option>`).join('')}</select></div>
+        <ul class="glist">${list.length?list.map(g=>`<li><div class="gname"><b>${esc(g.name)}${g.remind?' <span class="bell" title="Ждёт напоминание в Telegram">🔔</span>':''}</b><small>${g.status==='yes'?`${g.coming} из ${g.seats}`:`${g.seats} ${plural(g.seats,'место','места','мест')}`} · код открытки <b class="cardcode">${g.card}</b></small><span class="gtype" style="--c:${grp(g.group)[2]}">${typeLabel(g)}${g.part==='m'?' · мужская часть':''}</span>${g.kind==='group'?'<span class="gtype shared">общее приглашение · каждый отвечает за себя</span>':''}
+          ${g.kind==='group'&&g.answers.length?`<ul class="ans">${g.answers.map(a=>`<li>${esc(a.name)} — ${a.coming?`придёт${a.coming>1?' ('+a.coming+')':''}`:'не сможет'}</li>`).join('')}</ul>`:''}</div>
           <span class="pill ${g.status}">${ST[g.status]}</span>
           <div class="acts"><select data-g="${g.id}" aria-label="Стол для ${esc(g.name)}">${opts(g)}</select>
             <select data-l="${g.id}" aria-label="Язык приглашения для ${esc(g.name)}">${LANGS.map(([k,l])=>`<option value="${k}" ${g.lang===k?'selected':''}>${l}</option>`).join('')}</select>
+            <select data-part-of="${g.id}" aria-label="Часть зала">${PARTS.map(([k,l])=>`<option value="${k}" ${g.part===k?'selected':''}>${l}</option>`).join('')}</select>
             <select data-side-of="${g.id}" aria-label="Чья сторона">${SIDES.map(([k,l])=>`<option value="${k}" ${g.side===k?'selected':''}>${l}</option>`).join('')}</select>
             <select data-group-of="${g.id}" aria-label="Группа">${GROUPS.map(([k,l])=>`<option value="${k}" ${g.group===k?'selected':''}>${l}</option>`).join('')}</select>
             ${g.group==='rel'?`<select data-line-of="${g.id}" aria-label="Линия родства">${LINES.map(([k,l])=>`<option value="${k}" ${g.line===k?'selected':''}>${l}</option>`).join('')}</select>`:''}
-            <button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
+            <button class="iconbtn" data-edit="${g.id}" aria-expanded="${!!g.editOpen}">✎ Изменить</button><button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a>${g.status!=='none'?`<button class="iconbtn" data-reset="${g.id}">${g.resetAsk?'Точно сбросить?':'Сбросить ответ'}</button>`:''}<button class="iconbtn" data-recode="${g.id}">${g.recodeAsk?`Сменить на ${nextCode()}?`:'Новый код'}</button><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
+            ${g.editOpen?`<form class="editform" data-ef="${g.id}">
+              <label class="wide">${g.kind==='group'?'Обращение по-русски':'Имя, как на приглашении'}<input name="name" value="${esc(g.name)}" maxlength="120"></label>
+              <label class="wide">${g.kind==='group'?'Обращение по-узбекски':'Имя по-узбекски'} <small>(латиницей; пусто — «${esc(uzAuto(g.name))}»)</small><input name="name_uz" value="${esc(g.name_uz)}" maxlength="120" placeholder="${esc(uzAuto(g.name))}"></label>
+              ${g.kind==='group'?'':`<label>Обращение<select name="greet">${GREETS.map(x=>`<option ${g.greet===x?'selected':''}>${x}</option>`).join('')}</select></label>`}
+              <label>${g.kind==='group'?'Мест на всех':'Мест'}<input name="seats" type="number" min="1" max="20" value="${g.seats}"></label>
+              <div class="btnrow"><button class="pillbtn solid" type="submit">Сохранить</button><button class="pillbtn" type="button" data-ecancel="${g.id}">Отмена</button></div></form>`:''}
             ${g.noteOpen?`<textarea class="notein" data-note-in="${g.id}" rows="2" placeholder="Пара тёплых слов лично этому гостю. Появятся в его письме.">${esc(g.note||'')}</textarea>`:''}</div></li>`).join(''):'<li class="emptynote">Здесь пока никого.</li>'}</ul></section>
     </div>
     <section class="pane"><div class="pane-head"><h2>Кто приглашён</h2><span class="demotag">мест по группам · в скобках подтвердили</span></div>
@@ -1370,7 +1418,7 @@ function renderAdmin(){
     </section>
     <section class="pane remindpane"><div class="pane-head"><h2>Напоминание в Telegram</h2><span class="demotag">${G.filter(g=>g.remind&&g.status==='yes').length} ${plural(G.filter(g=>g.remind&&g.status==='yes').length,'гость ждёт','гостя ждут','гостей ждут')}</span></div>
       <div class="tgprev"><div class="tgmeta">25 ноября, 12:00 · отправится автоматически тем, кто ответил «Приду» и нажал «Напомнить»</div>
-        <div class="bubble">Завтра наша свадьба! 💍<br>Ждём вас 26 ноября в 18:00, ресторан «Maroqand», ул. Хидоятова, 20А.<br>Ваш стол № 5.<br><br>Дилшоджон и Нодира</div></div>
+        <div class="bubble">Завтра наша свадьба! 💍<br>Ждём вас 26 ноября в 18:00, свадебный ресторан «Maroqand», ул. Хидоятова, 20А.<br>Ваш стол № 5.<br><br>Дилшоджон и Нодира</div></div>
       <p class="demotag" style="margin:0">Номер стола подставляется для каждого гостя свой. Гостям, выбравшим узбекский, придёт текст на узбекском.</p>
     </section>
     <section class="pane"><div class="pane-head"><h2>Коды для открыток</h2><button class="pillbtn" id="copyCodes">Скопировать списком</button></div>
@@ -1378,15 +1426,30 @@ function renderAdmin(){
       <ol class="codes">${G.map(g=>`<li><span>${esc(g.name)}</span><b class="cardcode">${g.card}</b></li>`).join('')}</ol>
     </section>
     <section class="pane"><div class="pane-head"><h2>Пожелания</h2><span class="demotag">видите только вы · ${WISHES.length}</span></div>
-      ${WISHES.length?`<ul class="wishes">${WISHES.slice().reverse().map(w=>{const g=G.find(x=>x.id===w.gid);return `<li><blockquote>${esc(w.text)}</blockquote><span class="from"><b>${esc(g?g.name:'Гость')}</b> · ${fmtAt(w.at)}</span></li>`}).join('')}</ul>`
+      ${WISHES.length?`<ul class="wishes">${WISHES.slice().reverse().map(w=>{const g=G.find(x=>x.id===w.gid);return `<li><blockquote>${esc(w.text)}</blockquote><span class="from"><b>${esc(w.author||(g?g.name:'Гость'))}</b>${w.author&&g?` · <small>${esc(g.name)}</small>`:''} · ${fmtAt(w.at)}</span></li>`}).join('')}</ul>`
       :'<p class="emptynote">Пока пожеланий нет. Они появятся здесь, как только гости начнут писать.</p>'}
     </section>`;
   drawHall($('#adminHall'),{selected:tableFilter,byGroup:hallMode==='group',onPick:id=>{tableFilter=tableFilter===id?null:id;renderAdmin()}});
   const ct=$('#clearT');if(ct)ct.onclick=()=>{tableFilter=null;renderAdmin()};
   document.querySelectorAll('[data-hm]').forEach(b=>b.onclick=()=>{hallMode=b.dataset.hm;renderAdmin()});
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.edit);g.editOpen=!g.editOpen;renderAdmin()});
+  document.querySelectorAll('[data-ecancel]').forEach(b=>b.onclick=()=>{G.find(x=>x.id==b.dataset.ecancel).editOpen=false;renderAdmin()});
+  document.querySelectorAll('[data-ef]').forEach(fm=>fm.onsubmit=async e=>{e.preventDefault();const g=G.find(x=>x.id==fm.dataset.ef);const d=Object.fromEntries(new FormData(fm));
+    if(!d.name.trim()){toast('Имя не может быть пустым');return}const fields={name:d.name.trim(),name_uz:d.name_uz.trim()||null,seats:d.seats};if(d.greet)fields.greet=d.greet;
+    const r=await adm('save',{id:g.id,fields});if(r&&r.guest){const ans=g.answers;Object.assign(g,fromRow(r.guest));g.answers=ans;g.editOpen=false;renderAdmin();toast('Сохранено: '+g.name)}});
+  const ak=$('#aKind'),ap=$('#aPre');const syncKind=()=>{const grpK=ak.value==='group';$('#aPreW').hidden=!grpK;$('#aGreetW').hidden=grpK;
+    $('#aNameL').textContent=grpK?'Обращение по-русски':'Имя, как на приглашении';$('#aNameUzL').textContent=grpK?'Обращение по-узбекски, латиницей':'Имя по-узбекски, латиницей (необязательно)';
+    if(grpK){const p=GPRE.find(x=>x[0]===ap.value);$('#aName').value=p[2];$('#aNameUz').value=p[3];$('#aGrp').value=p[4];$('#aSeats').value=10}else{$('#aName').value='';$('#aNameUz').value='';$('#aSeats').value=2}};
+  ak.onchange=syncKind;ap.onchange=syncKind;
+  const lts=$('#ltSave');if(lts)lts.onclick=async()=>{const v={ru:{},uz:{}};document.querySelectorAll('[data-lt]').forEach(t=>{const[l,k]=t.dataset.lt.split('.');v[l][k]=t.value.trim()});
+    const r=await adm('letter',{value:v});if(r){LETTER=r.letter;renderAdmin();toast('Текст письма сохранён — гости увидят его сразу')}};
+  const ltr=$('#ltReset');if(ltr)ltr.onclick=async()=>{const r=await adm('letter',{value:{}});if(r){LETTER=null;renderAdmin();toast('Вернули стандартный текст')}};
   document.querySelectorAll('[data-note]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.note);g.noteOpen=!g.noteOpen;renderAdmin();const t=document.querySelector(`[data-note-in="${g.id}"]`);t&&t.focus()});
   document.querySelectorAll('[data-note-in]').forEach(t=>t.oninput=()=>{const g=G.find(x=>x.id==t.dataset.noteIn);g.note=t.value.trim();clearTimeout(t._d);t._d=setTimeout(()=>save(g,{note:g.note||null},'Личные слова сохранены'),700)});
   document.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{fSide=b.dataset.side;renderAdmin()});
+  document.querySelectorAll('[data-part]').forEach(b=>b.onclick=()=>{fPart=b.dataset.part;renderAdmin()});
+  document.querySelectorAll('[data-part-of]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.partOf);g.part=s.value;renderAdmin();save(g,{part:g.part},`${g.name}: ${s.value==='m'?'мужская':'женская'} часть`)});
+  $('#xlFile').onchange=e=>{const f=e.target.files[0];if(f)readXl(f)};
   $('#fGroup').onchange=e=>{fGroup=e.target.value;renderAdmin()};
   const setT=(attr,key,fix)=>document.querySelectorAll(`[${attr}]`).forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.getAttribute(attr));g[key]=s.value;if(fix)fix(g);renderAdmin();save(g,{side:g.side,grp:g.group,line:g.line},`${g.name}: ${typeLabel(g)}`)});
   setT('data-side-of','side');setT('data-group-of','group',g=>{if(g.group!=='rel')g.line=''});setT('data-line-of','line');
@@ -1398,9 +1461,16 @@ function renderAdmin(){
   $('#reload').onclick=()=>load();$('#logout').onclick=()=>{try{sessionStorage.removeItem('dn-admin')}catch(_){}KEY='';showLogin()};
   $('#botSetup').onclick=async()=>{const r=await adm('setup');if(r)toast(r.hook&&r.hook.ok?'Бот подключён, проверьте Telegram':'Не получилось: проверьте токен бота в Vercel')};
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.del);if(!g.delAsk){g.delAsk=true;renderAdmin();setTimeout(()=>{g.delAsk=false},4000);return}
-    if(await adm('delete',{id:g.id})){G=G.filter(x=>x!==g);renderAdmin();toast('Гость удалён')}});
-  $('#addForm').onsubmit=async e=>{e.preventDefault();const f={code:normCode($('#aCode').value),name:$('#aName').value.trim(),greet:$('#aGreet').value,seats:$('#aSeats').value,side:$('#aSide').value,grp:$('#aGrp').value,lang:$('#aLang').value};
+    if(await adm('delete',{id:g.id})){RETIRED.add(g.card);G=G.filter(x=>x!==g);renderAdmin();toast('Гость удалён. Его код больше не будет выдан')}});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.reset);if(!g.resetAsk){g.resetAsk=true;renderAdmin();setTimeout(()=>{g.resetAsk=false},4000);return}
+    const r=await adm('reset',{id:g.id});if(r&&r.guest){Object.assign(g,fromRow(r.guest));g.resetAsk=false;renderAdmin();toast(g.name+': ответ сброшен')}});
+  document.querySelectorAll('[data-recode]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.recode);const nc=nextCode();if(!nc){toast('Свободные коды из листа закончились');return}
+    if(!g.recodeAsk){g.recodeAsk=true;renderAdmin();setTimeout(()=>{g.recodeAsk=false},5000);return}
+    const r=await adm('recode',{id:g.id,code:nc});if(r&&r.guest){RETIRED.add(r.old);WISHES=WISHES.filter(w=>w.gid!==g.id);Object.assign(g,fromRow(r.guest));g.recodeAsk=false;renderAdmin();toast(`${g.name}: новый код ${nc} — напишите его на открытке. Старая ссылка больше не работает`)}});
+  $('#addForm').onsubmit=async e=>{e.preventDefault();const kind=$('#aKind').value;const f={kind,name_uz:$('#aNameUz').value.trim()||null,code:normCode($('#aCode').value),name:$('#aName').value.trim(),greet:kind==='group'?'Дорогие':$('#aGreet').value,seats:$('#aSeats').value,side:$('#aSide').value,grp:$('#aGrp').value,part:$('#aPart').value,lang:$('#aLang').value};
     if(f.code.length<4||!f.name){toast('Нужны код (4 знака) и имя');return}
+    if(RETIRED.has(f.code)){toast('Код '+f.code+' был у удалённого гостя — возьмите другой');return}
+    if(G.some(g=>g.card===f.code)){toast('Код '+f.code+' уже есть у другого гостя');return}
     const r=await adm('save',{fields:f});if(r&&r.guest){G.push(fromRow(r.guest));renderAdmin();toast('Добавлен: '+f.name)}};
   $('#impBtn').onclick=async()=>{const rows=$('#impText').value.split('\n').map(l=>l.split(/[;\t]/).map(x=>x.trim())).filter(p=>p[0]&&p[1]).map(p=>({code:normCode(p[0]),name:p[1],seats:p[2]||1}));
     if(!rows.length){toast('Нет строк для загрузки');return}const r=await adm('import',{rows});if(r){toast('Загружено: '+r.imported);load()}};
@@ -1451,17 +1521,52 @@ function renderQr(){
 /* ---------- live data for the couple ---------- */
 const PRINTED=["DA32", "4WHZ", "4R4V", "Y2GB", "HS7M", "HYC5", "77B6", "SPKN", "P437", "LVBP", "5XXK", "9R72", "G7W5", "WSJ8", "S6ZH", "S9C7", "3XSZ", "CSVE", "WESF", "T6EU", "8TB8", "XAMW", "FKWP", "KBS6", "JV6U", "9V6M", "5MJB", "KU52", "TL8Z", "7S6Z", "35DB", "TLMR", "VMPJ", "8NYG", "FSKV", "ZS72", "ZMB9", "N6F7", "KH2A", "U2H5", "V8KG", "Y4EX", "N533", "M7LB", "AXR8", "9LNP", "CBLT", "K34R", "ZDSU", "MECL", "W83X", "V5VL", "K7YW", "NZFL", "V8L2", "RYM3", "TX6L", "VXBW", "TLBR", "ZVZ9", "22K5", "CZJ7", "3KS4", "YB7L", "84V9", "7A5N", "2AAN", "428W", "NR9Y", "EYRP", "52T7", "CC9A", "A23G", "EK9Y", "L8L5", "NZN4", "K5BR", "4ZZU", "PD4Y", "DC5M", "9MPD", "LAX2", "6N8K", "UPB6", "2X77", "RS2C", "EKTJ", "56EM", "6PH4", "NN7G", "LHJJ", "DWZU", "YHUD", "L2NA", "5UUX", "SS9R", "Z5PJ", "7GTG", "Z5CU", "VYJT", "AXTT", "DDSB", "5AG3", "MPXJ", "CAHL", "9696", "PMU9", "KMFB", "8RSZ", "JW58", "8BCB", "CN4R", "35UW", "LKDM", "VCZE", "8CJF", "TX2H", "CZ2Y", "JS6N", "3S6S", "DFW5", "XL5T", "RG9S", "S3U6", "WMAR", "8F5T", "9YBK", "26JV", "AE45", "XEUF", "H9MW", "W6TK", "R6EK", "KADH", "VBP9", "2WTR", "6DYX", "WC7L", "54YF", "CBZ8", "Z293", "DUJF", "VWLX", "MU4T", "HJF6", "LW9E", "R6UT", "KZVB", "RAGX", "JHY6", "XDGN", "N7F9", "M4DM", "BF5Z", "RGUB", "AFPW", "YUKZ", "TDMW", "P2YZ", "H5GC", "HAT7", "YPCN", "BL6T", "LVJV", "SP9C", "GDCX", "NEX5", "93D2", "BYME", "M48L", "W33R", "PZJW", "7T7F", "WVNU", "EHHC", "JLWA", "A37P", "UDZB", "C5EM", "3UKL", "GANW", "5J9B", "CEP8", "6MXN", "R6FT", "5GB8", "8CJP", "W93B", "CVJ8", "BME8", "RRDB", "3F6Z", "UYWV", "6LDH", "EHWY", "GCKM", "B9U9", "HKD8", "C93G", "EMKB", "TWMH", "6PDD", "9BD9", "AVAD", "ZR2A", "T3XH", "7EWL", "L6DB", "UTLW", "D6CW", "5E4G", "Z2TZ", "77B4", "89TA", "YK7C", "CV3V", "XB73", "6W98", "R7GL", "JMFV", "VHA9", "EWXP", "N3DH", "W54Y", "H9UP", "5YXC", "Z3FE", "KRLL", "B588", "YX3D", "AKFJ", "27TW", "VR7X", "TZ53", "DDCF", "VYU5", "F8CZ", "55UU", "3EPE", "3VEW", "XT82", "5YFH", "H6KH", "LGNX", "228Z", "6UJL", "VB5U", "33WA", "TZE8", "RM9T"];
 let KEY='';try{KEY=sessionStorage.getItem('dn-admin')||''}catch(_){}
-let BOTNAME='';
-function fromRow(r){return{id:r.id,name:r.name,greet:r.greet,seats:r.seats,table:r.table_no,status:r.status,coming:r.coming,lang:r.lang,side:r.side,group:r.grp,line:r.line,note:r.note,remind:!!r.tg_chat_id,card:r.code,code:r.code}}
+let BOTNAME='',RETIRED=new Set(),LETTER=null;
+const GREETS=['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'];
+const GPRE=[['fr','Друзья','Дорогие друзья','Qadrli do‘stlar','fr'],['ks','Однокурсники','Дорогие однокурсники','Qadrli kursdoshlar','fr'],['sn','Одноклассники','Дорогие одноклассники','Qadrli sinfdoshlar','fr'],
+  ['col','Коллеги','Дорогие коллеги','Qadrli hamkasblar','col'],['nb','Соседи','Дорогие соседи','Qadrli qo‘shnilar','nb'],['own','Свой текст','','','oth']];
+const uzAuto=n=>cyr2lat(String(n||'').replace(/ и /g,' va '));
+function fromRow(r){return{id:r.id,part:r.part||'w',name_uz:r.name_uz||'',kind:r.kind||'one',answers:[],name:r.name,greet:r.greet,seats:r.seats,table:r.table_no,status:r.status,coming:r.coming,lang:r.lang,side:r.side,group:r.grp,line:r.line,note:r.note,remind:!!r.tg_chat_id,card:r.code,code:r.code}}
 const link=g=>`${location.origin}/?c=${g.card}`;
 const shareTg=g=>`https://t.me/share/url?url=${encodeURIComponent(link(g))}&text=${encodeURIComponent(`${g.greet} ${g.name}! Приглашаем вас на нашу свадьбу 💍 Ваше личное приглашение:`)}`;
-function nextCode(){const used=new Set(G.map(g=>g.card));return PRINTED.find(c=>!used.has(c))||''}
+function nextCode(){const used=new Set(G.map(g=>g.card));return PRINTED.find(c=>!used.has(c)&&!RETIRED.has(c))||''}
 async function adm(action,extra){try{const r=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':KEY},body:JSON.stringify({action,...extra})});
   const j=await r.json().catch(()=>({}));if(r.status===401){showLogin('Неверный пароль');return null}
-  if(!r.ok){toast(j.error==='duplicate_code'?'Такой код уже есть у другого гостя':'Ошибка сервера, попробуйте ещё раз');return null}return j}catch(e){toast('Нет связи с сервером');return null}}
+  if(!r.ok){toast(j.error==='duplicate_code'?'Такой код уже есть у другого гостя':j.error==='retired_code'?'Этот код был у удалённого гостя — возьмите другой':'Ошибка сервера, попробуйте ещё раз');return null}return j}catch(e){toast('Нет связи с сервером');return null}}
 async function save(g,fields,msg){const r=await adm('save',{id:g.id,fields});if(r&&msg)toast(msg)}
-async function load(){const j=await adm('list');if(!j)return;BOTNAME=j.bot||'';G=j.guests.map(fromRow);
-  WISHES=j.wishes.map(w=>({gid:w.guest_id,text:w.text,at:new Date(w.created_at)}));$('#login').hidden=true;$('#adminView').hidden=false;mode='admin';renderAdmin()}
+function loadXlLib(){return window.XLSX?Promise.resolve():new Promise((ok,bad)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=ok;sc.onerror=bad;document.head.appendChild(sc)})}
+const XMAP={greet:['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'],
+  part:{'женская часть':'w','мужская часть':'m'},side:{'дилшоджон':'g','нодира':'b','общие':'both'},
+  grp:Object.fromEntries(GROUPS.map(([k,l])=>[l.toLowerCase(),k])),line:{'по отцу':'f','по матери':'m'},
+  lang:{'русский':'ru','o‘zbekcha':'uzl',"o'zbekcha":'uzl','ozbekcha':'uzl','ўзбекча':'uzc'}};
+let XROWS=[];
+async function readXl(file){const p=$('#xlPrev');p.hidden=false;p.textContent='Читаю файл…';
+  try{await loadXlLib()}catch(e){p.textContent='Не удалось загрузить модуль Excel. Проверьте интернет.';return}
+  let rows;try{const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const sh=wb.Sheets['Гости']||wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(sh,{header:1,defval:''})}catch(e){p.textContent='Это не похоже на файл Excel.';return}
+  const hi=rows.findIndex(r=>r.some(c=>String(c).trim()==='Код'));if(hi<0){p.textContent='Не нашёл столбец «Код». Используйте присланный шаблон.';return}
+  const H=rows[hi].map(c=>String(c).trim().toLowerCase());const col=w=>H.findIndex(h=>h.startsWith(w));
+  const C={code:col('код'),name:col('имя'),greet:col('обращение'),seats:col('мест'),part:col('часть'),side:col('сторона'),grp:col('группа'),line:col('линия'),lang:col('язык'),table:col('стол'),note:col('личные')};
+  const v=(r,k)=>C[k]<0?'':String(r[C[k]]??'').trim();const warn=[];const seen=new Set();XROWS=[];
+  rows.slice(hi+1).forEach((r,i)=>{const name=v(r,'name');if(!name)return;const code=normCode(v(r,'code'));const n=hi+i+2;
+    if(code.length<4){warn.push(`строка ${n}: нет кода`);return}
+    if(RETIRED.has(code)){warn.push(`строка ${n} (${name}): код ${code} был у удалённого гостя — замените код в Excel, строка пропущена`);return}if(seen.has(code)){warn.push(`строка ${n}: код ${code} повторяется`);return}seen.add(code);
+    const o={code,name,seats:Math.max(1,Math.min(20,parseInt(v(r,'seats'),10)||1)),greet:XMAP.greet.includes(v(r,'greet'))?v(r,'greet'):'Дорогие',
+      part:XMAP.part[v(r,'part').toLowerCase()]||'w',side:XMAP.side[v(r,'side').toLowerCase()]||'both',grp:XMAP.grp[v(r,'grp').toLowerCase()]||'oth',
+      line:XMAP.line[v(r,'line').toLowerCase()]||'',lang:XMAP.lang[v(r,'lang').toLowerCase()]||'ru'};
+    if(!v(r,'part'))warn.push(`строка ${n} (${name}): часть зала не выбрана — поставлю «Женская»`);
+    const t=parseInt(v(r,'table'),10);if(t>=1&&t<=20)o.table_no=t;const nt=v(r,'note');if(nt)o.note=nt;XROWS.push(o)});
+  const seats=k=>XROWS.filter(o=>!k||o.part===k).reduce((a,o)=>a+o.seats,0);const exist=XROWS.filter(o=>G.some(g=>g.card===o.code)).length;
+  p.innerHTML=XROWS.length?`<b>Найдено ${XROWS.length} ${plural(XROWS.length,'приглашение','приглашения','приглашений')} · ${seats()} мест</b> (женская часть ${seats('w')}, мужская ${seats('m')})${exist?`<br>${exist} уже есть в панели — их данные обновятся, ответы сохранятся.`:''}
+    ${warn.length?`<details><summary>Замечания: ${warn.length}</summary><ul>${warn.slice(0,40).map(w=>`<li>${esc(w)}</li>`).join('')}</ul></details>`:''}
+    <div class="btnrow"><button class="pillbtn solid" id="xlGo">Загрузить на сайт</button><button class="pillbtn" id="xlNo">Отмена</button></div>`
+    :`В файле нет строк с именами.${warn.length?' '+esc(warn[0]):''}`;
+  const go=$('#xlGo');if(go)go.onclick=async()=>{go.disabled=true;go.textContent='Загружаю…';let done=0;
+    const groups={};XROWS.forEach(o=>{const k=Object.keys(o).sort().join();(groups[k]=groups[k]||[]).push(o)});
+    for(const rs of Object.values(groups))for(let i=0;i<rs.length;i+=100){const r=await adm('import',{rows:rs.slice(i,i+100)});if(!r){go.disabled=false;go.textContent='Повторить';return}done+=r.imported;if(r.skipped&&r.skipped.length)toast('Пропущены коды удалённых гостей: '+r.skipped.join(', '))}
+    toast('Загружено: '+done);XROWS=[];await load()};
+  const no=$('#xlNo');if(no)no.onclick=()=>{XROWS=[];p.hidden=true;$('#xlFile').value=''}}
+async function load(){const j=await adm('list');if(!j)return;BOTNAME=j.bot||'';RETIRED=new Set(j.retired||[]);LETTER=j.letter||null;G=j.guests.map(fromRow);
+  WISHES=j.wishes.map(w=>({gid:w.guest_id,text:w.text,author:w.author||'',at:new Date(w.created_at)}));(j.answers||[]).forEach(a=>{const g=G.find(x=>x.id===a.guest_id);if(g)g.answers.push(a)});$('#login').hidden=true;$('#adminView').hidden=false;mode='admin';renderAdmin()}
 function showLogin(err){$('#adminView').hidden=true;const l=$('#login');l.hidden=false;
   l.innerHTML=`<form class="loginbox" id="loginForm"><div class="entry-mono">Д·Н</div><h1>Наша панель</h1><p class="demotag">Только для Дилшоджона и Нодиры</p>
     <input id="pw" type="password" autocomplete="current-password" placeholder="Пароль" class="codein" style="letter-spacing:.1em;font-size:20px">

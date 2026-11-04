@@ -608,6 +608,9 @@ html.evening .hero .portal .mono{color:#f6e6bd}
 .rm-hint{position:absolute;right:10px;bottom:10px;background:var(--lapis);color:#fbf4e4;font-size:12px;padding:5px 10px;border-radius:999px;box-shadow:0 6px 14px rgba(19,36,61,.35)}
 .place .m-cap{position:static;text-align:center;margin:0 auto 4px;max-width:420px}
 .tk-h{width:.62em;height:.62em;fill:currentColor;vertical-align:.02em;margin-inline:.05em}
+.mename{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mename input{font:inherit;font-size:17px;letter-spacing:0;text-transform:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.mename input:focus{outline:2px solid var(--gold);outline-offset:1px}
 /* 9) 3D map card */
 .map3d{display:block;position:relative;width:100%;max-width:330px;height:230px;margin:4px auto 6px;perspective:700px;text-decoration:none;color:inherit}
 .m-plane{position:absolute;left:4%;right:4%;top:14px;height:170px;border-radius:12px;overflow:hidden;transform-origin:50% 80%;transform:rotateX(38deg) rotateZ(-6deg) scale(1.02);box-shadow:0 22px 30px -16px rgba(19,36,61,.45);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
@@ -704,7 +707,7 @@ const W = {
   venue:'Свадебный ресторан «Maroqand»', hall:'Место торжества', addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа', mapq:'Maroqand, ул. Хидоятова, 20А, Чигатай-Актепа',
   rsvpBy:'15 ноября',
   // times and icons; titles live in TX (per language)
-  program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note'],['21:00','cake']],
+  program:[['18:00','glass'],['18:30','rings'],['19:00','plate'],['20:00','note']],
   phone:'+998 33 333 12 12',
   palette:['#f3ece0','#ecd3cf','#c9dbe3','#b4c2a9','#2f4f78']
 };
@@ -852,6 +855,7 @@ function cyr2lat(s){return s.replace(/[А-яЁёЎўҚқҒғҲҳ]/g,(ch,i)=>{con
   if(lo==='е'&&(i===0||/[\s\-«(]/.test(s[i-1])))r='ye';return ch!==lo&&r?r[0].toUpperCase()+r.slice(1):r})}
 function conv(v){return Array.isArray(v)?v.map(conv):typeof v==='string'?lat2cyr(v):v}
 // guest names are entered once in Cyrillic; Uzbek views swap the Russian "и" for "va"
+function gName(g){if(lang==='ru')return g.name;if(g.name_uz)return lang==='uzc'?lat2cyr(g.name_uz):g.name_uz;return nm(g.name)}
 function nm(s){if(lang==='ru')return s;s=s.replace(/ и /g,' va ');return lang==='uzl'?cyr2lat(s).replace(/ va /g,' va '):s.replace(/ va /g,' ва ')}
 const TX={
 ru:{
@@ -864,7 +868,7 @@ ru:{
   c3:'До встречи',
   c4:'Программа',progH:'Как пройдёт вечер',
   prog:[['Сбор гостей','Встречаемся, обнимаемся и фотографируемся'],['Выход молодожёнов','Тот самый момент, ради которого мы собрались'],
-        ['Праздничный ужин','Угощения, тёплые слова и поздравления'],['Первый танец молодожёнов',''],['Свадебный торт','Сладкий финал вечера']],
+        ['Праздничный ужин','Угощения, тёплые слова и поздравления'],['Первый танец молодожёнов','']],
   c5:'Место',hall:'Место торжества',venue:'Свадебный ресторан «Maroqand»',addr:'Ташкент, ул. Хидоятова, 20А · махалля Чигатай-Актепа',yandex:'Яндекс Карты',
   c6:'Дресс-код',dressH:'Нежные оттенки',
   dressP:'Если захотите поддержать настроение вечера, выберите что-то из этих пастельных оттенков. Главное, чтобы вам было удобно и радостно.',
@@ -875,8 +879,8 @@ ru:{
         ['Парковка','У ресторана есть парковка.',0],
         ['Дети','Будем рады видеть вас вместе с детьми.',0],
         ['Вопросы','Если что-то непонятно, звоните или пишите Дилшоджону: §',0]],
-  c8:'Ваш ответ',rsvpH:'Вы будете с нами?',
-  rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Пожалуйста, дайте знать до 15 ноября, чтобы мы успели всё подготовить.`,
+  c8:'Ваш ответ',yourName:'Ваше имя',namePh:'Имя и фамилия',needName:'Напишите, пожалуйста, своё имя',rsvpPg:'Это общее приглашение — пусть каждый ответит за себя. Напишите своё имя, чтобы мы знали, кого ждать.',rsvpH:'Вы будете с нами?',
+  rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Дайте, пожалуйста, знать, сможете ли вы прийти.`,
   coming:'Придут',swipe:'с радостью приду',decline:'К сожалению, не смогу',
   c8y:'Ваше место',yesH:'Мы вас ждём',yourTable:'Ваш стол',seats:n=>`${n} ${plural(n,'место','места','мест')}`,
   wMen:'в мужской части зала, за занавесом у входа',wFar:'в ряду у дальней стены, вдоль танцпола',wNear:'в ряду вдоль танцпола, со стороны входа',
@@ -889,7 +893,7 @@ ru:{
   ctaAns:'Ответить',ctaSeat:'Мой стол',ctaWish:'Пожелание',menuLbl:'Главы приглашения',
   menu:['Дата','Главное','Письмо','Программа','Место','Полезно знать','Ваш ответ','Пара слов'],
   nums:['первая','вторая','четвёртая','пятая','шестая','седьмая','восьмая','девятая'],
-  calTitle:'Свадьба Дилшоджона и Нодиры',tooMany:'Слишком много попыток. Подождите 10 минут и попробуйте снова.',netErr:'Нет связи. Проверьте интернет и попробуйте ещё раз.',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'до 15 ноября',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
+  calTitle:'Свадьба Дилшоджона и Нодиры',tooMany:'Слишком много попыток. Подождите 10 минут и попробуйте снова.',netErr:'Нет связи. Проверьте интернет и попробуйте ещё раз.',mainLbl:'Главное',startLbl:'Начало',untilLbl:'примерно до 21:30',answerBy:'это займёт пару секунд',infoTile:'Парковка есть · с детьми можно · вопросы',forWhom:'Кому',big:'Крупный текст',today:'Сегодня наш день!',todaySub:'Ждём вас сегодня в 18:00',nowLbl:'Сейчас',nextLbl:'Далее',started:'Праздник уже идёт',route2:'Как доехать',ourTable:'Ваш стол',wdName:'четверг',monthYear:'ноября 2026',startAt:'начало в 18:00',thx:'Спасибо!',thxSub:'Мы очень ждём вас 26 ноября',seeTable:'Показать, где мой стол',routeLbl:'Путь от входа до вашего стола',copy:'Скопировать',copied:'Номер скопирован',
   qrInvite:'Приглашение на свадьбу',qrTitle:'Введите код с открытки',qrSub:'Код из четырёх знаков написан на вашей открытке под QR-кодом.',qrBtn:'Открыть приглашение',qrErr:'Такого кода нет. Проверьте буквы и цифры на открытке.',qrHelp:'Не получается? Позвоните Дилшоджону:'
 },
 uz:{
@@ -902,7 +906,7 @@ uz:{
   c3:'Diydorgacha',
   c4:'Dastur',progH:'Oqshom qanday o‘tadi',
   prog:[['Mehmonlar yig‘ilishi','Diydor ko‘rishamiz va suratga tushamiz'],['Kelin-kuyovning kirib kelishi','Hammamiz kutgan o‘sha lahza'],
-        ['Bayram dasturxoni','Taomlar, iliq so‘zlar va tabriklar'],['Kelin-kuyovning ilk raqsi',''],['To‘y torti','Oqshomning shirin yakuni']],
+        ['Bayram dasturxoni','Taomlar, iliq so‘zlar va tabriklar'],['Kelin-kuyovning ilk raqsi','']],
   c5:'Manzil',hall:'Bazm joyi',venue:'«Maroqand» to‘yxonasi',addr:'Toshkent, Hidoyatov ko‘chasi, 20A · Chig‘atoy-Oqtepa mahallasi',yandex:'Yandex Xaritalar',
   c6:'Kiyinish uslubi',dressH:'Nozik ranglar',
   dressP:'Agar oqshom kayfiyatini qo‘llab-quvvatlamoqchi bo‘lsangiz, shu pastel ranglardan birini tanlang. Eng muhimi, o‘zingizga qulay va quvonchli bo‘lsin.',
@@ -913,8 +917,8 @@ uz:{
         ['Avtoturargoh','Restoran yonida avtoturargoh bor.',0],
         ['Bolalar','Sizni farzandlaringiz bilan ko‘rishdan xursand bo‘lamiz.',0],
         ['Savollar','Biror narsa tushunarsiz bo‘lsa, Dilshodjonga qo‘ng‘iroq qiling yoki yozing: §',0]],
-  c8:'Javobingiz',rsvpH:'Biz bilan bo‘lasizmi?',
-  rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Hammasini tayyorlashga ulgurishimiz uchun, iltimos, 15-noyabrgacha javob bering.`,
+  c8:'Javobingiz',yourName:'Ismingiz',namePh:'Ism va familiya',needName:'Iltimos, ismingizni yozing',rsvpPg:'Bu umumiy taklifnoma — har kim o‘zi uchun javob bersin. Kimni kutayotganimizni bilishimiz uchun ismingizni yozing.',rsvpH:'Biz bilan bo‘lasizmi?',
+  rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Kela olasizmi — iltimos, bizga bildiring.`,
   coming:'Keladi',swipe:'albatta boraman',decline:'Afsuski, kela olmayman',
   c8y:'Joyingiz',yesH:'Sizni kutamiz',yourTable:'Stolingiz',seats:n=>`${n} ta joy`,
   wMen:'erkaklar qismida, kirish yonidagi parda ortida',wFar:'uzoq devor yonidagi qatorda, raqs maydoni bo‘ylab',wNear:'raqs maydoni bo‘ylab, kirish tomondagi qatorda',
@@ -927,7 +931,7 @@ uz:{
   ctaAns:'Javob berish',ctaSeat:'Stolim',ctaWish:'Tilak',menuLbl:'Taklifnoma boblari',
   menu:['Sana','Asosiy','Maktub','Dastur','Manzil','Bilish foydali','Javobingiz','Ko‘ngil so‘zi'],
   nums:['birinchi','ikkinchi','to‘rtinchi','beshinchi','oltinchi','yettinchi','sakkizinchi','to‘qqizinchi'],
-  calTitle:'Dilshodjon va Nodiraning to‘yi',tooMany:'Juda ko‘p urinish. 10 daqiqa kutib, qayta urinib ko‘ring.',netErr:'Aloqa yo‘q. Internetni tekshirib, qayta urinib ko‘ring.',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'15-noyabrgacha',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
+  calTitle:'Dilshodjon va Nodiraning to‘yi',tooMany:'Juda ko‘p urinish. 10 daqiqa kutib, qayta urinib ko‘ring.',netErr:'Aloqa yo‘q. Internetni tekshirib, qayta urinib ko‘ring.',mainLbl:'Asosiy',startLbl:'Boshlanishi',untilLbl:'taxminan 21:30 gacha',answerBy:'bir necha soniya vaqt oladi',infoTile:'Avtoturargoh bor · bolalar bilan mumkin · savollar',forWhom:'Kimga',big:'Katta shrift',today:'Bugun bizning kunimiz!',todaySub:'Bugun soat 18:00 da kutamiz',nowLbl:'Hozir',nextLbl:'Keyin',started:'Bayram allaqachon boshlandi',route2:'Qanday borish',ourTable:'Stolingiz',wdName:'payshanba',monthYear:'noyabr 2026',startAt:'boshlanishi 18:00 da',thx:'Rahmat!',thxSub:'26-noyabrda sizni intiqlik bilan kutamiz',seeTable:'Stolim qayerda',routeLbl:'Kirishdan stolingizgacha yo‘l',copy:'Nusxa olish',copied:'Raqam nusxalandi',
   qrInvite:'Nikoh to‘yiga taklifnoma',qrTitle:'Taklifnomadagi kodni kiriting',qrSub:'To‘rt belgili kod taklifnomangizda QR-kod ostida yozilgan.',qrBtn:'Taklifnomani ochish',qrErr:'Bunday kod yo‘q. Taklifnomadagi harf va raqamlarni tekshiring.',qrHelp:'Ochilmayaptimi? Dilshodjonga qo‘ng‘iroq qiling:'
 }};
 function tr(k,...a){const D=lang==='ru'?TX.ru:TX.uz;let v=D[k]??TX.ru[k];if(typeof v==='function')v=v(...a);return lang==='uzc'?conv(v):v}
@@ -999,15 +1003,16 @@ function rsvpBlock(g,t){
         <div class="btnrow"><button class="pillbtn" id="zoomBtn" data-z="out">${tr('allHall')}</button></div></div>`
       :`<div class="seatcard"><span class="label">${tr('yourTable')}</span><div class="num">…</div><p>${tr('noTable')}</p></div>`}
       <div class="btnrow"><a class="pillbtn solid" href="${gcal()}" target="_blank" rel="noopener">${tr('addCal')}</a>
-        ${BOT?`<a class="pillbtn tg${g.remind?' on':''}" href="https://t.me/${BOT}?start=${encodeURIComponent(CODE)}" target="_blank" rel="noopener">${icon('bell')}${g.remind?tr('reminded'):tr('remind')}</a>`:''}</div>
+        ${BOT&&g.kind!=='group'?`<a class="pillbtn tg${g.remind?' on':''}" href="https://t.me/${BOT}?start=${encodeURIComponent(CODE)}" target="_blank" rel="noopener">${icon('bell')}${g.remind?tr('reminded'):tr('remind')}</a>`:''}</div>
       <button class="linkbtn" id="change">${tr('change')}</button>
     </section>`;
   if(g.status==='no') return `<section class="chapter" id="seat"><span class="label">${tr('noLbl')}</span><h2>${tr('noH')}</h2>
       <p>${tr('noP')}</p><button class="linkbtn" id="change">${tr('canCome')}</button></section>`;
   return `<section class="chapter" id="rsvp"><span class="label">${tr('c8')}</span><h2>${tr('rsvpH')}</h2>
-    <p>${tr('rsvpP',g.seats)}</p>
+    <p>${g.kind==='group'?tr('rsvpPg'):tr('rsvpP',g.seats)}</p>
     <div class="rsvp">
-      <div class="stepper"><span>${tr('coming')}</span><div class="ctrl"><button id="minus" aria-label="−">−</button><output id="cnt">${g.seats}</output><button id="plus" aria-label="+">+</button></div></div>
+      ${g.kind==='group'?`<label class="mename"><span>${tr('yourName')}</span><input id="meName" maxlength="80" autocomplete="name" value="${esc(g.me||'')}" placeholder="${tr('namePh')}"></label>`:''}
+      <div class="stepper"><span>${tr('coming')}</span><div class="ctrl"><button id="minus" aria-label="−">−</button><output id="cnt">${g.kind==='group'?1:g.seats}</output><button id="plus" aria-label="+">+</button></div></div>
       <div class="swipe" id="swipe"><div class="fill" id="fill"></div><div class="hint">${tr('swipe')}</div><button class="knob" id="knob" aria-label="${tr('swipe')}">♡</button></div>
       <button class="linkbtn" id="decline">${tr('decline')}</button>
     </div></section>`;
@@ -1043,7 +1048,7 @@ function renderGuest(scrollId){
       </div>
     </section>
     <section class="chapter" id="ch-letter"><span class="label rv">${tr('c1')}</span>
-      <div class="letterbox rv"><div class="dear">${esc(greet)} ${esc(nm(g.name))},</div>
+      <div class="letterbox rv"><div class="dear">${g.kind==='group'?'':esc(greet)+' '}${esc(gName(g))},</div>
         <p class="lit">${words(tr('p1'))}</p><p class="lit">${words(tr('p2'))}</p>${g.note?`<p class="pnote">${esc(g.note)}</p>`:''}
         <div class="sig">${tr('groom')} ${tr('and')} ${tr('bride')}</div></div>
     </section>
@@ -1083,12 +1088,12 @@ function wishBlock(g){
   const sent=mine.length&&!g.writing;
   return `<section class="chapter archin" id="wish"><span class="label rv">${tr('c9')}</span><h2 class="rv">${tr('wishH')}</h2>
     <p class="rv">${tr('wishP')}</p>
-    ${sent?`<div class="wishsent rv"><span class="label">${tr('wishGot')}</span><blockquote>${esc(mine[mine.length-1].text)}</blockquote><span class="from">${esc(nm(g.name))}</span>
+    ${sent?`<div class="wishsent rv"><span class="label">${tr('wishGot')}</span><blockquote>${esc(mine[mine.length-1].text)}</blockquote><span class="from">${esc(g.me||gName(g))}</span>
       <button class="linkbtn" id="wishMore">${tr('more')}</button></div>`
     :`<form class="wishform rv" id="wishForm">
       <label for="wishText" class="label">${tr('wishLbl')}</label>
       <textarea id="wishText" maxlength="500" rows="4" placeholder="${tr('wishPh')}"></textarea>
-      <div class="wishfoot"><span class="from">${tr('signLbl')} <b>${esc(nm(g.name))}</b></span><button class="pillbtn solid" type="submit">${tr('send')}</button></div>
+      <div class="wishfoot"><span class="from">${tr('signLbl')} <b>${esc(g.me||gName(g))}</b></span><button class="pillbtn solid" type="submit">${tr('send')}</button></div>
       <p class="formerr" id="wishErr" hidden>${tr('wishErr')}</p>
     </form>`}
   </section>`;
@@ -1097,7 +1102,7 @@ function wireWish(g){
   const f=$('#wishForm');
   if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=$('#wishText').value.trim();
     if(v.length<2){$('#wishErr').hidden=false;return}
-    const sb=f.querySelector('button[type=submit]');sb.disabled=true;api('wish',{text:v}).then(r=>{sb.disabled=false;if(!r)return;WISHES.push({gid:g.id,text:v,at:new Date()});g.writing=false;toast(tr('wishToast'));renderGuest('wish')})});
+    const sb=f.querySelector('button[type=submit]');sb.disabled=true;api('wish',{text:v,name:g.me||''}).then(r=>{sb.disabled=false;if(!r)return;WISHES.push({gid:g.id,text:v,at:new Date()});g.writing=false;toast(tr('wishToast'));renderGuest('wish')})});
   const m=$('#wishMore');if(m)m.onclick=()=>{g.writing=true;renderGuest('wish')};
 }
 /* ---------- music: gentle music box, guest switches it on ---------- */
@@ -1109,13 +1114,17 @@ function mbTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.create
   gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+.012);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)}
 function phrase(t0){
-  const beat=.62;
-  const bars=[[48,[64,67,72],[76,74,72]],[45,[64,69,72],[72,71,69]],[41,[65,69,72],[69,72,77]],[43,[62,67,71],[74,72,71]],
-              [48,[64,67,72],[72,76,79]],[45,[64,69,72],[77,76,72]],[50,[65,69,74],[74,77,76]],[43,[62,67,71],[74,71,67]]];
-  bars.forEach((b,i)=>{const t=t0+i*3*beat;
-    mbTone(mtof(b[0]),t,2.2,.5);
-    b[1].forEach((n,j)=>mbTone(mtof(n),t+beat*(1+j*.66),1.2,.18));
-    b[2].forEach((n,j)=>mbTone(mtof(n),t+j*beat,j===0?1.8:1.3,.42));
+  // original gentle waltz in 3/4: low note on "one", soft chord on "two-three", music-box melody on top
+  const beat=.42;
+  const CH={C:[48,[64,67,72]],Am:[45,[64,69,72]],Dm:[50,[65,69,74]],G:[43,[62,67,71]],F:[41,[65,69,72]],Em:[40,[64,67,71]],G7:[43,[65,71,74]]};
+  const bars=[['C',[[76,2],[79,1]]],['Am',[[81,2],[79,1]]],['Dm',[[77,1],[76,1],[74,1]]],['G',[[74,2],[71,1]]],
+              ['C',[[72,2],[76,1]]],['F',[[77,2],[81,1]]],['G',[[79,1],[77,1],[74,1]]],['C',[[72,3]]],
+              ['Am',[[76,2],[72,1]]],['Em',[[71,2],[76,1]]],['F',[[77,2],[81,1]]],['C',[[79,2],[76,1]]],
+              ['Dm',[[77,1],[81,1],[84,1]]],['G',[[83,2],[79,1]]],['G7',[[77,1],[74,1],[71,1]]],['C',[[72,3]]]];
+  bars.forEach(([c,mel],i)=>{const t=t0+i*3*beat;const [bass,ch]=CH[c];
+    mbTone(mtof(bass),t,1.4,.42);
+    [1,2].forEach(k=>ch.forEach(n=>mbTone(mtof(n),t+k*beat,.5,.11)));
+    let at=0;mel.forEach(([n,d])=>{mbTone(mtof(n),t+at*beat,Math.max(.7,d*beat*1.6),.4);at+=d});
   });
   return bars.length*3*beat;
 }
@@ -1142,14 +1151,16 @@ function wireGuest(g,t){
   const zb=$('#zoomBtn');if(zb)zb.onclick=()=>{const svg=$('#guestHall');if(zb.dataset.z==='out'){animateVB(svg,[0,0,VW,H],900);zb.dataset.z='in';zb.textContent=tr('myTable')}else{zoomTo(svg,t.id);zb.dataset.z='out';zb.textContent=tr('allHall')}};
   // demo: in the live site this opens the wedding bot in Telegram, the guest taps Start, and the bot can message them the day before
   const rb=$('#remindBtn');if(rb)rb.onclick=()=>{g.remind=!g.remind;if(g.remind)toast(tr('remindToast'));rb.classList.toggle('on',g.remind);rb.setAttribute('aria-pressed',g.remind);rb.innerHTML=icon('bell')+(g.remind?tr('reminded'):tr('remind'))};
-  const dec=$('#decline');if(dec)dec.onclick=async()=>{dec.disabled=true;const r=await api('rsvp',{status:'no'});dec.disabled=false;if(!r)return;g.status='no';g.coming=0;renderGuest('seat')};
+  const myName=()=>{const i=$('#meName');return i?i.value.trim():''};const needName=()=>{if(g.kind!=='group'||myName())return false;toast(tr('needName'));const i=$('#meName');if(i)i.focus();return true};
+  const dec=$('#decline');if(dec)dec.onclick=async()=>{if(needName())return;dec.disabled=true;const me=myName();const r=await api('rsvp',{status:'no',name:me});dec.disabled=false;if(!r)return;if(me)g.me=me;g.status='no';g.coming=0;renderGuest('seat')};
   if(!$('#swipe'))return;
-  let n=g.seats;const cnt=$('#cnt'),mi=$('#minus'),pl=$('#plus');
-  const upd=()=>{cnt.textContent=n;mi.disabled=n<=1;pl.disabled=n>=g.seats};upd();
-  mi.onclick=()=>{n=Math.max(1,n-1);upd()};pl.onclick=()=>{n=Math.min(g.seats,n+1);upd()};
+  const cap=g.kind==='group'?Math.max(1,Math.min(5,g.seats)):g.seats;let n=g.kind==='group'?1:g.seats;const cnt=$('#cnt'),mi=$('#minus'),pl=$('#plus');
+  const upd=()=>{cnt.textContent=n;mi.disabled=n<=1;pl.disabled=n>=cap};upd();
+  mi.onclick=()=>{n=Math.max(1,n-1);upd()};pl.onclick=()=>{n=Math.min(cap,n+1);upd()};
   const sw=$('#swipe'),kn=$('#knob'),fill=$('#fill');let sx=null,dx=0;const max=()=>sw.clientWidth-62;
   const set=v=>{kn.style.transform=`translateX(${v}px)`;fill.style.width=(v+58)+'px'};
-  const yes=async()=>{const r=await api('rsvp',{status:'yes',coming:n});if(!r){kn.classList.add('snap');fill.classList.add('snap');set(0);fill.style.width='0';return}g.status='yes';g.coming=r.coming||n;try{navigator.vibrate&&navigator.vibrate(30)}catch(_){}renderGuest();thanks(g,TABLES.find(x=>x.id===g.table))};
+  const back=()=>{kn.classList.add('snap');fill.classList.add('snap');set(0);fill.style.width='0'};
+  const yes=async()=>{if(needName()){back();return}const me=myName();const r=await api('rsvp',{status:'yes',coming:n,name:me});if(!r){back();return}if(me)g.me=me;g.status='yes';g.coming=r.coming||n;try{navigator.vibrate&&navigator.vibrate(30)}catch(_){}renderGuest();thanks(g,TABLES.find(x=>x.id===g.table))};
   kn.addEventListener('pointerdown',e=>{sx=e.clientX;kn.setPointerCapture(e.pointerId);kn.classList.remove('snap');fill.classList.remove('snap')});
   kn.addEventListener('pointermove',e=>{if(sx==null)return;dx=Math.max(0,Math.min(max(),e.clientX-sx));set(dx)});
   const end=()=>{if(sx==null)return;sx=null;if(dx>=max()*.85){set(max());setTimeout(yes,200)}else{kn.classList.add('snap');fill.classList.add('snap');dx=0;set(0);fill.style.width='0'}};
@@ -1269,7 +1280,7 @@ addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onS
 
 /* ---------- envelope ---------- */
 function introTexts(){const g=G.find(x=>x.id===current);
-  $('#introTo').textContent=tr('to');$('#introFor').textContent=tr('forWhom');$('#introName').textContent=nm(g.name);$('#introTap').textContent=tr('tap');
+  $('#introTo').textContent=tr('to');$('#introFor').textContent=tr('forWhom');$('#introName').textContent=gName(g);$('#introTap').textContent=tr('tap');
   $('#introLetter').textContent=tr('letterTag');$('#introMusic').textContent=tr('musicHint');$('#introLangs').innerHTML=langSwitch()}
 function pickLang(g){let l=g.lang||'ru';try{l=localStorage.getItem('dn-lang-'+g.id)||l}catch(_){}lang=l;document.documentElement.lang=lang==='ru'?'ru':'uz'}
 function showIntro(){const g=G.find(x=>x.id===current);introTexts();opened=false;
@@ -1324,11 +1335,14 @@ function renderQr(){
 /* ---------- live data ---------- */
 const LL='69.177706,41.363879',YA='https://yandex.uz/maps/org/maroqand/91381430596/',GM='https://www.google.com/maps/search/?api=1&query=41.363879,69.177706';
 let CODE=null,BOT='';
-async function api(path,body){try{const r=await fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({c:CODE,...body})});
+const DEV=(()=>{try{let d=localStorage.getItem('dn-dev');if(!d){d=(Math.random().toString(36).slice(2)+Date.now().toString(36)).slice(0,24);localStorage.setItem('dn-dev',d)}return d}catch(_){return ('t'+Math.random().toString(36).slice(2)+'0000000000').slice(0,16)}})();
+function applyLetter(L){if(!L)return;for(const l of ['ru','uz'])for(const k of ['p1','p2'])if(L[l]&&L[l][k])TX[l][k]=L[l][k]}
+async function api(path,body){try{const r=await fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({c:CODE,d:DEV,...body})});
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j}catch(e){toast(tr('netErr'));return null}}
 async function openCode(code){if(!code||code.length<4)return 'nf';
-  try{const r=await fetch('/api/invite?c='+encodeURIComponent(code),{cache:'no-store'});if(r.status===404)return 'nf';if(r.status===429)return 'rl';if(!r.ok)return 'err';
-    const j=await r.json();CODE=code;BOT=j.bot||'';G=[{id:code,card:code,code,...j.guest,side:'both',group:'oth',line:''}];
+  try{const r=await fetch('/api/invite?c='+encodeURIComponent(code)+'&d='+DEV,{cache:'no-store'});if(r.status===404)return 'nf';if(r.status===429)return 'rl';if(!r.ok)return 'err';
+    const j=await r.json();CODE=code;BOT=j.bot||'';applyLetter(j.letter);const gu={id:code,card:code,code,...j.guest,side:'both',group:'oth',line:''};
+    if(gu.kind==='group'){gu.me=j.me?j.me.name:'';gu.status=j.me?(j.me.coming>0?'yes':'no'):'opened';gu.coming=j.me?j.me.coming:0;gu.remind=false}G=[gu];
     WISHES=(j.wishes||[]).map(w=>({gid:code,text:w.text,at:new Date(w.at)}));current=code;try{localStorage.setItem('dn-code',code)}catch(_){}return 'ok'}catch(e){return 'err'}}
 function setMode(m){mode=m;$('#guestView').hidden=m!=='guest';$('#qrView').hidden=m!=='qr';
   if(m==='guest'){opened=true;renderGuest()}else{$('#intro').hidden=true;renderQr()}window.scrollTo(0,0);onScroll()}
