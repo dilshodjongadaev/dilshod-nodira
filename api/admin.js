@@ -14,7 +14,7 @@ function clean(f) {
   if ('name_uz' in o) o.name_uz = o.name_uz ? String(o.name_uz).trim().slice(0, 120) : null;
   return o;
 }
-const RESET = { status: 'none', coming: null, tg_chat_id: null, opened_at: null, answered_at: null, reminded_at: null };
+const RESET = { status: 'none', coming: 0, tg_chat_id: null, opened_at: null, answered_at: null, reminded_at: null };
 async function retired(codes) {
   const ok = codes.filter(c => /^[A-Z0-9]{4,6}$/.test(c));
   if (!ok.length) return new Set();
