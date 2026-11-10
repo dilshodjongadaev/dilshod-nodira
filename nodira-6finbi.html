@@ -668,7 +668,9 @@ function pose(R,W,T,now){const j=R.j;const dt=R.last==null||now==null?0:Math.min
   if(R.svg){R.svg.classList.toggle('happy',W>JOIN-.1||W>90)}
   const hairIk=ikLow(BX0-10,GROUND-118+bobB,BX0-16,GROUND-150+bobB,28,25);const bT=tie*.9;
   rot(j.BfS,mix(mix(bRest[0],hairIk[0],bT),bIk[0],sm((W-OFFER+.15)/(JOIN-OFFER+.15))));rot(j.BfE,mix(mix(bRest[1],hairIk[1],bT),bIk[1],sm((W-OFFER+.15)/(JOIN-OFFER+.15))));
-  rot(j.BaS,32+2*Math.sin(T*2.1)*(1-amp)+3*amp*Math.sin(phb)-34*spinning);rot(j.BaE,58-40*spinning);
+  // bouquet hand rests in front of her waist (elbow out to the side); during the twirl it opens outward
+  {const tx=mix(1.5,32,spinning)+1.2*amp*Math.sin(phb),ty=mix(-79,-110,spinning)+.6*Math.sin(T*2.1);
+   const a=ik(10,-118,tx,ty,28,25,1),b=ik(10,-118,tx,ty,28,25,-1);const ex=v=>-Math.sin(v[0]*Math.PI/180);const A=ex(a)>=ex(b)?a:b;rot(j.BaS,A[0]);rot(j.BaE,A[1])}
   // heads
   rot(R.Gh,mix(0,7,lean)-4*up+Math.sin(T*1.5)*.7+5*tie+4*idleLook);rot(R.Bh,mix(0,-8,lean)+5*up*sx+Math.sin(T*1.5+1)*.7-6*tie-4*idleLook);
   const wind=Math.sin(T*2.6)*(1.2+2.4*amp+3*spinning)+R.veilO*.15;
