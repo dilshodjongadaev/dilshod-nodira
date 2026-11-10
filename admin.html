@@ -668,6 +668,36 @@ html.evening .mt-table{background:#1f4e79}
 .iconbtn{text-decoration:none;color:var(--ink);display:inline-flex;align-items:center}
 .iconbtn.del{color:var(--no)}
 @media (max-width:480px){.addform .wide{grid-column:auto}}
+
+/* panel v2 */
+.admin .gsearch{font:inherit;font-size:15px;border:1px solid var(--line);border-radius:12px;padding:11px 14px;background:var(--bg);color:var(--ink);width:100%}
+.filters .fsep{width:1px;background:var(--line);margin:2px 4px}
+.glist li.grow{display:block;padding:12px 2px}
+.grow .gmain{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px 14px;align-items:center}
+.grow .gside{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.grow .gbtns{display:flex;gap:6px}
+.grow .gbtns .pillbtn{padding:8px 14px}
+.grow.open{background:color-mix(in srgb,var(--paper) 60%,var(--bg));border-radius:12px;padding:12px 10px}
+.sentmark{font-size:12px;color:var(--ok)}
+.editform textarea{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--ink);width:100%;resize:vertical}
+.editform .btnrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.editform .danger{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px}
+.pane h2 small{font-style:normal;font-size:13px;margin-left:6px}
+.remindpane .tgprev .bubble{color:#1c2a44}.remindpane .tgprev .tgmeta{color:#5b6577}
+.invwrap{background:rgba(8,16,30,.78);overflow-y:auto;align-items:start;padding:20px 12px}
+.invcard{width:min(100%,520px);position:relative;align-items:stretch;text-align:left;margin:auto}
+.invcard .label,.invcard h3{text-align:center}.invcard .seg{align-self:center}
+.invx{position:absolute;top:10px;right:12px;border:0;background:none;font-size:28px;line-height:1;color:var(--muted);cursor:pointer}
+.invimg{aspect-ratio:1080/1350;width:min(100%,300px);align-self:center;border-radius:12px;overflow:hidden;background:#13243d;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.invimg img{width:100%;height:100%;display:block}.invload{color:#ecd7a0;font-size:14px}
+.steps{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.steps li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}
+.steps li>b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gold-hi);color:#13243d;font-size:14px}
+.invtext{white-space:pre-wrap;font:inherit;font-size:13px;line-height:1.45;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0;max-height:180px;overflow:auto;user-select:all;color:var(--ink)}
+.invcard .btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+.pillbtn.big{justify-content:center;padding:13px 18px;font-size:15px}
+kbd{font:inherit;font-size:12px;border:1px solid var(--line);border-radius:5px;padding:0 5px}
+@media (max-width:600px){.grow .gmain{grid-template-columns:minmax(0,1fr) auto}.grow .gbtns{grid-column:1/-1}.grow .gbtns .pillbtn{flex:1;justify-content:center}.steps li{grid-template-columns:28px minmax(0,1fr)}.steps li .pillbtn{grid-column:2;justify-content:center}.editform .danger{margin-left:0}}
 </style>
 
 
@@ -1330,155 +1360,250 @@ $('#wax').onclick=()=>{askMotion();const g=G.find(x=>x.id===current);if(g.status
   setTimeout(()=>{$('#intro').hidden=true},reduce?0:3000)};
 /* ---------- admin ---------- */
 const ST={yes:'Придёт',no:'Не придёт',opened:'Открыл, молчит',none:'Не открывал'};
+/* ---------- couple's panel: guests first, one «Пригласить» button per guest, everything else behind «✎» ---------- */
+let fQ='',fSent='all',addOpen=false;
+let SENT=new Set();try{SENT=new Set(JSON.parse(localStorage.getItem('dn-sent')||'[]'))}catch(_){}
+function setSent(g,on){on?SENT.add(g.card):SENT.delete(g.card);try{localStorage.setItem('dn-sent',JSON.stringify([...SENT]))}catch(_){}}
+const isWait=g=>g.status==='none'||g.status==='opened';
+function guestList(){
+  const q=fQ.trim().toLowerCase();
+  return G.filter(g=>filter==='all'||(filter==='wait'?isWait(g):g.status===filter))
+    .filter(g=>tableFilter==null||g.table===tableFilter)
+    .filter(g=>fSide==='all'||g.side===fSide).filter(g=>fGroup==='all'||g.group===fGroup).filter(g=>fPart==='all'||g.part===fPart)
+    .filter(g=>fSent==='all'||(fSent==='sent'?SENT.has(g.card):!SENT.has(g.card)))
+    .filter(g=>!q||g.name.toLowerCase().includes(q)||(g.name_uz||'').toLowerCase().includes(q)||g.card.toLowerCase().includes(q));
+}
+const selOpts=(arr,cur)=>arr.map(([k,l])=>`<option value="${k}" ${cur===k?'selected':''}>${l}</option>`).join('');
+function guestRow(g){
+  const seats=g.status==='yes'?`придут ${g.coming} из ${g.seats}`:`${g.seats} ${plural(g.seats,'место','места','мест')}`;
+  const lang=LANGS.find(l=>l[0]===g.lang)?.[1]||'Рус';
+  return `<li class="grow${g.editOpen?' open':''}" data-row="${g.id}">
+    <div class="gmain">
+      <div class="gname"><b>${esc(g.name)}${g.remind?' <span class="bell" title="Ждёт напоминание в Telegram">🔔</span>':''}</b>
+        <small>${seats} · ${g.table?'стол '+g.table:'без стола'} · ${lang} · код ${g.card}</small>
+        <span class="gtype" style="--c:${grp(g.group)[2]}">${typeLabel(g)}${g.part==='m'?' · мужская часть':''}${g.kind==='group'?' · общее':''}</span>
+        ${g.kind==='group'&&g.answers.length?`<ul class="ans">${g.answers.map(a=>`<li>${esc(a.name)} — ${a.coming?`придёт${a.coming>1?' ('+a.coming+')':''}`:'не сможет'}</li>`).join('')}</ul>`:''}
+      </div>
+      <div class="gside"><span class="pill ${g.status}">${ST[g.status]}</span>${SENT.has(g.card)?'<span class="sentmark">✓ отправлено</span>':''}</div>
+      <div class="gbtns"><button class="pillbtn solid invbtn" data-inv="${g.id}">${SENT.has(g.card)?'Ещё раз':'Пригласить'}</button><button class="pillbtn" data-edit="${g.id}" aria-expanded="${!!g.editOpen}">${g.editOpen?'Свернуть':'✎ Изменить'}</button></div>
+    </div>
+    ${g.editOpen?`<form class="editform" data-ef="${g.id}">
+      <label class="wide">${g.kind==='group'?'Обращение по-русски':'Имя, как на приглашении'}<input name="name" value="${esc(g.name)}" maxlength="120"></label>
+      <label class="wide">${g.kind==='group'?'Обращение по-узбекски':'Имя по-узбекски'} <small>(латиницей; пусто — «${esc(uzAuto(g.name))}»)</small><input name="name_uz" value="${esc(g.name_uz)}" maxlength="120" placeholder="${esc(uzAuto(g.name))}"></label>
+      ${g.kind==='group'?'':`<label>Обращение<select name="greet">${GREETS.map(x=>`<option ${g.greet===x?'selected':''}>${x}</option>`).join('')}</select></label>`}
+      <label>${g.kind==='group'?'Мест на всех':'Мест'}<input name="seats" type="number" min="1" max="20" value="${g.seats}"></label>
+      <label>Язык<select name="lang">${selOpts(LANGS,g.lang)}</select></label>
+      <label>Стол<select name="table_no"><option value="">без стола</option>${TABLES.map(t=>`<option value="${t.id}" ${g.table===t.id?'selected':''}>Стол ${t.id}</option>`).join('')}</select></label>
+      <label>Часть зала<select name="part">${selOpts(PARTS,g.part)}</select></label>
+      <label>Сторона<select name="side">${selOpts(SIDES,g.side)}</select></label>
+      <label>Группа<select name="grp">${selOpts(GROUPS.map(x=>[x[0],x[1]]),g.group)}</select></label>
+      <label>Линия родства<select name="line">${selOpts(LINES,g.line||'')}</select></label>
+      <label class="wide">Личные слова гостю <small>(необязательно — появятся в его письме)</small><textarea name="note" rows="2" maxlength="600" placeholder="Пара тёплых слов лично этому гостю">${esc(g.note||'')}</textarea></label>
+      <div class="btnrow"><button class="pillbtn solid" type="submit">Сохранить</button><button class="pillbtn" type="button" data-ecancel="${g.id}">Отмена</button>
+        <span class="danger">${g.status!=='none'?`<button class="iconbtn" type="button" data-reset="${g.id}">${g.resetAsk?'Точно сбросить?':'Сбросить ответ'}</button>`:''}<button class="iconbtn" type="button" data-recode="${g.id}">${g.recodeAsk?'Точно? Старая ссылка перестанет работать':'Новая ссылка'}</button><button class="iconbtn del" type="button" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить гостя'}</button></span></div>
+    </form>`:''}
+  </li>`;
+}
+function renderGuests(){const list=guestList();const box=$('#glist');if(!box)return;
+  box.innerHTML=list.length?list.map(guestRow).join(''):'<li class="emptynote">Никого не нашлось.</li>';
+  $('#gcount').textContent=`${list.length} из ${G.length}`;}
 function renderAdmin(){
   const invited=G.reduce((a,g)=>a+g.seats,0);
   const yes=G.filter(g=>g.status==='yes').reduce((a,g)=>a+g.coming,0);
   const no=G.filter(g=>g.status==='no').reduce((a,g)=>a+g.seats,0);
-  const wait=G.filter(g=>g.status==='none'||g.status==='opened').reduce((a,g)=>a+g.seats,0);
-  const unseated=G.filter(g=>!g.table&&g.status!=='no').length;const pct=v=>Math.round(v/invited*100);
-  let list=G.filter(g=>filter==='all'||(filter==='wait'?(g.status==='none'||g.status==='opened'):g.status===filter));
-  if(tableFilter!=null)list=list.filter(g=>g.table===tableFilter);
-  if(fSide!=='all')list=list.filter(g=>g.side===fSide);
-  if(fGroup!=='all')list=list.filter(g=>g.group===fGroup);
-  if(fPart!=='all')list=list.filter(g=>g.part===fPart);
+  const wait=G.filter(isWait).reduce((a,g)=>a+g.seats,0);
+  const notSent=G.filter(g=>!SENT.has(g.card)).length;
+  const pct=v=>invited?Math.round(v/invited*100):0;
   const ps=(p,f=()=>true)=>G.filter(g=>g.part===p&&f(g)).reduce((a,g)=>a+g.seats,0);
-  const opts=g=>`<option value="">без стола</option>`+TABLES.map(t=>`<option value="${t.id}" ${g.table===t.id?'selected':''}>Стол ${t.id}</option>`).join('');
+  const remindN=G.filter(g=>g.remind&&g.status==='yes').length;
   $('#adminView').innerHTML=`
-    <div class="admin-head"><div><div class="label">Свадьба ${W.groom} и ${W.bride} · 26 ноября 2026</div><h1>Наша панель</h1></div><div class="headacts"><span class="demotag">${G.length} приглашений · ${invited} мест</span><button class="pillbtn solid" id="commonQr">Общий QR для открыток</button><button class="pillbtn" id="reload">Обновить</button><button class="pillbtn" id="botSetup">Подключить бота</button><button class="pillbtn" id="logout">Выйти</button></div></div>
-    <section class="pane addpane"><div class="pane-head"><h2>Добавить гостя</h2><span class="demotag">код подставлен из вашего листа кодов — первый свободный</span></div>
+    <div class="admin-head"><div><div class="label">Свадьба ${W.groom} и ${W.bride} · 26 ноября 2026</div><h1>Наша панель</h1></div>
+      <div class="headacts"><button class="pillbtn solid" id="addToggle">${addOpen?'Скрыть':'+ Добавить гостей'}</button><button class="pillbtn" id="reload">Обновить</button><button class="pillbtn" id="logout">Выйти</button></div></div>
+    <section class="pane addpane" ${addOpen?'':'hidden'}><div class="pane-head"><h2>Добавить гостя</h2></div>
       <form id="addForm" class="addform">
         <label>Тип<select id="aKind"><option value="one">Личное</option><option value="group">Общее (друзья, однокурсники…)</option></select></label>
         <label id="aPreW" hidden>Для кого<select id="aPre">${GPRE.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
-        <label>Код<input id="aCode" maxlength="6" value="${nextCode()}" autocomplete="off"></label>
         <label class="wide"><span id="aNameL">Имя, как на приглашении</span><input id="aName" placeholder="Алишер ака и Нигора опа" autocomplete="off"></label>
         <label class="wide"><span id="aNameUzL">Имя по-узбекски, латиницей (необязательно)</span><input id="aNameUz" placeholder="пусто — переведётся само" autocomplete="off"></label>
-        <label id="aGreetW">Обращение<select id="aGreet">${['Дорогие','Дорогой','Дорогая','Дорогая семья','Уважаемые','Уважаемый','Уважаемая'].map(x=>`<option>${x}</option>`).join('')}</select></label>
+        <label id="aGreetW">Обращение<select id="aGreet">${GREETS.map(x=>`<option>${x}</option>`).join('')}</select></label>
         <label>Мест<input id="aSeats" type="number" min="1" max="20" value="2"></label>
-        <label>Часть зала<select id="aPart">${PARTS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
-        <label>Сторона<select id="aSide">${SIDES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
-        <label>Группа<select id="aGrp">${GROUPS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
-        <label>Язык<select id="aLang">${LANGS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
+        <label>Язык<select id="aLang">${selOpts(LANGS,'ru')}</select></label>
+        <label>Часть зала<select id="aPart">${selOpts(PARTS,'w')}</select></label>
+        <label>Сторона<select id="aSide">${selOpts(SIDES,'g')}</select></label>
+        <label>Группа<select id="aGrp">${selOpts(GROUPS.map(x=>[x[0],x[1]]),'rel')}</select></label>
         <button class="pillbtn solid" type="submit">Добавить</button>
       </form>
-      <div class="xlimport"><label class="pillbtn solid xlbtn">Загрузить из Excel<input type="file" id="xlFile" accept=".xlsx,.xls" hidden></label>
-        <span class="demotag">файл «Гости-Дилшоджон-Нодира.xlsx» · строки без имени пропускаются · ответы гостей не стираются</span>
+      <div class="xlimport"><label class="pillbtn xlbtn">Загрузить список из Excel<input type="file" id="xlFile" accept=".xlsx,.xls" hidden></label>
+        <span class="demotag">файл «Гости-Дилшоджон-Нодира.xlsx» · ответы гостей не стираются</span>
         <div id="xlPrev" class="xlprev" hidden></div></div>
-      <details class="import"><summary>Или вставить списком текстом</summary>
-        <p class="demotag">Каждая строка: <b>КОД ; Имя ; мест</b>. Например: <code>DA32; Алишер ака и Нигора опа; 2</code></p>
-        <textarea id="impText" rows="5" placeholder="DA32; Алишер ака и Нигора опа; 2&#10;4WHZ; Семья Каримовых; 4"></textarea>
-        <button class="pillbtn solid" id="impBtn">Загрузить</button></details>
     </section>
-    <section class="pane letterpane"><details ${LETTER?'':''}><summary><h2>Текст письма</h2><span class="demotag">${LETTER?'ваш текст':'стандартный текст'} · одинаковый для всех гостей</span></summary>
-      <p class="demotag">Над текстом каждый гость видит своё обращение («Уважаемые Алишер ака и Нигора опа,»), под ним — ваши личные слова, если вы их добавили. Узбекская кириллица делается из латиницы сама.</p>
-      <div class="lgrid">${[['ru','По-русски'],['uz','O‘zbekcha (lotin)']].map(([l,t])=>`<div><b>${t}</b>${['p1','p2'].map((k,i)=>`<label>Абзац ${i+1}<textarea data-lt="${l}.${k}" rows="${i?3:5}">${esc((LETTER&&LETTER[l]&&LETTER[l][k])||TX[l][k])}</textarea></label>`).join('')}</div>`).join('')}</div>
-      <div class="btnrow"><button class="pillbtn solid" id="ltSave">Сохранить текст</button>${LETTER?'<button class="pillbtn" id="ltReset">Вернуть стандартный</button>':''}</div></details></section>
     <section class="stats" aria-label="Сводка">
       <div class="stat"><b>${yes}</b><small>${plural(yes,'гость придёт','гостя придут','гостей придут')}</small><div class="bar"><i style="width:${pct(yes)}%;background:var(--ok)"></i></div></div>
       <div class="stat"><b>${wait}</b><small>${plural(wait,'место ждёт','места ждут','мест ждут')} ответа</small><div class="bar"><i style="width:${pct(wait)}%;background:var(--gold)"></i></div></div>
       <div class="stat"><b>${no}</b><small>${plural(no,'гость не сможет','гостя не смогут','гостей не смогут')}</small><div class="bar"><i style="width:${pct(no)}%;background:var(--no)"></i></div></div>
-      <div class="stat"><b>${unseated}</b><small>${plural(unseated,'приглашение','приглашения','приглашений')} без стола</small><div class="bar"><i style="width:${unseated?100:0}%;background:var(--muted)"></i></div></div>
+      <div class="stat"><b>${notSent}</b><small>${plural(notSent,'приглашение не отправлено','приглашения не отправлены','приглашений не отправлено')}</small><div class="bar"><i style="width:${G.length?Math.round((G.length-notSent)/G.length*100):0}%;background:var(--lapis)"></i></div></div>
     </section>
-    <section class="pane planpane"><div class="pane-head"><h2>План мест</h2><span class="demotag">вписано / план</span></div><div class="plan">
-      ${[['Женская часть · столы 1–15',ps('w'),150],['Мужская часть · столы 16–20',ps('m'),50],['— сторона невесты',ps('m',g=>g.side==='b'),10],['— друзья жениха',ps('m',g=>g.side==='g'&&g.group==='fr'),20],['— родственники жениха',ps('m',g=>g.side==='g'&&g.group==='rel'),20]].map(([l,v,p])=>`<div class="pl${l[0]==='—'?' sub':''}"><span>${l}</span><b class="${v>p?'over':v===p?'full':''}">${v} / ${p}</b><div class="bar"><i style="width:${Math.min(100,Math.round(v/p*100))}%"></i></div></div>`).join('')}
-    </div></section>
+    <section class="pane gpane"><div class="pane-head"><h2>${tableFilter!=null?'Стол '+tableFilter:'Гости'} <small id="gcount" class="demotag"></small></h2>${tableFilter!=null?'<button class="pillbtn" id="clearT">Все столы</button>':''}</div>
+      <input id="gq" class="gsearch" type="search" placeholder="Поиск по имени или коду…" value="${esc(fQ)}" autocomplete="off">
+      <div class="filters" role="group" aria-label="Фильтр">
+        ${[['all','Все'],['yes','Придут'],['wait','Ждём ответа'],['no','Не придут']].map(([k,l])=>`<button data-f="${k}" aria-pressed="${filter===k}">${l}</button>`).join('')}
+        <span class="fsep"></span>${[['not','Не отправлено'],['sent','Отправлено']].map(([k,l])=>`<button data-fs="${k}" aria-pressed="${fSent===k}">${l}</button>`).join('')}
+      </div>
+      <div class="filters">
+        <select id="fSide" aria-label="Сторона"><option value="all">Все стороны</option>${selOpts(SIDES,fSide)}</select>
+        <select id="fPartS" aria-label="Часть зала"><option value="all">Весь зал</option>${selOpts(PARTS,fPart)}</select>
+        <select id="fGroup" aria-label="Группа"><option value="all">Все группы</option>${selOpts(GROUPS.map(x=>[x[0],x[1]]),fGroup)}</select>
+      </div>
+      <ul class="glist" id="glist"></ul>
+    </section>
     <div class="panes">
-      <section class="pane"><div class="pane-head"><h2>Зал</h2><div class="seg mini" role="group" aria-label="Раскраска зала"><button data-hm="rsvp" aria-pressed="${hallMode==='rsvp'}">По ответам</button><button data-hm="group" aria-pressed="${hallMode==='group'}">По группам</button></div>${tableFilter!=null?'<button class="pillbtn" id="clearT">Все столы</button>':''}</div>
+      <section class="pane"><div class="pane-head"><h2>Зал</h2><div class="seg mini" role="group" aria-label="Раскраска зала"><button data-hm="rsvp" aria-pressed="${hallMode==='rsvp'}">По ответам</button><button data-hm="group" aria-pressed="${hallMode==='group'}">По группам</button></div></div>
         <div class="legend">${hallMode==='group'
           ?GROUPS.map(([k,l,c])=>`<span><i style="background:${c}"></i>${l}</span>`).join('')+'<span><i style="border:1.5px solid var(--muted)"></i>контур — ещё не ответили</span>'
           :'<span><i style="background:var(--rose)"></i>подтвердили</span><span><i style="border:1.5px solid var(--gold)"></i>ждём ответа</span><span><i style="background:var(--line)"></i>свободно</span><span><i style="border:1.5px solid var(--sage)"></i>столы 16–20 · старшие мужчины</span>'}</div>
         <svg id="adminHall" role="img" aria-label="Заполнение столов"></svg>
-        <p class="demotag" style="margin:0">Нажмите на стол, чтобы увидеть, кто за ним сидит.</p></section>
-      <section class="pane"><div class="pane-head"><h2>${tableFilter!=null?'Стол '+tableFilter:'Гости'}</h2></div>
-        <div class="filters" role="group" aria-label="Фильтр">${[['all','Все'],['yes','Придут'],['wait','Ждём'],['no','Не придут']].map(([k,l])=>`<button data-f="${k}" aria-pressed="${filter===k}">${l}</button>`).join('')}</div>
-        <div class="filters" role="group" aria-label="Сторона и группа">${[['all','Все стороны'],...SIDES].map(([k,l])=>`<button data-side="${k}" aria-pressed="${fSide===k}">${l}</button>`).join('')}
-          ${[['all','Весь зал'],...PARTS].map(([k,l])=>`<button data-part="${k}" aria-pressed="${fPart===k}">${l}</button>`).join('')}<select id="fGroup" aria-label="Группа гостей"><option value="all">Все группы</option>${GROUPS.map(([k,l])=>`<option value="${k}" ${fGroup===k?'selected':''}>${l}</option>`).join('')}</select></div>
-        <ul class="glist">${list.length?list.map(g=>`<li><div class="gname"><b>${esc(g.name)}${g.remind?' <span class="bell" title="Ждёт напоминание в Telegram">🔔</span>':''}</b><small>${g.status==='yes'?`${g.coming} из ${g.seats}`:`${g.seats} ${plural(g.seats,'место','места','мест')}`} · код открытки <b class="cardcode">${g.card}</b></small><span class="gtype" style="--c:${grp(g.group)[2]}">${typeLabel(g)}${g.part==='m'?' · мужская часть':''}</span>${g.kind==='group'?'<span class="gtype shared">общее приглашение · каждый отвечает за себя</span>':''}
-          ${g.kind==='group'&&g.answers.length?`<ul class="ans">${g.answers.map(a=>`<li>${esc(a.name)} — ${a.coming?`придёт${a.coming>1?' ('+a.coming+')':''}`:'не сможет'}</li>`).join('')}</ul>`:''}</div>
-          <span class="pill ${g.status}">${ST[g.status]}</span>
-          <div class="acts"><select data-g="${g.id}" aria-label="Стол для ${esc(g.name)}">${opts(g)}</select>
-            <select data-l="${g.id}" aria-label="Язык приглашения для ${esc(g.name)}">${LANGS.map(([k,l])=>`<option value="${k}" ${g.lang===k?'selected':''}>${l}</option>`).join('')}</select>
-            <select data-part-of="${g.id}" aria-label="Часть зала">${PARTS.map(([k,l])=>`<option value="${k}" ${g.part===k?'selected':''}>${l}</option>`).join('')}</select>
-            <select data-side-of="${g.id}" aria-label="Чья сторона">${SIDES.map(([k,l])=>`<option value="${k}" ${g.side===k?'selected':''}>${l}</option>`).join('')}</select>
-            <select data-group-of="${g.id}" aria-label="Группа">${GROUPS.map(([k,l])=>`<option value="${k}" ${g.group===k?'selected':''}>${l}</option>`).join('')}</select>
-            ${g.group==='rel'?`<select data-line-of="${g.id}" aria-label="Линия родства">${LINES.map(([k,l])=>`<option value="${k}" ${g.line===k?'selected':''}>${l}</option>`).join('')}</select>`:''}
-            <button class="iconbtn" data-edit="${g.id}" aria-expanded="${!!g.editOpen}">✎ Изменить</button><button class="iconbtn" data-msg="${g.id}">Текст + ссылка</button><button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a>${g.status!=='none'?`<button class="iconbtn" data-reset="${g.id}">${g.resetAsk?'Точно сбросить?':'Сбросить ответ'}</button>`:''}<button class="iconbtn" data-recode="${g.id}">${g.recodeAsk?`Сменить на ${nextCode()}?`:'Новый код'}</button><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
-            ${g.editOpen?`<form class="editform" data-ef="${g.id}">
-              <label class="wide">${g.kind==='group'?'Обращение по-русски':'Имя, как на приглашении'}<input name="name" value="${esc(g.name)}" maxlength="120"></label>
-              <label class="wide">${g.kind==='group'?'Обращение по-узбекски':'Имя по-узбекски'} <small>(латиницей; пусто — «${esc(uzAuto(g.name))}»)</small><input name="name_uz" value="${esc(g.name_uz)}" maxlength="120" placeholder="${esc(uzAuto(g.name))}"></label>
-              ${g.kind==='group'?'':`<label>Обращение<select name="greet">${GREETS.map(x=>`<option ${g.greet===x?'selected':''}>${x}</option>`).join('')}</select></label>`}
-              <label>${g.kind==='group'?'Мест на всех':'Мест'}<input name="seats" type="number" min="1" max="20" value="${g.seats}"></label>
-              <div class="btnrow"><button class="pillbtn solid" type="submit">Сохранить</button><button class="pillbtn" type="button" data-ecancel="${g.id}">Отмена</button></div></form>`:''}
-            ${g.noteOpen?`<textarea class="notein" data-note-in="${g.id}" rows="2" placeholder="Пара тёплых слов лично этому гостю. Появятся в его письме.">${esc(g.note||'')}</textarea>`:''}</div></li>`).join(''):'<li class="emptynote">Здесь пока никого.</li>'}</ul></section>
+        <p class="demotag" style="margin:0">Нажмите на стол — в списке гостей останутся только те, кто за ним сидит. Стол гостю назначается в «✎ Изменить».</p></section>
+      <section class="pane planpane"><div class="pane-head"><h2>План мест</h2><span class="demotag">вписано / план</span></div><div class="plan">
+        ${[['Женская часть · столы 1–15',ps('w'),150],['Мужская часть · столы 16–20',ps('m'),50],['— сторона невесты',ps('m',g=>g.side==='b'),10],['— друзья жениха',ps('m',g=>g.side==='g'&&g.group==='fr'),20],['— родственники жениха',ps('m',g=>g.side==='g'&&g.group==='rel'),20]].map(([l,v,p])=>`<div class="pl${l[0]==='—'?' sub':''}"><span>${l}</span><b class="${v>p?'over':v===p?'full':''}">${v} / ${p}</b><div class="bar"><i style="width:${Math.min(100,Math.round(v/p*100))}%"></i></div></div>`).join('')}
+        </div>
+        <div class="tablewrap"><table class="breakdown"><thead><tr><th></th>${SIDES.map(([k,l])=>`<th>${l}</th>`).join('')}<th>Всего</th></tr></thead><tbody>
+        ${GROUPS.map(([gk,gl,gc])=>{const cell=f=>{const a=G.filter(x=>x.group===gk&&f(x));const inv=a.reduce((m,x)=>m+x.seats,0),ok=a.filter(x=>x.status==='yes').reduce((m,x)=>m+x.coming,0);return inv?`${inv} <small>(${ok})</small>`:'<small>—</small>'};
+          return `<tr><th><i style="background:${gc}"></i>${gl}</th>${SIDES.map(([sk])=>`<td>${cell(x=>x.side===sk)}</td>`).join('')}<td><b>${cell(()=>true)}</b></td></tr>`}).join('')}
+        </tbody></table></div><p class="demotag" style="margin:0">Мест по группам, в скобках — подтвердили.</p></section>
     </div>
-    <section class="pane"><div class="pane-head"><h2>Кто приглашён</h2><span class="demotag">мест по группам · в скобках подтвердили</span></div>
-      <div class="tablewrap"><table class="breakdown"><thead><tr><th></th>${SIDES.map(([k,l])=>`<th>${l}</th>`).join('')}<th>Всего</th></tr></thead><tbody>
-      ${GROUPS.map(([gk,gl,gc])=>{const cell=f=>{const a=G.filter(x=>x.group===gk&&f(x));const inv=a.reduce((m,x)=>m+x.seats,0),ok=a.filter(x=>x.status==='yes').reduce((m,x)=>m+x.coming,0);return inv?`${inv} <small>(${ok})</small>`:'<small>—</small>'};
-        return `<tr><th><i style="background:${gc}"></i>${gl}</th>${SIDES.map(([sk])=>`<td>${cell(x=>x.side===sk)}</td>`).join('')}<td><b>${cell(()=>true)}</b></td></tr>`}).join('')}
-      </tbody></table></div>
-    </section>
-    <section class="pane remindpane"><div class="pane-head"><h2>Напоминание в Telegram</h2><span class="demotag">${G.filter(g=>g.remind&&g.status==='yes').length} ${plural(G.filter(g=>g.remind&&g.status==='yes').length,'гость ждёт','гостя ждут','гостей ждут')}</span></div>
-      <div class="tgprev"><div class="tgmeta">25 ноября, 12:00 · отправится автоматически тем, кто ответил «Приду» и нажал «Напомнить»</div>
-        <div class="bubble">Завтра наша свадьба! 💍<br>Ждём вас 26 ноября в 18:00, свадебный ресторан «Maroqand», ул. Хидоятова, 20А.<br>Ваш стол № 5.<br><br>Дилшоджон и Нодира</div></div>
-      <p class="demotag" style="margin:0">Номер стола подставляется для каждого гостя свой. Гостям, выбравшим узбекский, придёт текст на узбекском.</p>
-    </section>
-    <section class="pane"><div class="pane-head"><h2>Коды для открыток</h2><button class="pillbtn" id="copyCodes">Скопировать списком</button></div>
-      <p class="demotag" style="margin:0">Все открытки печатаются одинаковыми, с общим QR. Под QR от руки или наклейкой пишется код гостя.</p>
-      <ol class="codes">${G.map(g=>`<li><span>${esc(g.name)}</span><b class="cardcode">${g.card}</b></li>`).join('')}</ol>
-    </section>
     <section class="pane"><div class="pane-head"><h2>Пожелания</h2><span class="demotag">видите только вы · ${WISHES.length}</span></div>
       ${WISHES.length?`<ul class="wishes">${WISHES.slice().reverse().map(w=>{const g=G.find(x=>x.id===w.gid);return `<li><blockquote>${esc(w.text)}</blockquote><span class="from"><b>${esc(w.author||(g?g.name:'Гость'))}</b>${w.author&&g?` · <small>${esc(g.name)}</small>`:''} · ${fmtAt(w.at)}</span></li>`}).join('')}</ul>`
       :'<p class="emptynote">Пока пожеланий нет. Они появятся здесь, как только гости начнут писать.</p>'}
-    </section>`;
-  drawHall($('#adminHall'),{selected:tableFilter,byGroup:hallMode==='group',onPick:id=>{tableFilter=tableFilter===id?null:id;renderAdmin()}});
+    </section>
+    <section class="pane remindpane"><div class="pane-head"><h2>Напоминание в Telegram</h2><span class="demotag">${remindN} ${plural(remindN,'гость ждёт','гостя ждут','гостей ждут')}</span></div>
+      <div class="tgprev"><div class="tgmeta">25 ноября, 12:00 · уйдёт само тем, кто ответил «Приду» и нажал «Напомнить»</div>
+        <div class="bubble">Завтра наша свадьба! 💍<br>Ждём вас 26 ноября в 18:00, свадебный ресторан «Maroqand», ул. Хидоятова, 20А.<br>Ваш стол отмечен сердечком на плане в приглашении.<br><br>Дилшоджон и Нодира</div></div>
+      <p class="demotag" style="margin:0">Гостям, выбравшим узбекский, придёт текст на узбекском.</p>
+    </section>
+    <section class="pane letterpane"><details><summary><h2>Текст письма</h2><span class="demotag">${LETTER?'ваш текст':'стандартный текст'} · одинаковый для всех гостей</span></summary>
+      <p class="demotag">Над текстом каждый гость видит своё обращение («Уважаемые Алишер ака и Нигора опа,»), под ним — ваши личные слова, если вы их добавили. Узбекская кириллица делается из латиницы сама.</p>
+      <div class="lgrid">${[['ru','По-русски'],['uz','O‘zbekcha (lotin)']].map(([l,t])=>`<div><b>${t}</b>${['p1','p2'].map((k,i)=>`<label>Абзац ${i+1}<textarea data-lt="${l}.${k}" rows="${i?3:5}">${esc((LETTER&&LETTER[l]&&LETTER[l][k])||TX[l][k])}</textarea></label>`).join('')}</div>`).join('')}</div>
+      <div class="btnrow"><button class="pillbtn solid" id="ltSave">Сохранить текст</button>${LETTER?'<button class="pillbtn" id="ltReset">Вернуть стандартный</button>':''}</div></details></section>`;
+  renderGuests();
+  drawHall($('#adminHall'),{selected:tableFilter,byGroup:hallMode==='group',onPick:id=>{tableFilter=tableFilter===id?null:id;renderAdmin();$('.gpane').scrollIntoView({behavior:'smooth'})}});
   const ct=$('#clearT');if(ct)ct.onclick=()=>{tableFilter=null;renderAdmin()};
+  $('#addToggle').onclick=()=>{addOpen=!addOpen;renderAdmin();if(addOpen)$('#aName').focus()};
   document.querySelectorAll('[data-hm]').forEach(b=>b.onclick=()=>{hallMode=b.dataset.hm;renderAdmin()});
-  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.edit);g.editOpen=!g.editOpen;renderAdmin()});
-  document.querySelectorAll('[data-ecancel]').forEach(b=>b.onclick=()=>{G.find(x=>x.id==b.dataset.ecancel).editOpen=false;renderAdmin()});
-  document.querySelectorAll('[data-ef]').forEach(fm=>fm.onsubmit=async e=>{e.preventDefault();const g=G.find(x=>x.id==fm.dataset.ef);const d=Object.fromEntries(new FormData(fm));
-    if(!d.name.trim()){toast('Имя не может быть пустым');return}const fields={name:d.name.trim(),name_uz:d.name_uz.trim()||null,seats:d.seats};if(d.greet)fields.greet=d.greet;
-    const r=await adm('save',{id:g.id,fields});if(r&&r.guest){const ans=g.answers;Object.assign(g,fromRow(r.guest));g.answers=ans;g.editOpen=false;renderAdmin();toast('Сохранено: '+g.name)}});
+  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderAdmin()});
+  document.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{fSent=fSent===b.dataset.fs?'all':b.dataset.fs;renderAdmin()});
+  $('#fSide').onchange=e=>{fSide=e.target.value;renderGuests()};$('#fPartS').onchange=e=>{fPart=e.target.value;renderGuests()};$('#fGroup').onchange=e=>{fGroup=e.target.value;renderGuests()};
+  $('#gq').oninput=e=>{fQ=e.target.value;renderGuests()};
+  // one delegated handler for every guest row
+  const gl=$('#glist');
+  gl.onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;const pick=id=>G.find(x=>x.id==id);
+    if(d.inv){openInvite(pick(d.inv));return}
+    if(d.edit){const g=pick(d.edit);g.editOpen=!g.editOpen;renderGuests();return}
+    if(d.ecancel){pick(d.ecancel).editOpen=false;renderGuests();return}
+    if(d.del){const g=pick(d.del);if(!g.delAsk){g.delAsk=true;renderGuests();setTimeout(()=>{g.delAsk=false},4000);return}
+      if(await adm('delete',{id:g.id})){RETIRED.add(g.card);setSent(g,false);G=G.filter(x=>x!==g);renderAdmin();toast('Гость удалён')}return}
+    if(d.reset){const g=pick(d.reset);if(!g.resetAsk){g.resetAsk=true;renderGuests();setTimeout(()=>{g.resetAsk=false},4000);return}
+      const r=await adm('reset',{id:g.id});if(r&&r.guest){Object.assign(g,fromRow(r.guest),{editOpen:true});g.resetAsk=false;renderAdmin();toast(g.name+': ответ сброшен')}return}
+    if(d.recode){const g=pick(d.recode);const nc=nextCode();if(!nc){toast('Свободные коды закончились');return}
+      if(!g.recodeAsk){g.recodeAsk=true;renderGuests();setTimeout(()=>{g.recodeAsk=false},5000);return}
+      const r=await adm('recode',{id:g.id,code:nc});if(r&&r.guest){RETIRED.add(r.old);setSent(g,false);WISHES=WISHES.filter(w=>w.gid!==g.id);Object.assign(g,fromRow(r.guest),{editOpen:false});g.recodeAsk=false;renderAdmin();toast(`${g.name}: новая ссылка готова — отправьте приглашение заново`)}return}
+  };
+  gl.onsubmit=async e=>{const fm=e.target.closest('[data-ef]');if(!fm)return;e.preventDefault();const g=G.find(x=>x.id==fm.dataset.ef);const d=Object.fromEntries(new FormData(fm));
+    if(!d.name.trim()){toast('Имя не может быть пустым');return}
+    const fields={name:d.name.trim(),name_uz:d.name_uz.trim()||null,seats:d.seats,lang:d.lang,table_no:d.table_no||null,part:d.part,side:d.side,grp:d.grp,line:d.grp==='rel'?d.line:'',note:d.note.trim()||null};if(d.greet)fields.greet=d.greet;
+    const r=await adm('save',{id:g.id,fields});if(r&&r.guest){const ans=g.answers;Object.assign(g,fromRow(r.guest));g.answers=ans;g.editOpen=false;renderAdmin();toast('Сохранено: '+g.name)}};
   const ak=$('#aKind'),ap=$('#aPre');const syncKind=()=>{const grpK=ak.value==='group';$('#aPreW').hidden=!grpK;$('#aGreetW').hidden=grpK;
     $('#aNameL').textContent=grpK?'Обращение по-русски':'Имя, как на приглашении';$('#aNameUzL').textContent=grpK?'Обращение по-узбекски, латиницей':'Имя по-узбекски, латиницей (необязательно)';
     if(grpK){const p=GPRE.find(x=>x[0]===ap.value);$('#aName').value=p[2];$('#aNameUz').value=p[3];$('#aGrp').value=p[4];$('#aSeats').value=10}else{$('#aName').value='';$('#aNameUz').value='';$('#aSeats').value=2}};
   ak.onchange=syncKind;ap.onchange=syncKind;
+  $('#addForm').onsubmit=async e=>{e.preventDefault();const kind=$('#aKind').value;const code=nextCode();
+    const f={kind,name_uz:$('#aNameUz').value.trim()||null,code,name:$('#aName').value.trim(),greet:kind==='group'?'Дорогие':$('#aGreet').value,seats:$('#aSeats').value,side:$('#aSide').value,grp:$('#aGrp').value,part:$('#aPart').value,lang:$('#aLang').value};
+    if(!f.name){toast('Впишите имя');return}if(!code){toast('Свободные коды закончились');return}
+    const r=await adm('save',{fields:f});if(r&&r.guest){G.push(fromRow(r.guest));renderAdmin();toast('Добавлен: '+f.name+' — нажмите «Пригласить», чтобы отправить');$('#aName').focus()}};
+  $('#xlFile').onchange=e=>{const f=e.target.files[0];if(f)readXl(f)};
   const lts=$('#ltSave');if(lts)lts.onclick=async()=>{const v={ru:{},uz:{}};document.querySelectorAll('[data-lt]').forEach(t=>{const[l,k]=t.dataset.lt.split('.');v[l][k]=t.value.trim()});
     const r=await adm('letter',{value:v});if(r){LETTER=r.letter;renderAdmin();toast('Текст письма сохранён — гости увидят его сразу')}};
   const ltr=$('#ltReset');if(ltr)ltr.onclick=async()=>{const r=await adm('letter',{value:{}});if(r){LETTER=null;renderAdmin();toast('Вернули стандартный текст')}};
-  document.querySelectorAll('[data-note]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.note);g.noteOpen=!g.noteOpen;renderAdmin();const t=document.querySelector(`[data-note-in="${g.id}"]`);t&&t.focus()});
-  document.querySelectorAll('[data-note-in]').forEach(t=>t.oninput=()=>{const g=G.find(x=>x.id==t.dataset.noteIn);g.note=t.value.trim();clearTimeout(t._d);t._d=setTimeout(()=>save(g,{note:g.note||null},'Личные слова сохранены'),700)});
-  document.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{fSide=b.dataset.side;renderAdmin()});
-  document.querySelectorAll('[data-part]').forEach(b=>b.onclick=()=>{fPart=b.dataset.part;renderAdmin()});
-  document.querySelectorAll('[data-part-of]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.partOf);g.part=s.value;renderAdmin();save(g,{part:g.part},`${g.name}: ${s.value==='m'?'мужская':'женская'} часть`)});
-  $('#xlFile').onchange=e=>{const f=e.target.files[0];if(f)readXl(f)};
-  $('#fGroup').onchange=e=>{fGroup=e.target.value;renderAdmin()};
-  const setT=(attr,key,fix)=>document.querySelectorAll(`[${attr}]`).forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.getAttribute(attr));g[key]=s.value;if(fix)fix(g);renderAdmin();save(g,{side:g.side,grp:g.group,line:g.line},`${g.name}: ${typeLabel(g)}`)});
-  setT('data-side-of','side');setT('data-group-of','group',g=>{if(g.group!=='rel')g.line=''});setT('data-line-of','line');
-  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderAdmin()});
-  document.querySelectorAll('select[data-g]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.g);g.table=s.value?+s.value:null;renderAdmin();save(g,{table_no:g.table},s.value?`${g.name} → стол ${s.value}`:'Стол снят')});
-  document.querySelectorAll('[data-msg]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.msg);const t=invMsg(g,true);
-    try{navigator.clipboard.writeText(t).then(()=>toast('Сообщение скопировано — вставьте его в чат гостя'),()=>toast(t))}catch(e){toast(t)}});
-  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.copy);const url=link(g);
-    try{navigator.clipboard.writeText(url).then(()=>toast('Ссылка скопирована'),()=>toast(url))}catch(e){toast(url)}});
-  document.querySelectorAll('select[data-l]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.l);g.lang=s.value;save(g,{lang:g.lang},`${g.name}: приглашение откроется на «${LANGS.find(l=>l[0]===s.value)[1]}»`)});
   $('#reload').onclick=()=>load();$('#logout').onclick=()=>{try{sessionStorage.removeItem('dn-admin')}catch(_){}KEY='';showLogin()};
-  $('#botSetup').onclick=async()=>{const r=await adm('setup');if(r)toast(r.hook&&r.hook.ok?'Бот подключён, проверьте Telegram':'Не получилось: проверьте токен бота в Vercel')};
-  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.del);if(!g.delAsk){g.delAsk=true;renderAdmin();setTimeout(()=>{g.delAsk=false},4000);return}
-    if(await adm('delete',{id:g.id})){RETIRED.add(g.card);G=G.filter(x=>x!==g);renderAdmin();toast('Гость удалён. Его код больше не будет выдан')}});
-  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.reset);if(!g.resetAsk){g.resetAsk=true;renderAdmin();setTimeout(()=>{g.resetAsk=false},4000);return}
-    const r=await adm('reset',{id:g.id});if(r&&r.guest){Object.assign(g,fromRow(r.guest));g.resetAsk=false;renderAdmin();toast(g.name+': ответ сброшен')}});
-  document.querySelectorAll('[data-recode]').forEach(b=>b.onclick=async()=>{const g=G.find(x=>x.id==b.dataset.recode);const nc=nextCode();if(!nc){toast('Свободные коды из листа закончились');return}
-    if(!g.recodeAsk){g.recodeAsk=true;renderAdmin();setTimeout(()=>{g.recodeAsk=false},5000);return}
-    const r=await adm('recode',{id:g.id,code:nc});if(r&&r.guest){RETIRED.add(r.old);WISHES=WISHES.filter(w=>w.gid!==g.id);Object.assign(g,fromRow(r.guest));g.recodeAsk=false;renderAdmin();toast(`${g.name}: новый код ${nc} — напишите его на открытке. Старая ссылка больше не работает`)}});
-  $('#addForm').onsubmit=async e=>{e.preventDefault();const kind=$('#aKind').value;const f={kind,name_uz:$('#aNameUz').value.trim()||null,code:normCode($('#aCode').value),name:$('#aName').value.trim(),greet:kind==='group'?'Дорогие':$('#aGreet').value,seats:$('#aSeats').value,side:$('#aSide').value,grp:$('#aGrp').value,part:$('#aPart').value,lang:$('#aLang').value};
-    if(f.code.length<4||!f.name){toast('Нужны код (4 знака) и имя');return}
-    if(RETIRED.has(f.code)){toast('Код '+f.code+' был у удалённого гостя — возьмите другой');return}
-    if(G.some(g=>g.card===f.code)){toast('Код '+f.code+' уже есть у другого гостя');return}
-    const r=await adm('save',{fields:f});if(r&&r.guest){G.push(fromRow(r.guest));renderAdmin();toast('Добавлен: '+f.name)}};
-  $('#impBtn').onclick=async()=>{const rows=$('#impText').value.split('\n').map(l=>l.split(/[;\t]/).map(x=>x.trim())).filter(p=>p[0]&&p[1]).map(p=>({code:normCode(p[0]),name:p[1],seats:p[2]||1}));
-    if(!rows.length){toast('Нет строк для загрузки');return}const r=await adm('import',{rows});if(r){toast('Загружено: '+r.imported);load()}};
-  $('#commonQr').onclick=()=>openQr('Общий QR',location.origin,'Один код на все открытки. Гость сканирует его и вводит свой код из 4 знаков.');
-  $('#copyCodes').onclick=()=>{const t=G.map(g=>`${g.name} — ${g.card}`).join('\n');try{navigator.clipboard.writeText(t).then(()=>toast('Список кодов скопирован'),()=>toast('Не удалось скопировать'))}catch(e){toast('Не удалось скопировать')}};
 }
+
+/* ---------- «Пригласить»: a personal picture card + the message, ready to paste into the guest's Telegram chat ---------- */
+const CARD_TX={
+  ru:{top:'Приглашение на свадьбу',couple:['Дилшоджон','Нодира'],day:'четверг · 18:00',place:'Свадебный ресторан «Maroqand»',city:'Ташкент, ул. Хидоятова, 20А',foot:'Ваше личное приглашение — по ссылке ниже',footG:'Приглашение — по ссылке ниже'},
+  uzl:{top:'To‘yga taklifnoma',couple:['Dilshodjon','Nodira'],day:'payshanba · soat 18:00',place:'«Maroqand» to‘yxonasi',city:'Toshkent, Hidoyatov ko‘chasi, 20A',foot:'Shaxsiy taklifnomangiz — quyidagi havolada',footG:'Taklifnoma — quyidagi havolada'}};
+CARD_TX.uzc=Object.fromEntries(Object.entries(CARD_TX.uzl).map(([k,v])=>[k,Array.isArray(v)?['Дилшоджон','Нодира']:lat2cyr(v)]));
+function cardHi(g){const l=g.lang||'ru';return g.kind==='group'?invName(g,l):l==='ru'?`${g.greet} ${invName(g,l)}`:`${l==='uzc'?'Қадрли':'Qadrli'} ${invName(g,l)}`}
+async function drawCard(g){
+  const t=CARD_TX[g.lang]||CARD_TX.ru,W0=1080,H0=1350,c=document.createElement('canvas');c.width=W0;c.height=H0;const x=c.getContext('2d');
+  const SC='"Great Vibes", cursive',SE='"Cormorant Garamond", Georgia, serif';
+  try{await Promise.all([document.fonts.load(`150px ${SC}`,t.couple.join('&')),document.fonts.load(`italic 56px ${SE}`,cardHi(g)+t.top),document.fonts.load(`500 66px ${SE}`,'26 · 11 · 2026'+t.place)])}catch(_){}
+  let bg=x.createRadialGradient(W0/2,H0*.4,40,W0/2,H0*.45,H0*.75);bg.addColorStop(0,'#24426b');bg.addColorStop(.45,'#1b3354');bg.addColorStop(1,'#13243d');x.fillStyle=bg;x.fillRect(0,0,W0,H0);
+  x.save();x.globalAlpha=.07;x.strokeStyle='#ecd7a0';x.lineWidth=1.2;
+  for(let yy=0;yy<H0+72;yy+=72)for(let xx=0;xx<W0+72;xx+=72){x.beginPath();x.moveTo(xx+36,yy+4);x.lineTo(xx+68,yy+36);x.lineTo(xx+36,yy+68);x.lineTo(xx+4,yy+36);x.closePath();x.stroke();x.beginPath();x.arc(xx+36,yy+36,10,0,7);x.stroke()}
+  x.restore();
+  let s=0;for(const ch of g.card)s=s*31+ch.charCodeAt(0);const rnd=()=>(s=(s*9301+49297)%233280)/233280;
+  for(let i=0;i<40;i++){const r=.6+rnd()*1.8;x.globalAlpha=.25+rnd()*.6;x.fillStyle='#ecd7a0';x.shadowColor='#ecd7a0';x.shadowBlur=8;x.beginPath();x.arc(50+rnd()*(W0-100),50+rnd()*(H0-100),r,0,7);x.fill()}
+  x.globalAlpha=1;x.shadowBlur=0;
+  x.strokeStyle='rgba(236,215,160,.6)';x.lineWidth=2;x.strokeRect(36,36,W0-72,H0-72);x.strokeStyle='rgba(236,215,160,.28)';x.lineWidth=1;x.strokeRect(50,50,W0-100,H0-100);
+  // seal
+  const sy=190;let sg=x.createRadialGradient(W0/2-14,sy-14,4,W0/2,sy,58);sg.addColorStop(0,'#f6e6b8');sg.addColorStop(1,'#b8955a');
+  x.fillStyle=sg;x.beginPath();x.arc(W0/2,sy,58,0,7);x.fill();x.strokeStyle='rgba(19,36,61,.35)';x.lineWidth=2;x.beginPath();x.arc(W0/2,sy,46,0,7);x.stroke();
+  x.fillStyle='#13243d';x.textAlign='center';x.textBaseline='middle';x.font=`500 40px ${SE}`;x.fillText(g.lang==='uzl'?'D·N':'Д·Н',W0/2,sy+2);
+  x.textBaseline='alphabetic';
+  x.fillStyle='#c9cfdb';x.font=`italic 40px ${SE}`;x.fillText(t.top,W0/2,325);
+  // personal greeting, wrapped to two lines at most
+  const hi=cardHi(g)+'!';let fs=58,lines=[];
+  for(;fs>=36;fs-=2){x.font=`italic ${fs}px ${SE}`;lines=[];let cur='';for(const w of hi.split(' ')){const tr=cur?cur+' '+w:w;if(x.measureText(tr).width>860&&cur){lines.push(cur);cur=w}else cur=tr}lines.push(cur);if(lines.length<=2)break}
+  x.fillStyle='#f5ecd9';lines.forEach((ln,i)=>x.fillText(ln,W0/2,(lines.length===1?430:405)+i*fs*1.2));
+  const gold=(y0,y1)=>{const gr=x.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,'#f7e7b8');gr.addColorStop(.6,'#d6b36e');gr.addColorStop(1,'#b8955a');return gr};
+  x.font=`150px ${SC}`;x.fillStyle=gold(560,690);x.fillText(t.couple[0],W0/2,665);
+  x.font=`96px ${SC}`;x.fillStyle=gold(700,770);x.fillText('&',W0/2,765);
+  x.font=`150px ${SC}`;x.fillStyle=gold(780,900);x.fillText(t.couple[1],W0/2,880);
+  // ornament
+  const oy=960;let lg=x.createLinearGradient(W0/2-260,0,W0/2-30,0);lg.addColorStop(0,'rgba(236,215,160,0)');lg.addColorStop(1,'#ecd7a0');x.fillStyle=lg;x.fillRect(W0/2-260,oy,230,1.5);
+  lg=x.createLinearGradient(W0/2+260,0,W0/2+30,0);lg.addColorStop(0,'rgba(236,215,160,0)');lg.addColorStop(1,'#ecd7a0');x.fillStyle=lg;x.fillRect(W0/2+30,oy,230,1.5);
+  x.fillStyle='#ecd7a0';x.save();x.translate(W0/2,oy+2);x.scale(1.1,1.1);x.beginPath();x.moveTo(0,10);x.bezierCurveTo(-14,0,-12,-12,-5,-12);x.bezierCurveTo(-2,-12,0,-10,0,-7);x.bezierCurveTo(0,-10,2,-12,5,-12);x.bezierCurveTo(12,-12,14,0,0,10);x.fill();x.restore();
+  x.fillStyle='#f5ecd9';x.font=`500 68px ${SE}`;if('letterSpacing' in x)x.letterSpacing='10px';x.fillText('26 · 11 · 2026',W0/2+5,1075);if('letterSpacing' in x)x.letterSpacing='0px';
+  x.fillStyle='#ecd7a0';x.font=`italic 40px ${SE}`;x.fillText(t.day,W0/2,1132);
+  x.fillStyle='#f5ecd9';x.font=`500 40px ${SE}`;x.fillText(t.place,W0/2,1192);
+  x.fillStyle='#c9cfdb';x.font=`italic 32px ${SE}`;x.fillText(t.city,W0/2,1236);
+  x.fillStyle='rgba(236,215,160,.75)';x.font=`italic 28px ${SE}`;x.fillText((g.kind==='group'?t.footG:t.foot)+' ↓',W0/2,1290);
+  return c;
+}
+let INV=null;
+async function openInvite(g){
+  let wrap=$('#invWrap');
+  if(!wrap){wrap=document.createElement('div');wrap.id='invWrap';wrap.className='qrwrap invwrap';document.body.appendChild(wrap);wrap.onclick=e=>{if(e.target===wrap)closeInvite()}}
+  INV={g,blob:null,url:null};wrap.hidden=false;document.body.style.overflow='hidden';
+  const canShare=(()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[new File([new Blob(['x'])],'x.png',{type:'image/png'})]}))}catch(_){return false}})();
+  const coarse=matchMedia('(pointer:coarse)').matches;
+  wrap.innerHTML=`<div class="qrcard invcard" role="dialog" aria-modal="true" aria-labelledby="invName">
+    <button class="invx" id="invX" aria-label="Закрыть">×</button>
+    <span class="label">Приглашение</span><h3 id="invName">${esc(g.name)}</h3>
+    <div class="seg mini" role="group" aria-label="Язык">${LANGS.map(([k,l])=>`<button data-il="${k}" aria-pressed="${g.lang===k}">${l}</button>`).join('')}</div>
+    <div class="invimg"><div class="invload">Рисую открытку…</div></div>
+    ${canShare&&coarse?`<button class="pillbtn solid big" id="invShare">Отправить в Telegram</button><p class="demotag">Откроется выбор приложения: выберите Telegram и чат гостя. Открытка и текст уйдут вместе.</p>`:''}
+    <ol class="steps">
+      <li><b>1</b><span>Скопируйте открытку и вставьте в чат гостя${coarse?'':' <kbd>Ctrl</kbd>+<kbd>V</kbd>'}</span><button class="pillbtn ${canShare&&coarse?'':'solid'}" id="invImg">Копировать открытку</button></li>
+      <li><b>2</b><span>Скопируйте текст и вставьте его подписью к фото, затем отправьте</span><button class="pillbtn ${canShare&&coarse?'':'solid'}" id="invTxt">Копировать текст</button></li>
+    </ol>
+    <pre class="invtext" id="invText"></pre>
+    <div class="btnrow"><a class="iconbtn" id="invDl" download="priglashenie-${g.card}.png">Скачать открытку</a><button class="iconbtn" id="invSent">${SENT.has(g.card)?'✓ Отправлено — снять отметку':'Отметить как отправленное'}</button></div>
+  </div>`;
+  const paint=async()=>{$('#invText').textContent=invMsg(g,true);const box=wrap.querySelector('.invimg');box.innerHTML='<div class="invload">Рисую открытку…</div>';
+    const c=await drawCard(g);if(INV.g!==g)return;INV.blob=await new Promise(r=>c.toBlob(r,'image/png'));if(INV.url)URL.revokeObjectURL(INV.url);INV.url=URL.createObjectURL(INV.blob);
+    box.innerHTML=`<img src="${INV.url}" alt="Открытка для ${esc(g.name)}">`;$('#invDl').href=INV.url};
+  await paint();
+  const done=msg=>{if(!SENT.has(g.card)){setSent(g,true);$('#invSent').textContent='✓ Отправлено — снять отметку';renderAdmin()}toast(msg)};
+  wrap.querySelectorAll('[data-il]').forEach(b=>b.onclick=async()=>{g.lang=b.dataset.il;wrap.querySelectorAll('[data-il]').forEach(x=>x.setAttribute('aria-pressed',x===b));save(g,{lang:g.lang});await paint();renderGuests()});
+  $('#invImg').onclick=async()=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':INV.blob})]);toast('Открытка скопирована — вставьте её в чат гостя (Ctrl+V)')}catch(e){toast('Не получилось скопировать картинку — нажмите «Скачать открытку»')}};
+  $('#invTxt').onclick=async()=>{const t=invMsg(g,true);try{await navigator.clipboard.writeText(t);done('Текст скопирован — вставьте подписью к открытке')}catch(e){toast('Не получилось скопировать — выделите текст в окне вручную')}};
+  const sh=$('#invShare');if(sh)sh.onclick=async()=>{try{await navigator.share({files:[new File([INV.blob],`priglashenie-${g.card}.png`,{type:'image/png'})],text:invMsg(g,true)});done('Отмечено как отправленное')}catch(e){if(e&&e.name!=='AbortError')toast('Не получилось — используйте шаги 1 и 2')}};
+  $('#invSent').onclick=()=>{setSent(g,!SENT.has(g.card));$('#invSent').textContent=SENT.has(g.card)?'✓ Отправлено — снять отметку':'Отметить как отправленное';renderAdmin()};
+  $('#invX').onclick=closeInvite;
+}
+function closeInvite(){const w=$('#invWrap');if(w)w.hidden=true;document.body.style.overflow='';INV=null}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&INV)closeInvite()});
+
 function openQr(title,url,note){$('#qrName').textContent=title;$('#qrUrl').textContent=url;$('#qrNote').textContent=note;
   const box=$('#qrBox');box.innerHTML='';
   if(window.QRCode){new QRCode(box,{text:url,width:220,height:220,colorDark:'#3a2a31',colorLight:'#fffcfa',correctLevel:QRCode.CorrectLevel.M})}
