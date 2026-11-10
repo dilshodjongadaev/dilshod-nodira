@@ -813,6 +813,15 @@ html:not(.evening) .hero .portal .mono span:not(.amp){background-image:linear-gr
 .hero:not(.go) .portal .mono,.hero:not(.go) .portal .pdate{opacity:0}
 .hero.go .portal .pdate{animation:rise 1.2s ease 1.6s both}
 @media (prefers-reduced-motion:reduce){.pdoors{display:none}.portal .p-rays,.portal .p-glow,.portal .p-mote,.portal .p-star,.portal .p-lan,.hero .portal .mono span{animation:none!important}.portal .p-run{display:none}}
+.tbl-heart{display:block;width:1em;height:1em;fill:url(#none);fill:var(--gold-hi);filter:drop-shadow(0 4px 10px rgba(184,149,90,.35))}
+.seatcard .num{font-size:86px;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit;display:flex;justify-content:center;margin:6px 0}
+.seatcard .num .tbl-heart{fill:var(--rose-deep,#b5546a);animation:hbeat 1.6s ease-in-out infinite}
+.mt-table b .tbl-heart{width:46px;height:46px;fill:var(--gold-hi)}
+.th-card b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit;display:flex;justify-content:center}
+.th-card b .tbl-heart{width:72px;height:72px;fill:#e8a3b2;animation:hbeat 1.6s ease-in-out infinite}
+.th-card small{display:block;margin-top:6px;font-size:13px;opacity:.85}
+@keyframes hbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.tbl-heart{animation:none!important}}
 </style>
 
 
@@ -834,9 +843,9 @@ html:not(.evening) .hero .portal .mono span:not(.amp){background-image:linear-gr
       <path d="M0 0L150 112L300 0V200H0Z" fill="url(#evB)"/>
       <path d="M0 200L122 102M300 200L178 102" stroke="#d8c6a0" stroke-width=".8" fill="none"/>
       <path d="M0 200L150 96L300 200Z" fill="url(#evF)" opacity=".55"/>
-      <rect x="9" y="9" width="282" height="182" rx="3" fill="none" stroke="#b8955a" stroke-width=".9"/>
+      <clipPath id="evC"><path d="M0 0L150 112L300 0V200H0Z"/></clipPath><g clip-path="url(#evC)"><rect x="9" y="9" width="282" height="182" rx="3" fill="none" stroke="#b8955a" stroke-width=".9"/>
       <rect x="13" y="13" width="274" height="174" rx="2" fill="none" stroke="#b8955a" stroke-width=".4" opacity=".7"/>
-      <g fill="#b8955a"><path d="M19.8 171.8h8.4v8.4h-8.4zM24 170L30 176L24 182L18 176z"/><path d="M271.8 171.8h8.4v8.4h-8.4zM276 170L282 176L276 182L270 176z"/><path d="M19.8 19.8h8.4v8.4h-8.4zM24 18L30 24L24 30L18 24z"/><path d="M271.8 19.8h8.4v8.4h-8.4zM276 18L282 24L276 30L270 24z"/></g>
+      <g fill="#b8955a"><path d="M19.8 171.8h8.4v8.4h-8.4zM24 170L30 176L24 182L18 176z"/><path d="M271.8 171.8h8.4v8.4h-8.4zM276 170L282 176L276 182L270 176z"/></g></g>
     </svg>
     <svg class="flap" viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true">
       <defs><pattern id="evP" width="20" height="20" patternUnits="userSpaceOnUse"><g fill="none" stroke="#ecd7a0" stroke-width=".5" opacity=".55"><path d="M6 6H14V14H6Z"/><path d="M10 4.2 15.8 10 10 15.8 4.2 10Z"/><path d="M0 0 6 6M20 0 14 6M0 20 6 14M20 20 14 14"/></g></pattern>
@@ -961,7 +970,7 @@ function drawHall(svg,o){
       else{if(i<s.yes){fill=C.roseDeep;stroke=C.roseDeep}else if(i<s.yes+s.pend){fill='#fffcf5';stroke=C.gold}}
       el('rect',{x:x-3.4,y:y-2.8,width:6.8,height:5.6,rx:1.8,fill,stroke,'stroke-width':1,transform:`rotate(${a*180/Math.PI+90} ${x} ${y})`,opacity:dim?.45:1},g)}
     el('circle',{cx:t.x,cy:t.y,r:18,fill:mine?'#f4ead2':'url(#cloth)',stroke:mine||sel?C.roseDeep:(t.men?C.sage:'#d8cbb0'),'stroke-width':mine||sel?2:1,opacity:dim?.55:1},g);
-    txt(g,t.x,o.mine==null?t.y+1:t.y+5,t.id,{fill:mine?C.roseDeep:C.ink,'font-size':mine?17:14,'font-weight':mine?600:400,'font-family':'Cormorant Garamond, Georgia, serif',opacity:dim?.6:1});
+    if(mine)txt(g,t.x,t.y+6,'\u2665\uFE0E',{fill:C.roseDeep,'font-size':18,'text-anchor':'middle'});
     if(o.mine==null){const over=s.yes+s.pend>t.cap;txt(g,t.x,t.y+10,`${s.yes}/${t.cap}`,{fill:over?'#b25c62':C.muted,'font-size':7,...sans})}
     if(o.onPick){g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label','Стол '+t.id+(t.men?', старшие мужчины':''));
       g.addEventListener('click',()=>o.onPick(t.id));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();o.onPick(t.id)}})}
@@ -1078,7 +1087,7 @@ ru:{
   rsvpP:n=>`Мы оставили для вас ${n} ${plural(n,'место','места','мест')}. Дайте, пожалуйста, знать, сможете ли вы прийти.`,
   coming:'Придут',swipe:'с радостью приду',decline:'К сожалению, не смогу',
   c8y:'Ваше место',yesH:'Мы вас ждём',yourTable:'Ваш стол',seats:n=>`${n} ${plural(n,'место','места','мест')}`,
-  wMen:'в мужской части зала, за занавесом у входа',wFar:'в ряду у дальней стены, вдоль танцпола',wNear:'в ряду вдоль танцпола, со стороны входа',
+  wMen:'в мужской части зала, за занавесом у входа',onPlan:'Он отмечен сердечком на плане ниже.',wFar:'в ряду у дальней стены, вдоль танцпола',wNear:'в ряду вдоль танцпола, со стороны входа',
   noTable:'Рассадка ещё готовится. Загляните сюда ближе к свадьбе.',allHall:'Показать весь зал',myTable:'Мой стол',addCal:'Добавить в календарь',change:'Изменить ответ',
   remind:'Напомнить в Telegram за день',reminded:'Напомним 25 ноября в Telegram',remindToast:'Готово: напомним за день до свадьбы',
   noLbl:'Ваш ответ',noH:'Жаль, что вас не будет',noP:'Спасибо, что ответили. Мы будем вспоминать вас в этот день.',canCome:'Я всё-таки смогу прийти',
@@ -1116,7 +1125,7 @@ uz:{
   rsvpP:n=>`Siz uchun ${n} ta joy qoldirdik. Kela olasizmi — iltimos, bizga bildiring.`,
   coming:'Keladi',swipe:'albatta boraman',decline:'Afsuski, kela olmayman',
   c8y:'Joyingiz',yesH:'Sizni kutamiz',yourTable:'Stolingiz',seats:n=>`${n} ta joy`,
-  wMen:'erkaklar qismida, kirish yonidagi parda ortida',wFar:'uzoq devor yonidagi qatorda, raqs maydoni bo‘ylab',wNear:'raqs maydoni bo‘ylab, kirish tomondagi qatorda',
+  wMen:'erkaklar qismida, kirish yonidagi parda ortida',onPlan:'U quyidagi rejada yurakcha bilan belgilangan.',wFar:'uzoq devor yonidagi qatorda, raqs maydoni bo‘ylab',wNear:'raqs maydoni bo‘ylab, kirish tomondagi qatorda',
   noTable:'O‘tirish tartibi hali tayyorlanmoqda. To‘yga yaqinroq bu yerga qayting.',allHall:'Butun zalni ko‘rsatish',myTable:'Mening stolim',addCal:'Taqvimga qo‘shish',change:'Javobni o‘zgartirish',
   remind:'Telegramda bir kun oldin eslatish',reminded:'25-noyabr kuni Telegramda eslatamiz',remindToast:'Tayyor: to‘ydan bir kun oldin eslatamiz',
   noLbl:'Javobingiz',noH:'Kela olmasligingizdan afsusdamiz',noP:'Javob berganingiz uchun rahmat. Shu kuni sizni eslaymiz.',canCome:'Baribir kela olaman',
@@ -1182,7 +1191,7 @@ function todayBlock(g,t){if(!isDay())return '';const n=nowT();const cur=W.progra
   return `<section class="todaycard"><span class="label">26 · 11 · 2026</span><h2>${tr('today')}</h2>
     <p>${n>=W.start?tr('started'):tr('todaySub')}</p>
     ${cur>=0?`<div class="tnow"><div><span>${tr('nowLbl')}</span><b>${tr('prog')[cur][0]}</b></div>${nx>=0?`<div><span>${tr('nextLbl')} · ${W.program[nx][0]}</span><b>${tr('prog')[nx][0]}</b></div>`:''}</div>`:''}
-    <div class="btnrow">${g.status==='yes'&&t?`<button class="pillbtn solid" data-go="answer">${tr('ourTable')} · ${t.id}</button>`:''}
+    <div class="btnrow">${g.status==='yes'&&t?`<button class="pillbtn solid" data-go="answer">${tr('ourTable')}</button>`:''}
       <a class="pillbtn" target="_blank" rel="noopener" href="${YA}">${tr('route2')}</a></div></section>`}
 const cd=()=>{const ms=Math.max(0,W.start-nowT());return{d:Math.floor(ms/864e5),h:Math.floor(ms/36e5)%24,m:Math.floor(ms/6e4)%60,s:Math.floor(ms/1e3)%60}};
 function gcal(){const f=d=>d.toISOString().replace(/[-:]|\.\d{3}/g,'');const e=new Date(W.start.getTime()+3.5*36e5);
@@ -1193,8 +1202,8 @@ function rsvpBlock(g,t){
   if(g.status==='yes') return `
     <section class="chapter" id="seat">${DOVES}<span class="label">${tr('c8y')}</span>
       <h2>${tr('yesH')}</h2>
-      ${t?`<div class="seatcard"><i class="seal-mini" aria-hidden="true">Д·Н</i><span class="label">${tr('yourTable')}</span><div class="num">${t.id}</div><p>${tr('seats',g.coming)}, ${where(t)}</p></div>
-      <div class="hall"><span class="label route-lbl">${tr('routeLbl')}</span><svg id="guestHall" role="img" aria-label="${tr('yourTable')} ${t.id}"></svg>
+      ${t?`<div class="seatcard"><i class="seal-mini" aria-hidden="true">Д·Н</i><span class="label">${tr('yourTable')}</span><div class="num"><svg class="tbl-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C9 18.8 2 14 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6 22 14 15 18.8 12 21z"/></svg></div><p>${tr('seats',g.coming)}, ${where(t)}. ${tr('onPlan')}</p></div>
+      <div class="hall"><span class="label route-lbl">${tr('routeLbl')}</span><svg id="guestHall" role="img" aria-label="${tr('yourTable')}"></svg>
         <div class="btnrow"><button class="pillbtn" id="zoomBtn" data-z="out">${tr('allHall')}</button></div></div>`
       :`<div class="seatcard"><span class="label">${tr('yourTable')}</span><div class="num">…</div><p>${tr('noTable')}</p></div>`}
       <div class="btnrow"><a class="pillbtn solid" href="${gcal()}" target="_blank" rel="noopener">${tr('addCal')}</a>
@@ -1234,7 +1243,7 @@ function renderGuest(scrollId){
     <section class="chapter mainb-wrap" id="ch-main"><span class="label rv">${tr('mainLbl')}</span>
       <div class="mainb rv">
         <button class="mt mt-time" data-go="ch-program"><span class="k">${tr('startLbl')}</span><b>18:00</b><small>${tr('untilLbl')}</small></button>
-        ${g.status==='yes'&&t?`<button class="mt mt-table" data-go="answer"><span class="k">${tr('yourTable')}</span><b>${t.id}</b><small>${where(t)}</small></button>`
+        ${g.status==='yes'&&t?`<button class="mt mt-table" data-go="answer"><span class="k">${tr('yourTable')}</span><b><svg class="tbl-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C9 18.8 2 14 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6 22 14 15 18.8 12 21z"/></svg></b><small>${where(t)}</small></button>`
           :g.status==='no'?`<button class="mt mt-time" data-go="wish"><span class="k">${tr('noLbl')}</span><b style="font-size:26px">${tr('wishH')}</b></button>`
           :`<button class="mt mt-ans" data-go="answer"><span class="k">${tr('noLbl')}</span><b>${tr('ctaAns')}</b><small>${tr('answerBy')}</small></button>`}
         <div class="mt mt-place"><span class="k">${tr('c5')}</span><b>${tr('venue')}</b><small>${tr('addr')}</small>
@@ -1300,7 +1309,7 @@ function wireWish(g){
     const sb=f.querySelector('button[type=submit]');sb.disabled=true;api('wish',{text:v,name:g.me||''}).then(r=>{sb.disabled=false;if(!r)return;WISHES.push({gid:g.id,text:v,at:new Date()});g.writing=false;toast(tr('wishToast'));renderGuest('wish')})});
   const m=$('#wishMore');if(m)m.onclick=()=>{g.writing=true;renderGuest('wish')};
 }
-/* ---------- music: gentle music box, guest switches it on ---------- */
+/* ---------- music: Canon in D, guest switches it on ---------- */
 const Music={ac:null,master:null,on:false,timer:null,VOL:.16};
 function mtof(m){return 440*Math.pow(2,(m-69)/12)}
 function mbTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.createOscillator(),gn=a.createGain();
@@ -1308,20 +1317,28 @@ function mbTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.create
   const g2=a.createGain();g2.gain.value=.18;o2.connect(g2).connect(gn);o.connect(gn);gn.connect(Music.bus);
   gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+.012);gn.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)}
+function pianoTone(f,t,dur,vol){const a=Music.ac,gn=a.createGain();gn.connect(Music.bus);
+  [[1,1],[2,.32],[3,.1],[4.02,.04]].forEach(([m,v])=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f*m;g.gain.value=v;o.connect(g).connect(gn);o.start(t);o.stop(t+dur+.1)});
+  gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+.01);gn.gain.exponentialRampToValueAtTime(vol*.35,t+.35);gn.gain.exponentialRampToValueAtTime(.0001,t+dur)}
+function padTone(f,t,dur,vol){const a=Music.ac,o=a.createOscillator(),o2=a.createOscillator(),lp=a.createBiquadFilter(),gn=a.createGain();
+  o.type='triangle';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*1.004;lp.type='lowpass';lp.frequency.value=1100;
+  o.connect(lp);o2.connect(lp);lp.connect(gn);gn.connect(Music.bus);
+  gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+dur*.35);gn.gain.linearRampToValueAtTime(vol*.8,t+dur*.8);gn.gain.linearRampToValueAtTime(0,t+dur+.25);
+  o.start(t);o2.start(t);o.stop(t+dur+.3);o2.stop(t+dur+.3)}
 function phrase(t0){
-  // original gentle waltz in 3/4: low note on "one", soft chord on "two-three", music-box melody on top
-  const beat=.42;
-  const CH={C:[48,[64,67,72]],Am:[45,[64,69,72]],Dm:[50,[65,69,74]],G:[43,[62,67,71]],F:[41,[65,69,72]],Em:[40,[64,67,71]],G7:[43,[65,71,74]]};
-  const bars=[['C',[[76,2],[79,1]]],['Am',[[81,2],[79,1]]],['Dm',[[77,1],[76,1],[74,1]]],['G',[[74,2],[71,1]]],
-              ['C',[[72,2],[76,1]]],['F',[[77,2],[81,1]]],['G',[[79,1],[77,1],[74,1]]],['C',[[72,3]]],
-              ['Am',[[76,2],[72,1]]],['Em',[[71,2],[76,1]]],['F',[[77,2],[81,1]]],['C',[[79,2],[76,1]]],
-              ['Dm',[[77,1],[81,1],[84,1]]],['G',[[83,2],[79,1]]],['G7',[[77,1],[74,1],[71,1]]],['C',[[72,3]]]];
-  bars.forEach(([c,mel],i)=>{const t=t0+i*3*beat;const [bass,ch]=CH[c];
-    mbTone(mtof(bass),t,1.4,.42);
-    [1,2].forEach(k=>ch.forEach(n=>mbTone(mtof(n),t+k*beat,.5,.11)));
-    let at=0;mel.forEach(([n,d])=>{mbTone(mtof(n),t+at*beat,Math.max(.7,d*beat*1.6),.4);at+=d});
-  });
-  return bars.length*3*beat;
+  // Pachelbel – Canon in D (1680s, public domain): the classic slow wedding piece. One 8-chord cycle per call.
+  const beat=.85,k=Music.k=(Music.k||0)+1;
+  const BASS=[50,45,47,42,43,38,43,45];
+  const CH=[[62,66,69],[61,64,69],[62,66,71],[61,66,69],[62,67,71],[62,66,69],[62,67,71],[61,64,69]];
+  const V=[[[78,2],[76,2],[74,2],[73,2],[71,2],[69,2],[71,2],[73,2]],
+           [[74,2],[73,2],[71,2],[69,2],[67,2],[66,2],[67,2],[64,2]],
+           [74,78,81,79,78,74,78,76,74,71,74,81,79,83,81,79].map(n=>[n,1])];
+  BASS.forEach((n,i)=>{const t=t0+i*2*beat;pianoTone(mtof(n),t,2*beat*1.5,.34);pianoTone(mtof(n-12),t,2*beat*1.5,.12);
+    CH[i].forEach(m=>padTone(mtof(m),t,2*beat,.045))});
+  const play=(mel,vol)=>{let at=0;mel.forEach(([n,d])=>{pianoTone(mtof(n),t0+at*beat,Math.min(3.6,d*beat*1.7),vol);at+=d})};
+  if(k>=2)play(V[(k-2)%3],.3);
+  if(k>=3)play(V[(k-3)%3],.2);
+  return 16*beat;
 }
 function loop(){if(!Music.on)return;const len=phrase(Music.ac.currentTime+.08);Music.timer=setTimeout(loop,len*1000-120)}
 function toggleMusic(force){
@@ -1334,7 +1351,7 @@ function toggleMusic(force){
         Music.bus.connect(Music.master);Music.bus.connect(d);d.connect(fb).connect(d);d.connect(Music.master)}
       Music.ac.resume();Music.master.gain.cancelScheduledValues(Music.ac.currentTime);
       Music.master.gain.setValueAtTime(0,Music.ac.currentTime);Music.master.gain.linearRampToValueAtTime(Music.VOL,Music.ac.currentTime+1.2);
-      Music.on=true;loop();
+      Music.on=true;Music.k=0;loop();
     }catch(e){toast('Музыка недоступна в этом браузере');return}
   }else if(Music.ac){Music.on=false;clearTimeout(Music.timer);const t=Music.ac.currentTime;Music.master.gain.cancelScheduledValues(t);Music.master.gain.setValueAtTime(Music.master.gain.value,t);Music.master.gain.linearRampToValueAtTime(0,t+.6)}
   Music.on=want&&!!Music.ac;try{localStorage.setItem('dn-music',Music.on?'1':'')}catch(_){}b.setAttribute('aria-pressed',Music.on);b.setAttribute('aria-label',Music.on?'Выключить музыку':'Включить музыку');
@@ -1412,7 +1429,7 @@ function setEvening(on){document.documentElement.classList.toggle('evening',on)}
 /* ---------- thank-you moment after "I'm coming" ---------- */
 function thanks(g,t){const o=document.createElement('div');o.className='thanks';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
   o.innerHTML=`<div class="petals" aria-hidden="true"></div><div class="th-seal">Д·Н</div><h2 class="th-h">${tr('thx')}</h2><p class="th-p">${tr('thxSub')}</p>
-    ${t?`<div class="th-card"><span class="label">${tr('yourTable')}</span><b>${t.id}</b></div>`:''}
+    ${t?`<div class="th-card"><span class="label">${tr('yourTable')}</span><b><svg class="tbl-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C9 18.8 2 14 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6 22 14 15 18.8 12 21z"/></svg></b><small>${where(t)}</small></div>`:''}
     <button class="pillbtn th-btn">${t?tr('seeTable'):'OK'}</button>`;
   document.body.appendChild(o);drift(o.querySelector('.petals'),14,'petal');burst();
   requestAnimationFrame(()=>o.classList.add('on'));if(Music.on)setTimeout(()=>sfx('chime'),350);
@@ -1422,7 +1439,7 @@ function thanks(g,t){const o=document.createElement('div');o.className='thanks';
 /* ---------- dock, contents, progress ---------- */
 let ctaTarget='rsvp';
 function updCta(g,t){const b=$('#ctaBtn');
-  if(g.status==='yes'){ctaTarget='seat';b.textContent=t?`${tr('ctaSeat')} · ${t.id}`:tr('ctaSeat')}
+  if(g.status==='yes'){ctaTarget='seat';b.textContent=tr('ctaSeat')}
   else if(g.status==='no'){ctaTarget='wish';b.textContent=tr('ctaWish')}
   else{ctaTarget='rsvp';b.textContent=tr('ctaAns')}
   onScroll()}
