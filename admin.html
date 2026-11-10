@@ -1401,7 +1401,7 @@ function renderAdmin(){
             <select data-side-of="${g.id}" aria-label="Чья сторона">${SIDES.map(([k,l])=>`<option value="${k}" ${g.side===k?'selected':''}>${l}</option>`).join('')}</select>
             <select data-group-of="${g.id}" aria-label="Группа">${GROUPS.map(([k,l])=>`<option value="${k}" ${g.group===k?'selected':''}>${l}</option>`).join('')}</select>
             ${g.group==='rel'?`<select data-line-of="${g.id}" aria-label="Линия родства">${LINES.map(([k,l])=>`<option value="${k}" ${g.line===k?'selected':''}>${l}</option>`).join('')}</select>`:''}
-            <button class="iconbtn" data-edit="${g.id}" aria-expanded="${!!g.editOpen}">✎ Изменить</button><button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a>${g.status!=='none'?`<button class="iconbtn" data-reset="${g.id}">${g.resetAsk?'Точно сбросить?':'Сбросить ответ'}</button>`:''}<button class="iconbtn" data-recode="${g.id}">${g.recodeAsk?`Сменить на ${nextCode()}?`:'Новый код'}</button><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
+            <button class="iconbtn" data-edit="${g.id}" aria-expanded="${!!g.editOpen}">✎ Изменить</button><button class="iconbtn" data-msg="${g.id}">Текст + ссылка</button><button class="iconbtn" data-copy="${g.id}">Ссылка</button><a class="iconbtn" target="_blank" rel="noopener" href="${shareTg(g)}">Отправить в Telegram</a>${g.status!=='none'?`<button class="iconbtn" data-reset="${g.id}">${g.resetAsk?'Точно сбросить?':'Сбросить ответ'}</button>`:''}<button class="iconbtn" data-recode="${g.id}">${g.recodeAsk?`Сменить на ${nextCode()}?`:'Новый код'}</button><button class="iconbtn del" data-del="${g.id}">${g.delAsk?'Точно удалить?':'Удалить'}</button><button class="iconbtn" data-note="${g.id}" aria-expanded="${!!g.noteOpen}">✎ Личные слова${g.note?' ✓':''}</button>
             ${g.editOpen?`<form class="editform" data-ef="${g.id}">
               <label class="wide">${g.kind==='group'?'Обращение по-русски':'Имя, как на приглашении'}<input name="name" value="${esc(g.name)}" maxlength="120"></label>
               <label class="wide">${g.kind==='group'?'Обращение по-узбекски':'Имя по-узбекски'} <small>(латиницей; пусто — «${esc(uzAuto(g.name))}»)</small><input name="name_uz" value="${esc(g.name_uz)}" maxlength="120" placeholder="${esc(uzAuto(g.name))}"></label>
@@ -1455,6 +1455,8 @@ function renderAdmin(){
   setT('data-side-of','side');setT('data-group-of','group',g=>{if(g.group!=='rel')g.line=''});setT('data-line-of','line');
   document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderAdmin()});
   document.querySelectorAll('select[data-g]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.g);g.table=s.value?+s.value:null;renderAdmin();save(g,{table_no:g.table},s.value?`${g.name} → стол ${s.value}`:'Стол снят')});
+  document.querySelectorAll('[data-msg]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.msg);const t=invMsg(g,true);
+    try{navigator.clipboard.writeText(t).then(()=>toast('Сообщение скопировано — вставьте его в чат гостя'),()=>toast(t))}catch(e){toast(t)}});
   document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id==b.dataset.copy);const url=link(g);
     try{navigator.clipboard.writeText(url).then(()=>toast('Ссылка скопирована'),()=>toast(url))}catch(e){toast(url)}});
   document.querySelectorAll('select[data-l]').forEach(s=>s.onchange=()=>{const g=G.find(x=>x.id==s.dataset.l);g.lang=s.value;save(g,{lang:g.lang},`${g.name}: приглашение откроется на «${LANGS.find(l=>l[0]===s.value)[1]}»`)});
@@ -1528,7 +1530,16 @@ const GPRE=[['fr','Друзья','Дорогие друзья','Qadrli do‘stla
 const uzAuto=n=>cyr2lat(String(n||'').replace(/ и /g,' va '));
 function fromRow(r){return{id:r.id,part:r.part||'w',name_uz:r.name_uz||'',kind:r.kind||'one',answers:[],name:r.name,greet:r.greet,seats:r.seats,table:r.table_no,status:r.status,coming:r.coming,lang:r.lang,side:r.side,group:r.grp,line:r.line,note:r.note,remind:!!r.tg_chat_id,card:r.code,code:r.code}}
 const link=g=>`${location.origin}/?c=${g.card}`;
-const shareTg=g=>`https://t.me/share/url?url=${encodeURIComponent(link(g))}&text=${encodeURIComponent(`${g.greet} ${g.name}! Приглашаем вас на нашу свадьбу 💍 Ваше личное приглашение:`)}`;
+// the message for a personal Telegram DM, in the language the guest's invitation opens in
+function invName(g,l){if(l==='ru')return g.name;if(g.name_uz)return l==='uzc'?lat2cyr(g.name_uz):g.name_uz;const s=String(g.name||'').replace(/ и /g,' va ');return l==='uzl'?cyr2lat(s):s.replace(/ va /g,' ва ')}
+function invMsg(g,withLink){const l=g.lang||'ru',grp=g.kind==='group',url=link(g);
+  const hi=grp?invName(g,l):l==='ru'?`${g.greet} ${invName(g,l)}`:`${l==='uzc'?'Қадрли':'Qadrli'} ${invName(g,l)}`;
+  let body;
+  if(l==='ru')body=`С радостью приглашаем вас на нашу свадьбу 💍\n26 ноября 2026, 18:00 · «Maroqand», Ташкент\n\n${grp?'Приглашение общее: откройте, впишите своё имя и ответьте, придёте ли 👇':'Ваше личное приглашение 👇'}`;
+  else{body=`Sizni to‘yimizga mamnuniyat bilan taklif qilamiz 💍\n26-noyabr 2026, soat 18:00 · «Maroqand» to‘yxonasi, Toshkent\n\n${grp?'Taklifnoma umumiy: oching, ismingizni yozing va kelishingizni belgilang 👇':'Shaxsiy taklifnomangiz 👇'}`;if(l==='uzc')body=lat2cyr(body).replace('ноябр ','ноябрь ')}
+  const sign=l==='ru'?'Дилшоджон и Нодира':l==='uzc'?'Дилшоджон ва Нодира':'Dilshodjon va Nodira';
+  return `${hi}!\n\n${body}${withLink?'\n'+url:''}\n\n${sign}`}
+const shareTg=g=>`https://t.me/share/url?url=${encodeURIComponent(link(g))}&text=${encodeURIComponent(invMsg(g,false))}`;
 function nextCode(){const used=new Set(G.map(g=>g.card));return PRINTED.find(c=>!used.has(c)&&!RETIRED.has(c))||''}
 async function adm(action,extra){try{const r=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':KEY},body:JSON.stringify({action,...extra})});
   const j=await r.json().catch(()=>({}));if(r.status===401){showLogin('Неверный пароль');return null}
