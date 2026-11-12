@@ -529,7 +529,6 @@ html[lang=ko] .tlph figcaption{font-size:14px}
     <div class="with rv" data-t="fWith"></div>
     <div class="who rv d1"><span class="wipe" data-t="fWho"></span></div>
     <div class="lanterns" id="lanterns" aria-hidden="true"></div>
-    <p class="credit" data-t="credit"></p>
   </section>
 </main>
 <button class="music" id="music" aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-t="music"></span></button>
@@ -542,6 +541,8 @@ html[lang=ko] .tlph figcaption{font-size:14px}
 </div>
 
 <script>
+try{if(/[?&]reset=1/.test(location.search)){['nd-yes','nd-coupons','nd-lang2'].forEach(k=>localStorage.removeItem(k));history.replaceState(null,'',location.pathname)}}catch(_){}
+
 const $=s=>document.querySelector(s);
 const TX={
 ru:{credit:'Музыка: А. Вивальди, «Зима», II. Largo · исполняет Джон Харрисон (CC BY-SA)',kLabel:'Купоны<b>только для тебя</b>',kTitle:'Книжка купонов любви',kHint:'Выбери любые два купона и потяни вправо, чтобы оторвать — я сразу узнаю 😉',kLocked:'Два купона уже твои 💜',kUsed:'Использован',kToast:'Купон у меня — жди 💜',
@@ -811,7 +812,7 @@ addEventListener('scroll',tlProgress,{passive:true});
 function render(){
   document.documentElement.lang=lang;document.title=lang==='ko'?'사랑하는 노디라에게':'Для моей любимой';
   document.querySelectorAll('[data-t]').forEach(e=>{const v=tr(e.dataset.t);if(String(v).includes('<b>'))e.innerHTML=v;else e.textContent=v});
-  $('#goHeart').setAttribute('aria-label',tr('heartAria'));
+  $('#goHeart').setAttribute('aria-label',tr('heartAria'));$('#music').title=tr('credit');
   $('#names').innerHTML=tr('names').map((n,i)=>`<span class="${i?'':'on'}">${esc(n)}</span>`).join('');
   $('#letterBody').innerHTML=tr('letter').map(p=>`<p>${esc(p)}</p>`).join('');
   renderStory();
