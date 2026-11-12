@@ -385,6 +385,51 @@ html[lang=ko] .letter p{font-size:16px;line-height:var(--row)}
 .coupon.locked .cbody{cursor:default}.coupon.locked .arr{display:none}
 .cplock{margin:6px 0 0;font-family:var(--f-hand);font-size:26px;color:var(--plum)}
 .credit{margin-top:34px;max-width:300px;font:400 11px/1.6 var(--f-ui);color:var(--muted);opacity:.8}
+
+/* our story timeline */
+.story{justify-content:flex-start}
+.tl{position:relative;list-style:none;margin:34px 0 0;padding:0;width:100%;text-align:left}
+.tlbar{position:absolute;left:22px;top:14px;bottom:30px;width:2px;background:var(--line);border-radius:2px}
+.tlbar i{position:absolute;inset:0;background:linear-gradient(180deg,var(--lav),var(--rose));transform-origin:50% 0;transform:scaleY(0);border-radius:2px}
+.tl li{position:relative;padding:0 0 32px 60px;opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.tl li.in{opacity:1;transform:none}
+.tl .dot{position:absolute;left:6px;top:-4px;width:34px;height:34px;border-radius:50%;background:var(--paper);border:1.5px solid var(--lav);display:grid;place-items:center;box-shadow:0 6px 16px -8px rgba(109,79,151,.6);transform:scale(0);transition:transform .7s cubic-bezier(.3,1.6,.5,1) .25s}
+.tl li.in .dot{transform:none}
+.tl .dot svg{width:18px;height:18px;fill:none;stroke:var(--plum);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tl li.last .dot{background:linear-gradient(135deg,var(--pink),var(--rose));border-color:var(--rose)}
+.tl li.last .dot svg{stroke:#fff;fill:#fff}
+.tl .dt{display:block;font:600 11px var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--rose)}
+.tl h3{margin:4px 0 6px;font-family:var(--f-serif);font-weight:500;font-size:24px;line-height:1.2;color:var(--ink)}
+.tl p{margin:0;font-family:var(--f-serif);font-size:18px;line-height:1.5;color:var(--ink);opacity:.86}
+html[lang=ko] .tl h3{font-size:20px}html[lang=ko] .tl p{font-size:15.5px;line-height:1.75;word-break:keep-all}
+.tlph{margin:14px 0 0;padding:8px 8px 26px;background:#fff;border-radius:4px;box-shadow:0 12px 26px -14px rgba(62,51,82,.45);transform:rotate(-1.5deg);max-width:260px}
+.tl li:nth-child(odd) .tlph{transform:rotate(1.6deg)}
+.tlph img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:2px}
+.tlend{margin:6px 0 0;font-family:var(--f-hand);font-size:25px;line-height:1.35;color:var(--plum);max-width:330px}
+html[lang=ko] .tlend{font-size:22px;word-break:keep-all}
+@media (prefers-reduced-motion:reduce){.tl li,.tl .dot{opacity:1!important;transform:none!important}.tlbar i{transform:none!important}}
+
+/* photos */
+.pola{margin:18px auto 6px;width:min(62vw,240px);padding:10px 10px 0;background:#fff;border-radius:3px;box-shadow:0 18px 36px -18px rgba(62,51,82,.55),0 2px 6px rgba(62,51,82,.08);transform:rotate(-3deg)}
+.pola.rv{opacity:0;transform:translateY(30px) rotate(-9deg) scale(.92);transition:opacity 1.1s ease,transform 1.3s cubic-bezier(.2,.8,.2,1)}
+.pola.rv.in{opacity:1;transform:rotate(-3deg)}
+.pola img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:1px;filter:saturate(.92) contrast(1.02)}
+.pola figcaption{font-family:var(--f-ru-hand,var(--f-hand));font-size:22px;color:var(--plum);text-align:center;padding:6px 0 9px;letter-spacing:.04em}
+.pola::before{content:"";position:absolute;left:50%;top:-12px;width:84px;height:24px;margin-left:-42px;background:rgba(217,200,236,.75);transform:rotate(2deg);border-radius:2px}
+.pola{position:relative}
+.film{width:calc(100% + 40px);margin:4px -20px 26px;overflow:hidden;background:#3e3352;padding:16px 0;position:relative;transform:rotate(-1.5deg)}
+.film::before,.film::after{content:"";position:absolute;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,transparent 0 8px,rgba(255,253,253,.85) 8px 18px,transparent 18px 26px);border-radius:2px}
+.film::before{top:4px}.film::after{bottom:4px}
+.filmrow{display:flex;gap:10px;width:max-content;animation:filmgo 55s linear infinite}
+.filmrow img{display:block;height:170px;width:auto;aspect-ratio:2/3;object-fit:cover;border-radius:3px}
+@keyframes filmgo{to{transform:translateX(calc(-50% - 5px))}}
+@media (prefers-reduced-motion:reduce){.filmrow{animation:none}.pola.rv{opacity:1;transform:rotate(-3deg)}}
+
+.tlpair{display:flex;gap:0;margin-top:14px;max-width:310px}
+.tlpair .tlph{flex:1;margin:0;padding:6px 6px 0;transform:rotate(-4deg)}
+.tlpair .tlph+.tlph{margin-left:-14px;margin-top:22px;transform:rotate(3.5deg);z-index:1}
+.tlph figcaption{font-family:var(--f-hand);font-size:16px;white-space:nowrap;color:var(--plum);text-align:center;padding:4px 0 6px;line-height:1.1}
+html[lang=ko] .tlph figcaption{font-size:14px}
 </style>
 </head>
 <body>
@@ -410,10 +455,19 @@ html[lang=ko] .letter p{font-size:16px;line-height:var(--row)}
   <section class="hero">
     <div class="en rv"><span class="wipe" data-t="forLove"></span></div>
     <div class="date rv d1" id="heroDate"></div>
+    <figure class="pola rv d2"><img src="nodira-hero.jpg" alt="" width="720" height="900"><figcaption>11 · 11 · 2026</figcaption></figure>
     <div class="namebox rv d2" id="names"></div>
     <p class="rv d3 words" data-t="hSub"></p>
     <svg class="bouquet rv d4 bloom" id="bouquet" viewBox="0 0 300 190" aria-hidden="true"></svg>
     <div class="scroll rv d5" data-t="scroll"></div>
+  </section>
+
+  <section class="story">
+    <div class="label rv" data-t="sLabel"></div>
+    <h2 class="rv d1" data-t="sTitle"></h2>
+    <ol class="tl" id="tl"><i class="tlbar" aria-hidden="true"><i id="tlfill"></i></i></ol>
+    <div class="film rv" aria-hidden="true"><div class="filmrow"><img src="nodira-f4.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f1.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f5.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f2.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f3.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f4.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f1.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f5.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f2.jpg" alt="" loading="lazy" width="480" height="720"><img src="nodira-f3.jpg" alt="" loading="lazy" width="480" height="720"></div></div>
+    <p class="tlend rv" data-t="sEnd"></p>
   </section>
 
   <section>
@@ -498,6 +552,15 @@ ru:{credit:'Музыка: А. Вивальди, «Зима», II. Largo · ис�
   letter:['Любимушка, есть люди, рядом с которыми мир становится тише и теплее. Для меня это ты.',
     'Каждый день с тобой — как маленький праздник. Ты моя радость, моё спокойствие и мой дом.',
     '26 ноября мы скажем друг другу самые важные слова. А я уже сейчас знаю главное: я выбираю тебя, Вкусняшка моя, — сегодня, завтра и всю жизнь.'],
+  sLabel:'Наша история<b>как всё началось</b>',sTitle:'Пять лет, чтобы заметить друг друга',
+  story:[['пять лет назад','Там, где всё началось','Мы работали бок о бок — я старшим на точке, ты в моей команде. Каждый день рядом — и всё же мимо: каждый был занят своей дорогой и не замечал, что самая важная встреча уже случилась.'],
+    ['годы спустя','Тонкая ниточка','Жизнь развела нас по разным улицам. Остались редкие «привет» в Instagram и Telegram — пара слов раз в несколько месяцев. Тогда я ещё не знал, что эта ниточка однажды приведёт меня к тебе.'],
+    ['лето 2026','Лето, которое всё изменило','В июле мы снова разговорились — сначала осторожно, потом так, что не хотелось прощаться. А 19 августа было наше первое свидание: обычный вечер в кино, после которого всё стало особенным.'],
+    ['4 октября','Твоё «да»','Море роз, маленькая коробочка в моих руках — и самое короткое слово, которое изменило всю мою жизнь. Ты сказала «да».'],
+    ['11 ноября','Муж и жена','В этот день мы стали семьёй — и по закону, и по никоху. Теперь каждый раз, когда я говорю «моя жена», я улыбаюсь.'],
+    ['26 ноября','Навсегда','Наша свадьба — начало самой длинной и самой счастливой истории. Рука в руке, ступенька за ступенькой — дальше только вместе.']],
+  pairCap:['за секунду до…','…и «да!»'],
+  sEnd:'Пять лет мы были рядом, прежде чем увидели друг друга. Больше я не потеряю ни одного дня.',
   lSig:'Твой Мишка',vLabel:'Обещания<b>только тебе</b>',vTitle:'Мои маленькие обещания',
   vows:['Обнимать тебя крепко-крепко, особенно когда ты устала','Отдавать тебе последний кусочек самого вкусного','Смеяться вместе над нашими глупостями','Держать тебя за руку — и на свадьбе, и через пятьдесят лет','Говорить «люблю» чаще, чем «доброе утро»'],
   cLabel:'До нашего дня',units:['дней','часов','минут','секунд'],when:'26 ноября 2026 · четверг · 18:00',
@@ -513,6 +576,15 @@ ko:{credit:'음악: 비발디 〈겨울〉 2악장 라르고 · 연주 존 해�
   letter:['내 사랑, 어떤 사람 곁에 있으면 세상이 더 조용하고 따뜻해져요. 나에게 그런 사람은 바로 당신이에요.',
     '당신과 함께하는 하루하루가 작은 축제 같아요. 당신은 나의 기쁨이고, 나의 평온이고, 나의 집이에요.',
     '11월 26일, 우리는 서로에게 가장 소중한 말을 하게 될 거예요. 하지만 나는 이미 알고 있어요. 오늘도, 내일도, 평생 당신을 선택할 거라는 걸.'],
+  sLabel:'우리의 이야기<b>모든 것의 시작</b>',sTitle:'서로를 알아보기까지, 5년',
+  story:[['5년 전','모든 것이 시작된 곳','우리는 같은 매장에서 나란히 일했어요. 나는 선임으로, 당신은 우리 팀의 일원으로. 매일 곁에 있었지만 늘 스쳐 지나갔죠. 각자의 길에 바빠서, 가장 소중한 만남이 이미 시작됐다는 걸 몰랐어요.'],
+    ['몇 년 후','가느다란 실','삶은 우리를 서로 다른 길로 보냈어요. 남은 건 인스타그램과 텔레그램으로 가끔 건네던 “안녕” 몇 마디뿐. 그때는 몰랐어요, 그 가느다란 실이 언젠가 나를 당신에게 데려다줄 줄은.'],
+    ['2026년 여름','모든 것을 바꾼 여름','7월, 우리는 다시 이야기를 나누기 시작했어요. 처음엔 조심스럽게, 나중엔 작별 인사가 아쉬울 만큼. 그리고 8월 19일, 우리의 첫 데이트. 평범한 영화관의 저녁이었지만 그날 이후 모든 것이 특별해졌어요.'],
+    ['10월 4일','당신의 “응”','장미의 바다, 내 손 위의 작은 반지 상자. 그리고 내 인생 전체를 바꾼 가장 짧은 한마디 — 당신은 “응”이라고 했어요.'],
+    ['11월 11일','남편과 아내','이날 우리는 가족이 되었어요 — 법으로도, 니코흐로도. 이제 “내 아내”라고 말할 때마다 저절로 웃음이 나요.'],
+    ['11월 26일','영원히','우리의 결혼식은 가장 길고 행복한 이야기의 시작이에요. 손에 손을 잡고, 한 계단 한 계단 — 이제부터는 언제나 함께.']],
+  pairCap:['1초 전…','…그리고 “응!”'],
+  sEnd:'서로를 알아보기 전까지 5년을 곁에 있었어요. 이제는 단 하루도 놓치지 않을게요.',
   lSig:'당신의 곰돌이',vLabel:'약속<b>당신에게만</b>',vTitle:'나의 작은 약속들',
   vows:['당신이 지칠 때면 꼭 안아줄게요','제일 맛있는 마지막 한 입은 언제나 당신 거예요','우리만 아는 장난에 함께 웃을게요','결혼식 날에도, 50년 후에도 당신 손을 잡을게요','\'좋은 아침\'보다 \'사랑해\'를 더 자주 말할게요'],
   cLabel:'우리의 날까지',units:['일','시간','분','초'],when:'2026년 11월 26일 목요일 오후 6시',
@@ -729,12 +801,20 @@ function pose(R,W,T,now){const j=R.j;const dt=R.last==null||now==null?0:Math.min
 /* ================= page ================= */
 const HEART='<svg viewBox="0 0 24 24"><path d="M12 21C9 18.8 2 14 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6 22 14 15 18.8 12 21z"/></svg>';
 function vowIcon(i){seed=40+i*7;return `<svg class="ic" viewBox="0 0 44 44" aria-hidden="true">${cluster(22,24,.72,[['pink','lilac','cream'],['lilac','plum','blush'],['cream','pink','lilac'],['plum','lilac','pink'],['blush','cream','plum']][i])}</svg>`}
+// photo per chapter: put a file name here (e.g. 'story-4.jpg') once the photos arrive
+const STORY_PH=['','','',['nodira-wait.jpg','nodira-yes.jpg'],'nodira-zags.jpg','nodira-up.jpg'];
+const TLI=['<path d="M5 9h14l-1 11H6zM9 9V7a3 3 0 0 1 6 0v2"/>','<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/>','<path d="M4 8h16v11H4zM4 8l3-4h10l3 4M10 11l5 2.5-5 2.5z"/>','<circle cx="12" cy="14" r="6"/><path d="M9 4h6l-3 4z"/>','<circle cx="9" cy="13" r="5"/><circle cx="15" cy="13" r="5"/>','<path d="M12 20s-7-4.4-7-9.6A3.6 3.6 0 0 1 12 8a3.6 3.6 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>'];
+function renderStory(){const ol=$('#tl');ol.querySelectorAll('li').forEach(l=>l.remove());
+  ol.insertAdjacentHTML('beforeend',tr('story').map(([d,h,t],i,a)=>`<li class="rv${i===a.length-1?' last':''}"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true">${TLI[i]}</svg></span><span class="dt">${esc(d)}</span><h3>${esc(h)}</h3><p>${esc(t)}</p>${Array.isArray(STORY_PH[i])?`<div class="tlpair">${STORY_PH[i].map((f,k)=>`<figure class="tlph"><img src="${f}" alt="" loading="lazy"><figcaption>${esc(tr('pairCap')[k])}</figcaption></figure>`).join('')}</div>`:STORY_PH[i]?`<figure class="tlph"><img src="${STORY_PH[i]}" alt="" loading="lazy"></figure>`:''}</li>`).join(''))}
+function tlProgress(){const ol=$('#tl');if(!ol)return;const r=ol.getBoundingClientRect();const p=Math.max(0,Math.min(1,(innerHeight*.6-r.top)/r.height));$('#tlfill').style.transform=`scaleY(${p.toFixed(3)})`}
+addEventListener('scroll',tlProgress,{passive:true});
 function render(){
   document.documentElement.lang=lang;document.title=lang==='ko'?'사랑하는 노디라에게':'Для моей любимой';
   document.querySelectorAll('[data-t]').forEach(e=>{const v=tr(e.dataset.t);if(String(v).includes('<b>'))e.innerHTML=v;else e.textContent=v});
   $('#goHeart').setAttribute('aria-label',tr('heartAria'));
   $('#names').innerHTML=tr('names').map((n,i)=>`<span class="${i?'':'on'}">${esc(n)}</span>`).join('');
   $('#letterBody').innerHTML=tr('letter').map(p=>`<p>${esc(p)}</p>`).join('');
+  renderStory();
   $('#vows').innerHTML=tr('vows').map((v,i)=>`<li class="rv d${i%5+1}">${vowIcon(i)}<p>${esc(v)}</p></li>`).join('');
   const hs=$('.hero p.words');hs.innerHTML=tr('hSub').split(' ').map((w,i)=>`<span class="w" style="transition-delay:${(.5+i*.09).toFixed(2)}s">${esc(w)}</span>`).join(' ');
   $('#heroDate').innerHTML='2026 · 11 · 26'.split('').map((c,i)=>`<span style="transition-delay:${(.3+i*.05).toFixed(2)}s">${c===' '?'&nbsp;':c}</span>`).join('');
