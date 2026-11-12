@@ -831,6 +831,16 @@ html:not(.evening) .hero .portal .mono span:not(.amp){background-image:linear-gr
 .th-card small{display:block;margin-top:6px;font-size:13px;opacity:.85}
 @keyframes hbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
 @media (prefers-reduced-motion:reduce){.tbl-heart{animation:none!important}}
+
+/* calmer scrolling: no rubber-band / pull-to-refresh, and a hard fling stops at the next chapter */
+html,body{overscroll-behavior-y:none}
+html{scroll-snap-type:y proximity}
+.guest>section.chapter,.guest>.chapter{scroll-snap-align:start;scroll-snap-stop:always}
+.heropin .chapter{scroll-snap-align:none}
+html.locked{overflow:hidden}
+.menushade{position:fixed;inset:0;z-index:29;background:rgba(19,36,61,.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;animation:shadeIn .25s ease}
+@keyframes shadeIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){html{scroll-snap-type:none}}
 </style>
 
 
@@ -885,7 +895,7 @@ html:not(.evening) .hero .portal .mono span:not(.amp){background-image:linear-gr
 <main id="guestView" class="guest"></main>
 <main id="qrView" class="qrview" hidden></main>
 <div class="progress" id="progress" aria-hidden="true"></div>
-<div class="sheet" id="menuSheet" hidden><span class="label" id="menuLbl">Главы приглашения</span><ol id="menuList"></ol><button class="bigtoggle" id="bigBtn" aria-pressed="false"><span>Aa</span><b id="bigLbl">Крупный текст</b></button></div>
+<div class="menushade" id="menuShade" hidden></div><div class="sheet" id="menuSheet" hidden><span class="label" id="menuLbl">Главы приглашения</span><ol id="menuList"></ol><button class="bigtoggle" id="bigBtn" aria-pressed="false"><span>Aa</span><b id="bigLbl">Крупный текст</b></button></div>
 <nav class="dock" id="dock" aria-label="Навигация по приглашению" hidden>
   <button class="music" id="musicBtn" aria-pressed="false" aria-label="Включить музыку"><span class="note">♪</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
   <button class="dk-cta" id="ctaBtn">Ответить</button>
@@ -1456,8 +1466,10 @@ const CH_IDS=['ch-date','ch-main','ch-letter','ch-program','ch-place','ch-info',
 function buildMenu(){$('#menuLbl').textContent=tr('menuLbl');$('#bigLbl').textContent=tr('big');
   $('#menuList').innerHTML=CH_IDS.map((id,i)=>`<li><button data-go="${id}">${tr('menu')[i]}<span>${String(i+1).padStart(2,'0')}</span></button></li>`).join('')}
 function goTo(id){const n=id==='answer'?($('#rsvp')||$('#seat')):$('#'+id);n&&n.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
-function menu(open){$('#menuSheet').hidden=!open;$('#menuBtn').setAttribute('aria-expanded',open)}
+function menu(open){$('#menuSheet').hidden=!open;$('#menuBtn').setAttribute('aria-expanded',open);$('#menuShade').hidden=!open;document.documentElement.classList.toggle('locked',!!open)}
 $('#menuBtn').onclick=e=>{e.stopPropagation();menu($('#menuSheet').hidden)};
+// while the chapter menu is open the page behind it must not move
+['#menuShade','#menuSheet'].forEach(q=>{const el=$(q);['touchmove','wheel'].forEach(ev=>el.addEventListener(ev,e=>e.preventDefault(),{passive:false}))});$('#menuShade').onclick=()=>menu(false);
 $('#menuList').onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;menu(false);goTo(b.dataset.go)};
 document.addEventListener('click',e=>{if(!$('#menuSheet').hidden&&!e.target.closest('#menuSheet,#menuBtn'))menu(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu(false);closeQr()}});

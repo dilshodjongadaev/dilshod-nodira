@@ -430,6 +430,11 @@ html[lang=ko] .tlend{font-size:22px;word-break:keep-all}
 .tlpair .tlph+.tlph{margin-left:-14px;margin-top:22px;transform:rotate(3.5deg);z-index:1}
 .tlph figcaption{font-family:var(--f-hand);font-size:16px;white-space:nowrap;color:var(--plum);text-align:center;padding:4px 0 6px;line-height:1.1}
 html[lang=ko] .tlph figcaption{font-size:14px}
+
+html,body{overscroll-behavior-y:none}
+html{scroll-snap-type:y proximity}
+main>section{scroll-snap-align:start;scroll-snap-stop:always}
+@media (prefers-reduced-motion:reduce){html{scroll-snap-type:none}}
 </style>
 </head>
 <body>
